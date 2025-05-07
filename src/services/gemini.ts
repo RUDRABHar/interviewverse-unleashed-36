@@ -1,4 +1,3 @@
-
 import { Question } from '@/components/interviews/InterviewQuestion';
 import { toast } from 'sonner';
 
@@ -30,6 +29,7 @@ export const generateInterviewQuestions = async (config: InterviewConfig): Promi
     return parseQuestionsFromResponse(response, config);
   } catch (error) {
     console.error('Error generating questions:', error);
+    toast.error('Failed to generate interview questions. Please try again.');
     throw new Error('Failed to generate interview questions. Please try again.');
   }
 };
@@ -379,8 +379,10 @@ const mapDifficultyToExperience = (difficulty: string): string => {
 const callGeminiAPI = async (prompt: string): Promise<any> => {
   try {
     console.log('Calling Gemini API with prompt:', prompt);
+    toast.info('Connecting to Gemini AI...');
     
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+    // Updated to use gemini-2.0-flash model instead of gemini-pro
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -402,20 +404,45 @@ const callGeminiAPI = async (prompt: string): Promise<any> => {
     });
     
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Gemini API error:', errorData);
-      throw new Error(`API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+      const errorText = await response.text();
+      console.error('Gemini API error response:', errorText);
+      
+      let errorMessage;
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.error?.message || 'Unknown API error';
+      } catch (e) {
+        errorMessage = `API error: ${response.status} - ${errorText || 'Unknown error'}`;
+      }
+      
+      toast.error(`Gemini API error: ${errorMessage}`);
+      throw new Error(errorMessage);
     }
     
     const data = await response.json();
     console.log('Gemini API response:', data);
+    
+    // Check if the response contains expected data structure
+    if (!data.candidates || !data.candidates[0]?.content?.parts) {
+      console.error('Invalid response format from Gemini API:', data);
+      toast.error('Received invalid response format from Gemini API');
+      throw new Error('Invalid response format from Gemini API');
+    }
+    
     return data;
   } catch (error) {
     console.error('Error calling Gemini API:', error);
+    toast.error(`API error: ${error instanceof Error ? error.message : 'Connection failed'}`);
     
-    // For testing purposes, if API fails, fall back to mock data
-    console.warn('Falling back to mock questions');
-    return generateMockResponse();
+    // For testing purposes, only fall back to mock data in development
+    if (import.meta.env.DEV) {
+      console.warn('Development mode: Falling back to mock questions');
+      toast.warning('Using mock questions for development');
+      return generateMockResponse();
+    } else {
+      // In production, we should inform the user and fail properly
+      throw error;
+    }
   }
 };
 
@@ -428,6 +455,14 @@ const parseQuestionsFromResponse = (response: any, config: InterviewConfig): Que
     if (response.candidates && response.candidates[0]?.content?.parts) {
       const content = response.candidates[0].content.parts[0]?.text;
       
+      if (!content) {
+        console.error('Empty response content from Gemini API');
+        toast.error('Received empty response from Gemini API');
+        throw new Error('Empty response from Gemini API');
+      }
+      
+      console.log('Parsing response content:', content);
+      
       // Try to find JSON in the content
       const jsonMatch = content.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
@@ -438,6 +473,7 @@ const parseQuestionsFromResponse = (response: any, config: InterviewConfig): Que
           questionsData = JSON.parse(content);
         } catch (e) {
           console.error('Failed to parse JSON from content:', e);
+          toast.error('Failed to parse questions from API response');
           // Extract question-like structures from text if JSON parsing fails
           questionsData = extractQuestionsFromText(content, config);
         }
@@ -446,8 +482,18 @@ const parseQuestionsFromResponse = (response: any, config: InterviewConfig): Que
       // This is for mock response format
       questionsData = response.questions;
     } else {
+      toast.error('Unexpected response format from Gemini API');
       throw new Error('Unexpected response format from API');
     }
+    
+    if (!questionsData || !Array.isArray(questionsData) || questionsData.length === 0) {
+      console.error('No questions found in API response');
+      toast.error('No questions found in API response');
+      throw new Error('No questions found in API response');
+    }
+    
+    console.log('Successfully parsed questions:', questionsData.length);
+    toast.success(`Generated ${questionsData.length} interview questions`);
     
     // Convert parsed data to Question[] format
     return questionsData.map((q: any, index: number) => {
@@ -477,8 +523,16 @@ const parseQuestionsFromResponse = (response: any, config: InterviewConfig): Que
     }).slice(0, config.questions); // Ensure we only return the requested number of questions
   } catch (error) {
     console.error('Error parsing questions from response:', error);
-    // Fall back to mock questions if parsing fails
-    return generateMockQuestions(config);
+    toast.error('Failed to parse questions from the API response');
+    
+    // In development, fall back to mock questions
+    if (import.meta.env.DEV) {
+      toast.warning('Using mock questions instead');
+      return generateMockQuestions(config);
+    }
+    
+    // In production, fail properly
+    throw error;
   }
 };
 
@@ -915,4 +969,3 @@ const generateMockQuestions = (config: InterviewConfig): Question[] => {
   
   return questions;
 };
-

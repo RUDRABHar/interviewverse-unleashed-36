@@ -7,6 +7,7 @@ import { InterviewQuestion, Question } from './InterviewQuestion';
 import { InterviewTimer } from './InterviewTimer';
 import { LoadingScreen } from './LoadingScreen';
 import { generateInterviewQuestions } from '@/services/gemini';
+import { AlertCircle } from 'lucide-react';
 
 interface InterviewSession {
   id: string;
@@ -52,28 +53,43 @@ export const InterviewInProgress: React.FC = () => {
         setGeneratingQuestions(true);
         
         // Generate questions using Gemini API
-        const questions = await generateInterviewQuestions(config);
-        
-        // Create session object
-        const session: InterviewSession = {
-          id,
-          title: `Interview Session ${new Date().toLocaleString()}`,
-          durationInMinutes: config.duration || 30,
-          questions,
-          config,
-          answers: {},
-          scores: {}
-        };
-        
-        // Save session
-        setSession(session);
-        localStorage.setItem(`interview_session_${id}`, JSON.stringify(session));
-        setGeneratingQuestions(false);
+        try {
+          console.log("Generating questions with config:", config);
+          const questions = await generateInterviewQuestions(config);
+          
+          if (!questions || questions.length === 0) {
+            throw new Error("No questions were generated. Please try again.");
+          }
+          
+          console.log("Generated questions:", questions);
+          
+          // Create session object
+          const session: InterviewSession = {
+            id,
+            title: `Interview Session ${new Date().toLocaleString()}`,
+            durationInMinutes: config.duration || 30,
+            questions,
+            config,
+            answers: {},
+            scores: {}
+          };
+          
+          // Save session
+          setSession(session);
+          localStorage.setItem(`interview_session_${id}`, JSON.stringify(session));
+          setGeneratingQuestions(false);
+          setError(null);
+        } catch (err: any) {
+          console.error("Error generating interview questions:", err);
+          toast.error("Error generating interview questions");
+          setError(`Failed to generate questions: ${err.message}`);
+          setGeneratingQuestions(false);
+        }
       } catch (err: any) {
         console.error("Error starting interview:", err);
         
         if (retryCount < 2) {
-          toast.error("Generating interview questions, please wait...");
+          toast.error("Error starting interview. Retrying...");
           setRetryCount(prev => prev + 1);
           // Retry after a delay
           setTimeout(() => fetchInterview(), 3000);
@@ -121,6 +137,13 @@ export const InterviewInProgress: React.FC = () => {
     // Navigate to results page
     navigate(`/interviews/complete/${id}`);
   };
+  
+  const handleRetry = () => {
+    setLoading(true);
+    setError(null);
+    setRetryCount(0);
+    window.location.reload();
+  };
 
   if (loading || generatingQuestions) {
     return <LoadingScreen message={generatingQuestions ? "Generating personalized interview questions..." : undefined} />;
@@ -129,15 +152,26 @@ export const InterviewInProgress: React.FC = () => {
   if (error || !session) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-md p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+          <div className="flex justify-center mb-4">
+            <AlertCircle className="h-12 w-12 text-orange-500" />
+          </div>
           <h2 className="text-2xl font-bold mb-4 dark:text-white">Interview Error</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
-          <button 
-            onClick={() => navigate('/interviews')}
-            className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-all duration-300"
-          >
-            Return to Interviews
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+              onClick={handleRetry}
+              className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-all duration-300"
+            >
+              Retry
+            </button>
+            <button 
+              onClick={() => navigate('/interviews')}
+              className="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-300"
+            >
+              Return to Interviews
+            </button>
+          </div>
         </div>
       </div>
     );

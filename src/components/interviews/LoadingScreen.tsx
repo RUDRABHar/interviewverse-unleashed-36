@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loader } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -11,12 +11,27 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   message = "Preparing your interview experience..." 
 }) => {
   // Customize loading steps based on domain/interview type
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const loadingSteps = [
     "Analyzing your preferences...",
     "Crafting personalized questions...",
     "Preparing domain-specific scenarios...",
     "Setting up your virtual interview..."
   ];
+  
+  // Progress through steps to give a sense of activity
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStepIndex(current => {
+        if (current >= loadingSteps.length - 1) {
+          return 0;
+        }
+        return current + 1;
+      });
+    }, 3000);
+    
+    return () => clearInterval(interval);
+  }, []);
   
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -50,12 +65,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                animate={{ opacity: index <= currentStepIndex ? 1 : 0.4, x: 0 }}
                 transition={{ delay: 1 + index * 0.5 }}
                 className="flex items-center"
               >
-                <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{step}</p>
+                <div className={`w-2 h-2 rounded-full mr-3 ${index <= currentStepIndex ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                <p className={`text-sm ${index === currentStepIndex ? 'text-gray-800 dark:text-gray-200 font-medium' : 'text-gray-600 dark:text-gray-400'}`}>
+                  {step}
+                </p>
               </motion.div>
             ))}
           </motion.div>
