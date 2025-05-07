@@ -1,1 +1,7 @@
+
+# This file is used for configuring the Supabase project.
+
 project_id = "fedpxnllrjxomtwzzbnm"
+
+[functions.analyze-interview-answers]
+verify_jwt = true

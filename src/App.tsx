@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from './pages/Index';
@@ -5,7 +6,7 @@ import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
 import Interviews from './pages/Interviews';
-import ActiveInterviewLayout from './layouts/ActiveInterviewLayout';
+import { InterviewInProgress } from './components/interviews/InterviewInProgress';
 import NotFound from './pages/NotFound';
 import { InterviewComplete } from './components/interviews/InterviewComplete';
 import { InterviewResults } from './components/interviews/InterviewResults';
@@ -18,7 +19,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/interviews" element={<Interviews />} />
-      <Route path="/interviews/:id" element={<ActiveInterviewLayout />} />
+      <Route path="/interviews/:id" element={<InterviewInProgress />} />
       <Route path="/interviews/complete/:id" element={<InterviewComplete />} />
       <Route path="/interviews/results/:id" element={<InterviewResults />} />
       <Route path="*" element={<NotFound />} />

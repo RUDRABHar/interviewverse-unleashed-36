@@ -3,9 +3,10 @@ import React from 'react';
 
 interface ScoreCircleProps {
   score: number;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-export const ScoreCircle: React.FC<ScoreCircleProps> = ({ score }) => {
+export const ScoreCircle: React.FC<ScoreCircleProps> = ({ score, size = 'md' }) => {
   // Calculate the color gradient based on score
   const getScoreColor = () => {
     if (score >= 80) return '#22c55e'; // Green for high scores
@@ -13,19 +14,34 @@ export const ScoreCircle: React.FC<ScoreCircleProps> = ({ score }) => {
     return '#ef4444'; // Red for low scores
   };
   
+  // Calculate the radius based on size
+  const getRadius = () => {
+    switch(size) {
+      case 'sm': return 14;
+      case 'lg': return 22;
+      default: return 18; // Medium is default
+    }
+  };
+  
   // Calculate the circumference and stroke-dasharray
-  const radius = 18;
+  const radius = getRadius();
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = circumference;
   const strokeDashoffset = circumference - (score / 100) * circumference;
   
+  // Set container size based on radius
+  const containerSize = radius * 2 + 10; // Add some padding
+  
+  // Set font size based on size
+  const fontSize = size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-xs';
+  
   return (
-    <div className="relative flex items-center justify-center">
-      <svg width="50" height="50" viewBox="0 0 50 50" className="transform -rotate-90">
+    <div className="relative flex items-center justify-center" style={{ width: containerSize, height: containerSize }}>
+      <svg width={containerSize} height={containerSize} viewBox={`0 0 ${containerSize} ${containerSize}`} className="transform -rotate-90">
         {/* Background circle */}
         <circle
-          cx="25"
-          cy="25"
+          cx={containerSize / 2}
+          cy={containerSize / 2}
           r={radius}
           fill="none"
           stroke="currentColor"
@@ -35,8 +51,8 @@ export const ScoreCircle: React.FC<ScoreCircleProps> = ({ score }) => {
         
         {/* Progress circle */}
         <circle
-          cx="25"
-          cy="25"
+          cx={containerSize / 2}
+          cy={containerSize / 2}
           r={radius}
           fill="none"
           stroke={getScoreColor()}
@@ -48,7 +64,7 @@ export const ScoreCircle: React.FC<ScoreCircleProps> = ({ score }) => {
       </svg>
       
       {/* Score text */}
-      <div className="absolute text-xs font-semibold dark:text-white">{score}</div>
+      <div className={`absolute ${fontSize} font-semibold dark:text-white`}>{score}</div>
     </div>
   );
 };

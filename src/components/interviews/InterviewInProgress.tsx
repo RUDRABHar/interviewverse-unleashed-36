@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ActiveInterviewLayout } from './ActiveInterviewLayout';
+import ActiveInterviewLayout from '@/layouts/ActiveInterviewLayout';
 import { LoadingScreen } from './LoadingScreen';
 import { InterviewErrorView } from './InterviewErrorView';
 import { ActiveInterviewContent } from './ActiveInterviewContent';
