@@ -45,6 +45,7 @@ interface UseInterviewSessionResult {
   session: InterviewSession | null;
   loading: boolean;
   error: string | null;
+  errorType?: 'profile' | 'general';
   dbSessionId: string | null;
   generatingQuestions: boolean;
   handleAnswerSubmit: (questionId: string, answer: string, isCorrect?: boolean) => Promise<void>;
@@ -56,6 +57,7 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorType, setErrorType] = useState<'profile' | 'general'>('general');
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [generatingQuestions, setGeneratingQuestions] = useState(true);
@@ -66,6 +68,22 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
       if (!id || !userId) return;
 
       try {
+        // Check if user profile exists
+        const { data: userProfile, error: profileError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+          
+        if (profileError || !userProfile) {
+          console.error("User profile not found:", profileError);
+          setError("Your profile setup is incomplete. Please complete your profile setup before starting an interview.");
+          setErrorType('profile');
+          setLoading(false);
+          setGeneratingQuestions(false);
+          return;
+        }
+        
         const storedConfig = localStorage.getItem(`interview_config_${id}`);
         
         if (!storedConfig) {
@@ -94,7 +112,15 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
 
         if (sessionError) {
           console.error("Error creating interview session:", sessionError);
-          throw new Error("Failed to create interview session in database");
+          if (sessionError.message?.includes('foreign key constraint')) {
+            setError("Your profile setup is incomplete. Please complete your profile setup before starting an interview.");
+            setErrorType('profile');
+          } else {
+            setError(`Failed to create interview session: ${sessionError.message}`);
+          }
+          setLoading(false);
+          setGeneratingQuestions(false);
+          return;
         }
 
         setDbSessionId(sessionData.id);
@@ -290,6 +316,7 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
     session,
     loading,
     error,
+    errorType,
     dbSessionId,
     generatingQuestions,
     handleAnswerSubmit,

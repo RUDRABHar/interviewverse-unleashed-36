@@ -37,6 +37,7 @@ export const InterviewInProgress: React.FC = () => {
     session,
     loading,
     error,
+    errorType,
     generatingQuestions,
     handleAnswerSubmit,
     handleTimeUp,
@@ -60,7 +61,11 @@ export const InterviewInProgress: React.FC = () => {
 
   // Show error view if something went wrong
   if (error || !session) {
-    return <InterviewErrorView error={error || "Session not found"} onRetry={handleRetry} />;
+    return <InterviewErrorView 
+      error={error || "Session not found"} 
+      onRetry={handleRetry} 
+      errorType={errorType}
+    />;
   }
 
   // Get the current question
