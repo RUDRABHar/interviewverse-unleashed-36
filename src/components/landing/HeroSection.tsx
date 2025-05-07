@@ -31,55 +31,47 @@ const HeroSection = () => {
               AI-Powered Interview Preparation
             </motion.span>
             
-            <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold font-sora leading-tight text-shadow-sm"
+            <motion.div 
+              className="content-wrapper"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              Master Every Interview with <span className="text-interview-primary">AI</span>
-            </motion.h1>
-            
-            <motion.p 
-              className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            >
-              AI-powered mock interviews tailored to your domain, difficulty & growth level. Get real-time feedback and improve your chances of landing your dream job.
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-wrap gap-4 pt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
-            >
-              <GradientButton 
-                size="lg" 
-                className="rounded-full px-8 py-6 text-lg font-medium group"
-              >
-                <Link to="/auth" className="flex items-center">
-                  Start Now
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </GradientButton>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-sora leading-tight text-shadow-sm">
+                Master Every Interview with <span className="text-interview-primary">AI</span>
+              </h1>
               
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="rounded-full px-8 py-6 text-lg font-medium border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
-                asChild
-              >
-                <Link to="#how-it-works" className="flex items-center">
-                  <BookOpen className="mr-2 h-5 w-5" />
-                  See How It Works
-                </Link>
-              </Button>
+              <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-xl mt-4">
+                AI-powered mock interviews tailored to your domain, difficulty & growth level. Get real-time feedback and improve your chances of landing your dream job.
+              </p>
+              
+              <div className="flex flex-wrap gap-4 pt-6">
+                <GradientButton 
+                  size="lg" 
+                  className="rounded-full px-8 py-6 text-lg font-medium group"
+                >
+                  <Link to="/auth" className="flex items-center">
+                    Start Now
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </GradientButton>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="rounded-full px-8 py-6 text-lg font-medium border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+                  asChild
+                >
+                  <Link to="#how-it-works" className="flex items-center">
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    See How It Works
+                  </Link>
+                </Button>
+              </div>
             </motion.div>
             
             <motion.div 
-              className="flex items-center gap-2 text-sm text-gray-500 pt-8"
+              className="flex items-center gap-2 text-sm text-gray-500 pt-4 bg-white/60 dark:bg-gray-800/60 p-3 rounded-lg backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
@@ -121,7 +113,7 @@ const HeroSection = () => {
                   ease: "easeInOut"
                 }}
               >
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 border border-gray-200 dark:border-gray-700">
+                <div className="glass-effect-strong rounded-2xl shadow-2xl p-4">
                   <div className="rounded-lg bg-interview-primary/10 p-6">
                     <div className="flex items-center gap-4 mb-6">
                       <div className="h-12 w-12 rounded-full bg-interview-primary/20 flex items-center justify-center">

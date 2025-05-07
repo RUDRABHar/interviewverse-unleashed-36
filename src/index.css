@@ -57,6 +57,16 @@
   .text-on-gradient {
     @apply relative z-10 bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl backdrop-blur-sm border border-white/20 dark:border-gray-700/20 shadow-lg;
   }
+  
+  /* Enhanced content sections */
+  .content-section {
+    @apply relative z-20 backdrop-blur-sm border-y border-white/10 dark:border-gray-800/30;
+  }
+  
+  /* Content wrapper for better text visibility */
+  .content-wrapper {
+    @apply bg-white/70 dark:bg-gray-900/70 backdrop-blur-md rounded-xl shadow-md border border-white/20 dark:border-gray-800/20 p-6;
+  }
 }
 
 .cm-editor {
@@ -132,6 +142,20 @@
 /* Card hover effects */
 .card-hover {
   @apply transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1;
+}
+
+/* Enhanced glass effects */
+.glass-effect {
+  @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-white/20 dark:border-gray-700/20 shadow-lg;
+}
+
+.glass-effect-strong {
+  @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border border-white/30 dark:border-gray-700/30 shadow-xl;
+}
+
+/* Enhanced text visibility */
+.enhanced-text {
+  @apply bg-white/90 dark:bg-gray-800/90 px-3 py-1 rounded;
 }
 
 /* Interactive elements */

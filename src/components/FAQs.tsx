@@ -37,9 +37,12 @@ const faqs = [
 
 const FAQs = () => {
   return (
-    <section id="faqs" className="section-padding relative bg-gradient-to-br from-white to-interview-primary/5 dark:from-gray-900 dark:to-gray-800">
+    <section id="faqs" className="section-padding relative">
+      {/* Enhanced background for better text visibility */}
+      <div className="absolute inset-0 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm -z-10"></div>
+      
       {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden -z-10">
         <div className="absolute top-0 left-1/4 w-72 h-72 bg-interview-primary/5 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
         <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-interview-blue/5 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
       </div>
@@ -52,7 +55,7 @@ const FAQs = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-sora font-bold mb-4">Frequently Asked Questions</h2>
+          <h2 className="text-3xl md:text-4xl font-sora font-bold mb-4 text-shadow-sm">Frequently Asked Questions</h2>
           <p className="text-lg text-gray-700 dark:text-gray-300">
             Everything you need to know about InterviewXpert
           </p>
@@ -70,13 +73,13 @@ const FAQs = () => {
               <Accordion type="single" collapsible>
                 <AccordionItem 
                   value={`item-${index}`}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 px-6 overflow-hidden backdrop-blur-sm"
+                  className="glass-effect rounded-lg overflow-hidden"
                 >
-                  <AccordionTrigger className="text-left py-4 font-medium text-gray-800 dark:text-gray-200 hover:text-interview-primary transition-colors">
+                  <AccordionTrigger className="text-left py-4 font-medium text-gray-800 dark:text-gray-200 hover:text-interview-primary transition-colors px-6">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-600 dark:text-gray-300 pb-4">
-                    <div className="border-l-2 border-interview-primary/30 pl-4">
+                  <AccordionContent className="text-gray-600 dark:text-gray-300 pb-4 px-6">
+                    <div className="border-l-2 border-interview-primary/30 pl-4 bg-white/50 dark:bg-gray-800/50 p-3 rounded-r-lg">
                       {faq.answer}
                     </div>
                   </AccordionContent>
