@@ -8,8 +8,9 @@ import { StaggerContainer, StaggerItem } from '@/components/ui/design-system/ani
 export const TestHistoryHeader = () => {
   return (
     <GlassCard 
-      className="space-y-3 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700"
+      className="space-y-3 p-6 border border-gray-100 dark:border-gray-700"
       glassOpacity="light"
+      borderEffect
     >
       <div className="flex items-start">
         <div className="h-12 w-12 rounded-lg bg-interview-primary/10 flex items-center justify-center mr-4">

@@ -13,7 +13,7 @@ export const EmptyTestHistory = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="flex flex-col items-center justify-center py-16 text-center rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 bg-white dark:bg-gray-800 overflow-hidden relative"
+      className="flex flex-col items-center justify-center py-16 text-center rounded-xl shadow-lg glass-card p-8 overflow-hidden relative"
     >
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-interview-primary/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -47,6 +47,7 @@ export const EmptyTestHistory = () => {
           <Link to="/interviews">
             <GradientButton 
               className="px-6 py-6 text-white rounded-xl shadow-md hover:shadow-xl text-base group"
+              glowEffect
             >
               Start Your First Interview
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />

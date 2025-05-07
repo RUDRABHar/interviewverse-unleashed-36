@@ -8,6 +8,8 @@ interface GlassCardProps extends HTMLMotionProps<"div"> {
   className?: string;
   glassOpacity?: 'light' | 'medium' | 'heavy';
   glowEffect?: boolean;
+  hoverEffect?: boolean;
+  borderEffect?: boolean;
 }
 
 export const GlassCard = ({
@@ -15,6 +17,8 @@ export const GlassCard = ({
   className = '',
   glassOpacity = 'medium',
   glowEffect = false,
+  hoverEffect = false,
+  borderEffect = false,
   ...props
 }: GlassCardProps) => {
   const opacityClasses = {
@@ -29,10 +33,12 @@ export const GlassCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
+      whileHover={hoverEffect ? { y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" } : {}}
       className={cn(
-        'rounded-2xl border border-gray-200/30 dark:border-white/10 shadow-lg',
+        'rounded-2xl border border-gray-200/30 dark:border-white/10 shadow-md transition-all duration-300',
         opacityClasses[glassOpacity],
         glowEffect && 'shadow-[0_0_15px_rgba(155,135,245,0.3)]',
+        borderEffect && 'hover:border-interview-primary/30',
         className
       )}
       {...props}
