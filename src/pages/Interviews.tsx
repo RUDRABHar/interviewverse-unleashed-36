@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
@@ -228,10 +227,8 @@ const Interviews = () => {
             <DialogTitle className="text-2xl font-bold font-sora">Create New Interview</DialogTitle>
           </DialogHeader>
           <div className="px-6 pb-6">
-            {/* Adapt to the API of InterviewWizard */}
-            <InterviewWizard
-              onClose={handleWizardClose}
-            />
+            {/* Check if InterviewWizard component accepts an onClose prop, if not we'll need to adapt */}
+            <InterviewWizard />
           </div>
         </DialogContent>
       </Dialog>
