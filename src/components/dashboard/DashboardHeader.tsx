@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Bell, User, Sun, Moon, Settings, LogOut, Search, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -103,7 +102,7 @@ export const DashboardHeader = ({ user, profile }: DashboardHeaderProps) => {
           
           {/* Notifications */}
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger>
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -156,7 +155,7 @@ export const DashboardHeader = ({ user, profile }: DashboardHeaderProps) => {
           
           {/* User Menu */}
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger>
               <Button 
                 variant="ghost" 
                 size="icon" 
