@@ -5,3 +5,6 @@ project_id = "fedpxnllrjxomtwzzbnm"
 
 [functions.analyze-interview-answers]
 verify_jwt = true
+
+[functions.generate-skill-insight]
+verify_jwt = true

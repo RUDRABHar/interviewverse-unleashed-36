@@ -13,6 +13,7 @@ import { InterviewInProgress } from './components/interviews/InterviewInProgress
 import NotFound from './pages/NotFound';
 import { InterviewComplete } from './components/interviews/InterviewComplete';
 import { InterviewResults } from './components/interviews/InterviewResults';
+import SkillGalaxy from './pages/SkillGalaxy';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <Route path="/interviews/active/:id" element={<InterviewInProgress />} />
       <Route path="/interviews/complete/:id" element={<InterviewComplete />} />
       <Route path="/interviews/results/:id" element={<InterviewResults />} />
+      <Route path="/progress-3d" element={<SkillGalaxy />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

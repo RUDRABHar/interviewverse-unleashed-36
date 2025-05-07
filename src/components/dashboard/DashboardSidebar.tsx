@@ -5,11 +5,11 @@ import {
   LayoutDashboard, 
   MessageSquare, 
   BarChart, 
-  BookOpen, 
   Settings, 
   HelpCircle,
   FileText,
-  Calendar
+  Calendar,
+  Stars
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -60,10 +60,10 @@ export const DashboardSidebar = () => {
       active: currentPath.includes('/analytics')
     },
     {
-      icon: BookOpen,
-      label: 'Resources',
-      href: '/resources',
-      active: currentPath.includes('/resources')
+      icon: Stars,
+      label: 'Skill Galaxy',
+      href: '/progress-3d',
+      active: currentPath === '/progress-3d'
     },
     {
       icon: Settings,
