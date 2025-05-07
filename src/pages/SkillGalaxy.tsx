@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -18,34 +17,19 @@ const SkillGalaxy = () => {
   const [isPerfMode, setIsPerfMode] = useState(false);
   const { skills, loading, error, refetch } = useSkillGalaxyData();
 
-  // First-time user detection
-  const [isFirstVisit, setIsFirstVisit] = useState(false);
+  // First-time user detection - simplified to avoid database issues
+  const [isFirstVisit, setIsFirstVisit] = useState(true);
   
   useEffect(() => {
-    const checkFirstVisit = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data } = await supabase
-            .from('user_profiles')
-            .select('has_visited_galaxy')
-            .eq('id', user.id)
-            .single();
-          
-          if (data && !data.has_visited_galaxy) {
-            setIsFirstVisit(true);
-            await supabase
-              .from('user_profiles')
-              .update({ has_visited_galaxy: true })
-              .eq('id', user.id);
-          }
-        }
-      } catch (error) {
-        console.error('Error checking first visit:', error);
-      }
-    };
-    
-    checkFirstVisit();
+    // Show the onboarding overlay on first render, then hide it
+    // We'll just use local state instead of database tracking for now
+    const hasSeenGalaxy = localStorage.getItem('has_visited_galaxy');
+    if (!hasSeenGalaxy) {
+      setIsFirstVisit(true);
+      localStorage.setItem('has_visited_galaxy', 'true');
+    } else {
+      setIsFirstVisit(false);
+    }
   }, []);
 
   const handleSkillClick = (skill: any) => {

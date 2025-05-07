@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { Color, MeshStandardMaterial } from 'three';
+import * as THREE from 'three';
 
 interface SkillNodeProps {
   skill: {

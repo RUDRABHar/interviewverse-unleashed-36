@@ -1,8 +1,9 @@
 
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Text, Html } from '@react-three/drei';
+import { OrbitControls, Stars } from '@react-three/drei';
 import { SkillNode } from './SkillNode';
+import * as THREE from 'three';
 
 interface SkillGalaxyViewProps {
   skills: any[];
@@ -75,7 +76,7 @@ const NeuralConnections = ({ skills }: { skills: any[] }) => {
           setFromPoints={[
             { x: centerNode[0], y: centerNode[1], z: centerNode[2] },
             { x: skill.position[0], y: skill.position[1], z: skill.position[2] }
-          ]}
+          ].map(point => new THREE.Vector3(point.x, point.y, point.z))}
         />
         <lineBasicMaterial attach="material" color="#465470" transparent opacity={0.3} />
       </line>
@@ -93,7 +94,7 @@ const NeuralConnections = ({ skills }: { skills: any[] }) => {
               setFromPoints={[
                 { x: skill.position[0], y: skill.position[1], z: skill.position[2] },
                 { x: otherSkill.position[0], y: otherSkill.position[1], z: otherSkill.position[2] }
-              ]}
+              ].map(point => new THREE.Vector3(point.x, point.y, point.z))}
             />
             <lineBasicMaterial attach="material" color="#465470" transparent opacity={0.1} />
           </line>

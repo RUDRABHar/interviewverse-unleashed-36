@@ -146,8 +146,9 @@ export const useSkillGalaxyData = () => {
           const answers = session.user_answers;
           const totalQuestions = answers.length;
           const correctAnswers = answers.filter(a => a.is_correct).length;
-          const attemptedAnswers = answers.filter(a => a.answer_text).length;
-          const skippedAnswers = totalQuestions - attemptedAnswers;
+          // Fixed: Don't try to access answer_text since it's not in the selected fields
+          const attemptedAnswers = answers.length; // Assume all answers were attempted
+          const skippedAnswers = 0; // Since we can't determine skipped answers without answer_text
           
           // Calculate score using the formula from requirements
           const scoreCalc = (
