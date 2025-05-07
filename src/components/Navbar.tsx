@@ -3,10 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +25,35 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    // Check if user is signed in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Setup auth listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
+  const handleStartInterview = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
   return (
     <nav 
       className={cn(
@@ -30,10 +63,10 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
-          <a href="#" className="text-2xl font-sora font-bold">
+          <Link to="/" className="text-2xl font-sora font-bold">
             <span className="text-interview-primary">Interview</span>
             <span className="text-interview-blue">Xpert</span>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -42,10 +75,33 @@ const Navbar = () => {
           <a href="#features" className="text-gray-700 hover:text-interview-primary transition-colors">Features</a>
           <a href="#pricing" className="text-gray-700 hover:text-interview-primary transition-colors">Pricing</a>
           <a href="#faqs" className="text-gray-700 hover:text-interview-primary transition-colors">FAQs</a>
-          <a href="#" className="text-interview-primary font-medium hover:text-interview-violet transition-colors">Login</a>
-          <Button className="bg-gradient-primary hover:shadow-glow transition-all shadow-sm">
-            Start Your Mock Interview
-          </Button>
+          
+          {user ? (
+            <>
+              <Link to="/dashboard" className="text-interview-primary font-medium hover:text-interview-violet transition-colors">
+                Dashboard
+              </Link>
+              <Button 
+                variant="outline" 
+                onClick={handleSignOut}
+                className="border-interview-primary text-interview-primary hover:bg-interview-light"
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth" className="text-interview-primary font-medium hover:text-interview-violet transition-colors">
+                Login
+              </Link>
+              <Button 
+                onClick={handleStartInterview} 
+                className="bg-gradient-primary hover:shadow-glow transition-all shadow-sm"
+              >
+                Start Your Mock Interview
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -64,10 +120,26 @@ const Navbar = () => {
             <a href="#features" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">Features</a>
             <a href="#pricing" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">Pricing</a>
             <a href="#faqs" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">FAQs</a>
-            <a href="#" onClick={() => setIsOpen(false)} className="text-interview-primary font-medium py-2">Login</a>
-            <Button onClick={() => setIsOpen(false)} className="bg-gradient-primary w-full">
-              Start Your Mock Interview
-            </Button>
+            
+            {user ? (
+              <>
+                <Link to="/dashboard" onClick={() => setIsOpen(false)} className="text-interview-primary font-medium py-2">
+                  Dashboard
+                </Link>
+                <Button onClick={() => {handleSignOut(); setIsOpen(false);}} variant="outline" className="w-full border-interview-primary text-interview-primary">
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth" onClick={() => setIsOpen(false)} className="text-interview-primary font-medium py-2">
+                  Login
+                </Link>
+                <Button onClick={() => {handleStartInterview(); setIsOpen(false);}} className="bg-gradient-primary w-full">
+                  Start Your Mock Interview
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
