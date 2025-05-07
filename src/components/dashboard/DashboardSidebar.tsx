@@ -9,7 +9,8 @@ import {
   Settings, 
   HelpCircle,
   FileText,
-  User
+  User,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -40,6 +41,12 @@ export const DashboardSidebar = () => {
       label: 'My Interviews',
       href: '/interviews',
       active: currentPath === '/interviews'
+    },
+    {
+      icon: Calendar,
+      label: 'Schedule Interview',
+      href: '/schedule',
+      active: currentPath === '/schedule'
     },
     {
       icon: FileText,

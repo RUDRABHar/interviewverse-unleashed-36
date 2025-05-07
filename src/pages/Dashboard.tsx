@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,6 +14,7 @@ import { PerformanceChart } from '@/components/dashboard/PerformanceChart';
 import { SkillsRadarChart } from '@/components/dashboard/SkillsRadarChart';
 import { InterviewTypeChart } from '@/components/dashboard/InterviewTypeChart';
 import { UpcomingInterview } from '@/components/dashboard/UpcomingInterview';
+import { UpcomingInterviews } from '@/components/schedules/UpcomingInterviews';
 import { ProUpgradeCard } from '@/components/dashboard/ProUpgradeCard';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
@@ -213,12 +215,19 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Upcoming Interviews */}
                 <div className="lg:col-span-2">
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
-                    Upcoming Interviews
-                  </h2>
-                  <div className="space-y-4">
-                    {mockUpcomingInterviews.map(interview => <UpcomingInterview key={interview.id} interview={interview} />)}
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+                      Upcoming Interviews
+                    </h2>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/schedule" className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>Schedule New</span>
+                      </Link>
+                    </Button>
                   </div>
+                  
+                  {user && <UpcomingInterviews userId={user.id} limit={3} />}
                 </div>
                 
                 {/* Pro Upgrade CTA */}

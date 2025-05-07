@@ -124,6 +124,51 @@ export type Database = {
           },
         ]
       }
+      scheduled_sessions: {
+        Row: {
+          created_at: string | null
+          difficulty_level: string
+          domain: string | null
+          id: string
+          interview_type: string
+          number_of_questions: number
+          reminder_time: string | null
+          reminder_type: string | null
+          scheduled_for: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          difficulty_level: string
+          domain?: string | null
+          id?: string
+          interview_type: string
+          number_of_questions: number
+          reminder_time?: string | null
+          reminder_type?: string | null
+          scheduled_for: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          difficulty_level?: string
+          domain?: string | null
+          id?: string
+          interview_type?: string
+          number_of_questions?: number
+          reminder_time?: string | null
+          reminder_type?: string | null
+          scheduled_for?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_answers: {
         Row: {
           ai_feedback: string | null
