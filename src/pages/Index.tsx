@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Navbar from '../components/Navbar';
-import HeroSection from '../components/HeroSection';
+import HeroSection from '../components/landing/HeroSection';
 import HowItWorks from '../components/HowItWorks';
 import Features from '../components/Features';
 import DemoSection from '../components/DemoSection';
@@ -13,7 +13,7 @@ import Footer from '../components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-white dark:bg-gray-900">
       <Navbar />
       <HeroSection />
       <HowItWorks />

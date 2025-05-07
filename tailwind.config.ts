@@ -54,12 +54,13 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				interview: {
-					primary: '#9b87f5', // Updated to match CSS variable
+					primary: '#9b87f5', // Purple
 					blue: '#0EA5E9',
 					violet: '#805AD5',
 					indigo: '#6366F1',
 					light: '#EEF2FF',
 					dark: '#1C1C1E',
+					orange: '#FF6B00', // Additional orange color for accents
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -75,7 +76,9 @@ export default {
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'2xl': '1rem',
+				'3xl': '1.5rem',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -132,6 +135,26 @@ export default {
 						opacity: '1',
 						transform: 'scale(1)'
 					}
+				},
+				'blob': {
+					'0%': {
+						transform: 'translate(0px, 0px) scale(1)'
+					},
+					'33%': {
+						transform: 'translate(30px, -50px) scale(1.1)'
+					},
+					'66%': {
+						transform: 'translate(-20px, 20px) scale(0.9)'
+					},
+					'100%': {
+						transform: 'translate(0px, 0px) scale(1)'
+					}
+				},
+				'ping-slow': {
+					'75%, 100%': {
+						transform: 'scale(2)',
+						opacity: '0'
+					}
 				}
 			},
 			animation: {
@@ -143,18 +166,23 @@ export default {
 				'spin-slow': 'spin-slow 10s linear infinite',
 				'fade-in': 'fade-in 0.3s ease-in-out',
 				'slide-in-right': 'slide-in-right 0.4s ease-in-out',
-				'scale-up': 'scale-up 0.3s ease-in-out'
+				'scale-up': 'scale-up 0.3s ease-in-out',
+				'blob': 'blob 7s infinite',
+				'ping-slow': 'ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite'
 			},
 			backgroundImage: {
 				'hero-pattern': 'url("/hero-pattern.svg")',
 				'gradient-primary': 'linear-gradient(90deg, #9b87f5 0%, #a89af7 100%)',
 				'gradient-blue': 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)',
-				'gradient-violet': 'linear-gradient(90deg, #805AD5 0%, #9F7AEA 100%)'
+				'gradient-violet': 'linear-gradient(90deg, #805AD5 0%, #9F7AEA 100%)',
+				'gradient-purple-blue': 'linear-gradient(135deg, #9b87f5 0%, #0EA5E9 100%)',
 			},
 			boxShadow: {
 				'glow': '0 0 15px rgba(155, 135, 245, 0.5)',
 				'card': '0 10px 30px rgba(0, 0, 0, 0.1)',
-				'button': '0 4px 14px rgba(155, 135, 245, 0.25)'
+				'button': '0 4px 14px rgba(155, 135, 245, 0.25)',
+				'glass': '0 8px 32px rgba(0, 0, 0, 0.08)',
+				'glass-dark': '0 8px 32px rgba(0, 0, 0, 0.3)',
 			},
 			fontFamily: {
 				'sans': ['Inter', 'sans-serif'],

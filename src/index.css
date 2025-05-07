@@ -1,4 +1,6 @@
 
+@import './styles/animations.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,65 +51,6 @@
   @apply ring-2 ring-ring ring-offset-2 outline-none border-primary;
 }
 
-/* Standardized Animation Keyframes */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-in-out;
-}
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.4s ease-in-out;
-}
-
-@keyframes scale-up {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-scale-up {
-  animation: scale-up 0.3s ease-in-out;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.animate-pulse-soft {
-  animation: pulse 2s infinite;
-}
-
 /* Interview app specific colors */
 :root {
   --interview-primary: #9b87f5;
@@ -153,6 +96,18 @@
 
 .border-interview-primary\/20 {
   border-color: rgba(155, 135, 245, 0.2);
+}
+
+.bg-interview-blue\/5 {
+  background-color: rgba(14, 165, 233, 0.05);
+}
+
+.bg-interview-blue\/10 {
+  background-color: rgba(14, 165, 233, 0.1);
+}
+
+.bg-interview-blue\/20 {
+  background-color: rgba(14, 165, 233, 0.2);
 }
 
 /* Card hover effects */
@@ -205,4 +160,41 @@
 
 .orb-blue {
   background: radial-gradient(circle, rgba(14, 165, 233, 0.8) 0%, rgba(14, 165, 233, 0.2) 70%);
+}
+
+/* Advanced glassmorphism */
+.glass-morphism {
+  @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-lg;
+}
+
+.dark .glass-morphism {
+  @apply bg-gray-900/20 border-gray-700/20;
+}
+
+/* Feature card with hover effect */
+.feature-card {
+  @apply rounded-2xl p-6 shadow-lg transition-all duration-500 overflow-hidden relative border border-gray-200/50 dark:border-gray-700/50;
+}
+
+.feature-card::before {
+  content: '';
+  @apply absolute inset-0 opacity-0 transition-opacity duration-500 bg-gradient-to-br from-interview-primary/5 to-interview-blue/5;
+}
+
+.feature-card:hover::before {
+  @apply opacity-100;
+}
+
+/* Logo animation */
+@keyframes logo-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(155, 135, 245, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(155, 135, 245, 0.9));
+  }
+}
+
+.logo-glow {
+  animation: logo-glow 3s ease-in-out infinite;
 }
