@@ -56,12 +56,15 @@ export const InterviewComplete: React.FC = () => {
           }
           
           if (sessionData) {
+            // Convert duration_taken from interval to minutes if it exists
+            const durationInMinutes = sessionData.duration_taken 
+              ? Math.ceil(parseInt(sessionData.duration_taken.toString()) / 60) 
+              : (session.durationInMinutes || 30);
+              
             setResult({
               id: session.id,
               title: session.title || `Interview ${new Date(sessionData.created_at).toLocaleString()}`,
-              duration: session.durationInMinutes || 
-                        (sessionData.duration_taken ? 
-                          Math.ceil(parseInt(sessionData.duration_taken) / 60) : 30),
+              duration: durationInMinutes,
               questionsAnswered: answersCount,
               totalQuestions: session.questions.length,
               completedAt: sessionData.completed_at || new Date().toISOString(),
