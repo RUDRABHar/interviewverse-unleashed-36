@@ -25,8 +25,8 @@ const faqs = [
     answer: 'Our AI feedback has been calibrated using data from thousands of actual interviews and hiring decisions. In blind tests, InterviewXpert feedback matched professional interviewer assessments with over 92% accuracy across technical, behavioral, and communication dimensions.'
   },
   {
-    question: 'Do you offer refunds if I'm not satisfied?',
-    answer: 'Yes, we offer a 14-day money-back guarantee on all premium plans. If you're not completely satisfied with InterviewXpert, simply contact our support team within 14 days of purchase for a full refund, no questions asked.'
+    question: "Do you offer refunds if I'm not satisfied?",
+    answer: "Yes, we offer a 14-day money-back guarantee on all premium plans. If you're not completely satisfied with InterviewXpert, simply contact our support team within 14 days of purchase for a full refund, no questions asked."
   },
   {
     question: 'Can I use InterviewXpert on mobile devices?',
