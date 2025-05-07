@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -265,6 +264,7 @@ export const AuthForm = ({ setVerificationEmailSent }: AuthFormProps) => {
                           placeholder="Full name"
                           className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all"
                           {...field}
+                          value={field.value || ''}
                         />
                       </FormControl>
                     </div>
