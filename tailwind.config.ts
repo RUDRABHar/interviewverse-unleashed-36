@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,6 +53,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				interview: {
+					primary: '#4D47C3',
+					blue: '#3B82F6',
+					violet: '#8B5CF6',
+					indigo: '#6366F1',
+					light: '#EEF2FF',
+					dark: '#2D3748',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -70,25 +79,52 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'pulse-soft': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' }
+				},
+				'gradient-flow': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
+				},
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
+				'gradient-flow': 'gradient-flow 6s ease infinite',
+				'spin-slow': 'spin-slow 10s linear infinite'
+			},
+			backgroundImage: {
+				'hero-pattern': 'url("/hero-pattern.svg")',
+				'gradient-primary': 'linear-gradient(90deg, #4D47C3 0%, #8B5CF6 100%)',
+				'gradient-blue': 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)'
+			},
+			boxShadow: {
+				'glow': '0 0 15px rgba(139, 92, 246, 0.5)',
+				'card': '0 10px 30px rgba(0, 0, 0, 0.1)',
+				'button': '0 4px 14px rgba(139, 92, 246, 0.25)'
+			},
+			fontFamily: {
+				'sans': ['Inter', 'sans-serif'],
+				'sora': ['Sora', 'sans-serif']
 			}
 		}
 	},
