@@ -1,7 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { addDays, format, startOfWeek, differenceInDays, parseISO, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
-import { Card } from '@/components/ui/card';
+import { addDays, format, startOfWeek, differenceInDays, parseISO, startOfMonth, endOfMonth } from 'date-fns';
 
 interface InterviewActivityCalendarProps {
   data: any[];
@@ -146,7 +145,7 @@ export const InterviewActivityCalendar: React.FC<InterviewActivityCalendarProps>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-3 rounded-sm bg-red-100 dark:bg-red-900/30"></div>
-          <span>Needs work (<60%)</span>
+          <span>Needs work (&lt;60%)</span>
         </div>
       </div>
     </div>
