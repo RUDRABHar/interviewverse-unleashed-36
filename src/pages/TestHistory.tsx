@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useMediaQuery } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const TestHistory = () => {
   const navigate = useNavigate();
@@ -75,6 +76,26 @@ const TestHistory = () => {
     );
   }
 
+  // Animation variants for staggered animation
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -84,27 +105,44 @@ const TestHistory = () => {
           <DashboardHeader user={user} profile={profile} />
           
           <main className="flex-1 overflow-auto p-4 md:p-6 animate-fade-in">
-            <div className="max-w-7xl mx-auto space-y-6">
-              <TestHistoryHeader />
-              <TestHistoryFilters filters={filters} setFilters={setFilters} />
+            <motion.div 
+              className="max-w-7xl mx-auto space-y-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={itemVariants}>
+                <TestHistoryHeader />
+              </motion.div>
+              
+              <motion.div variants={itemVariants}>
+                <TestHistoryFilters filters={filters} setFilters={setFilters} />
+              </motion.div>
               
               {dataLoading ? (
-                <div className="space-y-4">
+                <motion.div className="space-y-4" variants={itemVariants}>
                   {Array(5).fill(0).map((_, i) => (
-                    <Skeleton key={i} className="w-full h-24 rounded-lg" />
+                    <Skeleton 
+                      key={i} 
+                      className="w-full h-24 rounded-xl shadow-md bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" 
+                    />
                   ))}
-                </div>
+                </motion.div>
               ) : interviews && interviews.length > 0 ? (
-                <TestHistoryTable 
-                  interviews={interviews} 
-                  isMobile={isMobile}
-                  pagination={pagination}
-                  setPagination={setPagination}
-                />
+                <motion.div variants={itemVariants}>
+                  <TestHistoryTable 
+                    interviews={interviews} 
+                    isMobile={isMobile}
+                    pagination={pagination}
+                    setPagination={setPagination}
+                  />
+                </motion.div>
               ) : (
-                <EmptyTestHistory />
+                <motion.div variants={itemVariants}>
+                  <EmptyTestHistory />
+                </motion.div>
               )}
-            </div>
+            </motion.div>
           </main>
         </div>
       </div>

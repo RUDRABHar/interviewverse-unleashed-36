@@ -4,6 +4,7 @@ import { addDays, format, startOfWeek, differenceInDays, parseISO, startOfMonth,
 
 interface InterviewActivityCalendarProps {
   data: any[];
+  dateRange?: "week" | "month" | "year";
 }
 
 interface CalendarDay {
@@ -12,7 +13,7 @@ interface CalendarDay {
   score: number | null;
 }
 
-export const InterviewActivityCalendar: React.FC<InterviewActivityCalendarProps> = ({ data }) => {
+export const InterviewActivityCalendar: React.FC<InterviewActivityCalendarProps> = ({ data, dateRange = "month" }) => {
   // Generate calendar data for the current month
   const calendarData = useMemo(() => {
     const today = new Date();
@@ -55,7 +56,7 @@ export const InterviewActivityCalendar: React.FC<InterviewActivityCalendarProps>
       days: days.slice(0, totalDays + 7),
       weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     };
-  }, [data]);
+  }, [data, dateRange]); // Added dateRange dependency to react to changes
   
   // Helper function to determine cell color based on score
   const getCellColor = (day: CalendarDay) => {
@@ -76,7 +77,7 @@ export const InterviewActivityCalendar: React.FC<InterviewActivityCalendarProps>
     
     return (
       <div className={`relative h-full w-full p-1 ${isCurrentMonth ? '' : 'opacity-50'}`}>
-        <div className={`absolute top-1 right-1 text-xs ${isToday ? 'font-bold text-orange-500' : 'text-gray-500 dark:text-gray-400'}`}>
+        <div className={`absolute top-1 right-1 text-xs ${isToday ? 'font-bold text-interview-primary' : 'text-gray-500 dark:text-gray-400'}`}>
           {format(day.date, 'd')}
         </div>
         

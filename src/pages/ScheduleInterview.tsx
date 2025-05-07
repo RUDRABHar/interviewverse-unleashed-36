@@ -6,6 +6,8 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { InterviewScheduler } from '@/components/schedules/InterviewScheduler';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const ScheduleInterview = () => {
   const navigate = useNavigate();
@@ -59,6 +61,25 @@ const ScheduleInterview = () => {
       </div>
     );
   }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
   
   return (
     <SidebarProvider>
@@ -69,9 +90,38 @@ const ScheduleInterview = () => {
           <DashboardHeader user={user} profile={profile} />
           
           <main className="flex-1 overflow-auto p-4 md:p-6 animate-fade-in">
-            <div className="max-w-4xl mx-auto">
-              <InterviewScheduler user={user} />
-            </div>
+            <motion.div 
+              className="max-w-4xl mx-auto space-y-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div 
+                variants={itemVariants} 
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="h-12 w-12 rounded-lg bg-interview-primary/10 flex items-center justify-center">
+                    <Calendar className="h-6 w-6 text-interview-primary" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold font-sora mb-1 text-gray-800 dark:text-white">
+                      Schedule Interview
+                    </h1>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Book a mock interview session with our AI interviewers to practice and improve your skills
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <motion.div 
+                variants={itemVariants}
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-6"
+              >
+                <InterviewScheduler user={user} />
+              </motion.div>
+            </motion.div>
           </main>
         </div>
       </div>

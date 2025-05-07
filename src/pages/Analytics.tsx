@@ -10,6 +10,8 @@ import { PerformanceByCategoryChart } from '@/components/analytics/PerformanceBy
 import { PerformanceInsightsPanel } from '@/components/analytics/PerformanceInsightsPanel';
 import { InterviewActivityCalendar } from '@/components/analytics/InterviewActivityCalendar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BarChart, Calendar, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Analytics = () => {
   const navigate = useNavigate();
@@ -102,7 +104,8 @@ const Analytics = () => {
         
         if (interviewDate <= today) {
           activityData.push({
-            date: interviewDate.toISOString().split('T')[0],
+            completed_at: interviewDate.toISOString(),
+            score: Math.floor(Math.random() * 40) + 60,
             count: Math.floor(Math.random() * 3) + 1
           });
         }
@@ -129,6 +132,25 @@ const Analytics = () => {
       </div>
     );
   }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
   
   return (
     <SidebarProvider>
@@ -139,19 +161,34 @@ const Analytics = () => {
           <DashboardHeader user={user} profile={profile} />
           
           <main className="flex-1 overflow-auto p-4 md:p-6 animate-fade-in">
-            <div className="max-w-7xl mx-auto space-y-8">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight font-sora mb-1 text-gray-800 dark:text-white">Analytics</h1>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Track your interview performance and improvement over time
-                </p>
-              </div>
+            <motion.div 
+              className="max-w-7xl mx-auto space-y-8"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={itemVariants} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700">
+                <div className="flex items-start gap-3">
+                  <div className="h-12 w-12 rounded-lg bg-interview-primary/10 flex items-center justify-center">
+                    <BarChart className="h-6 w-6 text-interview-primary" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold tracking-tight font-sora mb-1 text-gray-800 dark:text-white">Analytics</h1>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Track your interview performance and improvement over time
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="col-span-full lg:col-span-2 transition-all duration-300 hover:shadow-lg">
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                      <h2 className="text-xl font-semibold mb-2 sm:mb-0 text-gray-800 dark:text-white">Performance Over Time</h2>
+                      <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                        <TrendingUp className="h-5 w-5 text-interview-primary" />
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Performance Over Time</h2>
+                      </div>
                       <Tabs defaultValue="month" className="w-full sm:w-auto">
                         <TabsList className="grid grid-cols-3 w-full sm:w-auto bg-gray-100 dark:bg-gray-700">
                           <TabsTrigger value="week">Week</TabsTrigger>
@@ -168,17 +205,25 @@ const Analytics = () => {
                 
                 <div className="col-span-full lg:col-span-1 transition-all duration-300 hover:shadow-lg">
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 h-full border border-gray-100 dark:border-gray-700">
-                    <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Performance by Category</h2>
+                    <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-white flex items-center gap-2">
+                      <div className="h-6 w-6 rounded bg-interview-primary/10 flex items-center justify-center">
+                        <span className="text-interview-primary text-xs font-bold">%</span>
+                      </div>
+                      Performance by Category
+                    </h2>
                     <div className="h-[300px]">
                       <PerformanceByCategoryChart data={analyticsData.performanceByCategory} />
                     </div>
                   </div>
                 </div>
                 
-                <div className="col-span-full transition-all duration-300 hover:shadow-lg">
+                <motion.div variants={itemVariants} className="col-span-full transition-all duration-300 hover:shadow-lg">
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                      <h2 className="text-xl font-semibold mb-2 sm:mb-0 text-gray-800 dark:text-white">Interview Activity Calendar</h2>
+                      <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                        <Calendar className="h-5 w-5 text-interview-primary" />
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Interview Activity Calendar</h2>
+                      </div>
                       <Tabs 
                         defaultValue="month" 
                         onValueChange={(value) => setDateRange(value as "week" | "month" | "year")}
@@ -195,13 +240,13 @@ const Analytics = () => {
                     {/* Pass the activity data and dateRange to the calendar component */}
                     <InterviewActivityCalendar data={activityData} dateRange={dateRange} />
                   </div>
-                </div>
+                </motion.div>
                 
-                <div className="col-span-full transition-all duration-300 hover:shadow-lg">
+                <motion.div variants={itemVariants} className="col-span-full transition-all duration-300 hover:shadow-lg">
                   <PerformanceInsightsPanel data={analyticsData} />
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           </main>
         </div>
       </div>

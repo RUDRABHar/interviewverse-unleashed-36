@@ -9,7 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, FileText, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 const Interviews = () => {
   const navigate = useNavigate();
@@ -75,6 +77,25 @@ const Interviews = () => {
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -84,52 +105,87 @@ const Interviews = () => {
           <DashboardHeader user={user} profile={profile} />
           
           <main className="flex-1 overflow-auto p-4 md:p-6 animate-fade-in">
-            <div className="max-w-7xl mx-auto space-y-6">
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold font-sora text-gray-800 dark:text-gray-100">My Interviews</h1>
-                <button
-                  onClick={() => setWizardOpen(!wizardOpen)}
-                  className="px-4 py-2 bg-gradient-to-r from-interview-primary to-interview-primary/80 hover:from-interview-primary/90 hover:to-interview-primary text-white rounded-lg flex items-center gap-2 transition-all shadow-md hover:shadow-lg"
-                >
-                  {wizardOpen ? (
-                    <>
-                      <X className="h-5 w-5" /> Hide Wizard
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="h-5 w-5" /> Create New Interview
-                    </>
-                  )}
-                </button>
-              </div>
+            <motion.div 
+              className="max-w-7xl mx-auto space-y-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={itemVariants} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-12 rounded-lg bg-interview-primary/10 flex items-center justify-center">
+                      <FileText className="h-6 w-6 text-interview-primary" />
+                    </div>
+                    <div>
+                      <h1 className="text-3xl font-bold font-sora text-gray-800 dark:text-gray-100">My Interviews</h1>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">Create, manage and track your interview practice sessions</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={() => navigate('/schedule')}
+                      variant="outline"
+                      className="gap-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 hover:bg-white dark:hover:bg-gray-800"
+                    >
+                      <Calendar className="h-5 w-5 text-interview-primary" />
+                      Schedule Interview
+                    </Button>
+                    
+                    <Button
+                      onClick={() => setWizardOpen(!wizardOpen)}
+                      className="px-4 py-2 bg-interview-primary hover:bg-interview-primary/90 text-white rounded-lg flex items-center gap-2 transition-all shadow-md hover:shadow-lg"
+                    >
+                      {wizardOpen ? (
+                        <>
+                          <X className="h-5 w-5" /> Hide Wizard
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-5 w-5" /> Create New Interview
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
               
               {wizardOpen && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 ease-in-out animate-fade-in">
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 ease-in-out"
+                >
                   <InterviewWizard onComplete={handleInterviewCreated} />
-                </div>
+                </motion.div>
               )}
               
-              <Tabs defaultValue="all" className="w-full">
-                <TabsList className="mb-4 bg-gray-100 dark:bg-gray-700">
-                  <TabsTrigger value="all">All Interviews</TabsTrigger>
-                  <TabsTrigger value="completed">Completed</TabsTrigger>
-                  <TabsTrigger value="pending">Pending</TabsTrigger>
-                  <TabsTrigger value="draft">Drafts</TabsTrigger>
-                </TabsList>
-                <TabsContent value="all">
-                  <InterviewHistory filter="all" />
-                </TabsContent>
-                <TabsContent value="completed">
-                  <InterviewHistory filter="completed" />
-                </TabsContent>
-                <TabsContent value="pending">
-                  <InterviewHistory filter="pending" />
-                </TabsContent>
-                <TabsContent value="draft">
-                  <InterviewHistory filter="draft" />
-                </TabsContent>
-              </Tabs>
-            </div>
+              <motion.div variants={itemVariants}>
+                <Tabs defaultValue="all" className="w-full">
+                  <TabsList className="mb-4 bg-gray-100 dark:bg-gray-700">
+                    <TabsTrigger value="all">All Interviews</TabsTrigger>
+                    <TabsTrigger value="completed">Completed</TabsTrigger>
+                    <TabsTrigger value="pending">Pending</TabsTrigger>
+                    <TabsTrigger value="draft">Drafts</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="all" className="animate-fade-in">
+                    <InterviewHistory filter="all" />
+                  </TabsContent>
+                  <TabsContent value="completed" className="animate-fade-in">
+                    <InterviewHistory filter="completed" />
+                  </TabsContent>
+                  <TabsContent value="pending" className="animate-fade-in">
+                    <InterviewHistory filter="pending" />
+                  </TabsContent>
+                  <TabsContent value="draft" className="animate-fade-in">
+                    <InterviewHistory filter="draft" />
+                  </TabsContent>
+                </Tabs>
+              </motion.div>
+            </motion.div>
           </main>
         </div>
       </div>
