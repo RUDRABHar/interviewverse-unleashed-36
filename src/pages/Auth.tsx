@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthForm } from '@/components/auth/AuthForm';
 import { supabase } from '@/integrations/supabase/client';
 import { EmailVerificationPopup } from '@/components/auth/EmailVerificationPopup';
 import { ParticlesBackground } from '@/components/auth/ParticlesBackground';
+import { AuthTabs } from '@/components/auth/AuthTabs';
 
 const Auth = () => {
   const [verificationEmailSent, setVerificationEmailSent] = useState(false);
@@ -34,7 +34,7 @@ const Auth = () => {
       <ParticlesBackground />
       
       <div className="z-10 w-full max-w-md">
-        <AuthForm setVerificationEmailSent={setVerificationEmailSent} />
+        <AuthTabs setVerificationEmailSent={setVerificationEmailSent} />
       </div>
       
       {verificationEmailSent && (
