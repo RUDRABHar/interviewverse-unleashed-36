@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mic, MicOff, Code, Check } from 'lucide-react';
+import { Mic, MicOff, Code, Check, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -34,6 +34,28 @@ export const InterviewQuestion: React.FC<InterviewQuestionProps> = ({
   currentIndex,
   totalQuestions
 }) => {
+  // Safety check - if question is undefined, return a fallback UI
+  if (!question || !question.type) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto px-4 py-6"
+      >
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 text-center">
+          <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Question Data Error</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            There was a problem loading this question. Please try again or continue to the next question.
+          </p>
+          <Button onClick={() => onAnswerSubmit('error', 'Question could not be loaded')}>
+            Continue
+          </Button>
+        </div>
+      </motion.div>
+    );
+  }
+
   const [answer, setAnswer] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);

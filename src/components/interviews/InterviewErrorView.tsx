@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Info, Database, ShieldAlert, ArrowLeftCircle } from 'lucide-react';
+import { AlertCircle, Info, Database, ShieldAlert, ArrowLeftCircle, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
 interface InterviewErrorViewProps {
   error: string;
   onRetry: () => void;
-  errorType?: 'profile' | 'general' | 'permissions';
+  errorType?: 'profile' | 'general' | 'permissions' | 'data';
 }
 
 export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({ 
@@ -29,6 +29,8 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
         return <Info className="h-12 w-12 text-blue-500" />;
       case 'permissions':
         return <ShieldAlert className="h-12 w-12 text-red-500" />;
+      case 'data':
+        return <Database className="h-12 w-12 text-yellow-500" />;
       default:
         return <AlertCircle className="h-12 w-12 text-orange-500" />;
     }
@@ -40,6 +42,8 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
         return 'Profile Setup Required';
       case 'permissions':
         return 'Database Permission Error';
+      case 'data':
+        return 'Interview Data Error';
       default:
         return 'Interview Error';
     }
@@ -48,6 +52,10 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
   const getErrorDescription = () => {
     if (errorType === 'permissions') {
       return "There was a database permissions error. This typically happens when the database security policies are preventing the operation. Please try again or contact support if the issue persists.";
+    }
+    
+    if (errorType === 'data') {
+      return "There was an error with the interview data. This could happen if questions weren't properly loaded or if the session data became corrupted. Please try starting a new interview session.";
     }
     
     if (error.includes("row-level security") || error.includes("violates row-level security policy")) {
@@ -75,6 +83,16 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
             className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-300"
           >
             Login Again
+          </Button>
+        );
+      case 'data':
+        return (
+          <Button 
+            onClick={() => navigate('/interviews')}
+            className="px-6 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-all duration-300"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Start New Interview
           </Button>
         );
       default:

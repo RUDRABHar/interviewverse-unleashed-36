@@ -114,7 +114,22 @@ export const InterviewInProgress: React.FC = () => {
 
   // Get the current question
   const currentQuestionIndex = Object.keys(session.answers).length;
+  
+  // Check if we've answered all questions - if so, navigate to completion page
+  if (currentQuestionIndex >= session.questions.length) {
+    // We've completed all questions - show loading state before redirection
+    return <LoadingScreen message="Processing your interview results..." />;
+  }
+  
   const currentQuestion = session.questions[currentQuestionIndex];
+  
+  // Safety check - if somehow currentQuestion is undefined, show an error
+  if (!currentQuestion) {
+    return <InterviewErrorView 
+      error="Unable to load the current question. There might be an issue with the interview data." 
+      onRetry={handleRetry}
+    />;
+  }
 
   // Render the interview
   return (
