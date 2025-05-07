@@ -54,12 +54,12 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				interview: {
-					primary: '#4D47C3',
+					primary: '#FF6B00',
 					blue: '#3B82F6',
-					violet: '#8B5CF6',
+					violet: '#805AD5',
 					indigo: '#6366F1',
 					light: '#EEF2FF',
-					dark: '#2D3748',
+					dark: '#1C1C1E',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -114,13 +114,14 @@ export default {
 			},
 			backgroundImage: {
 				'hero-pattern': 'url("/hero-pattern.svg")',
-				'gradient-primary': 'linear-gradient(90deg, #4D47C3 0%, #8B5CF6 100%)',
-				'gradient-blue': 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)'
+				'gradient-primary': 'linear-gradient(90deg, #FF6B00 0%, #FF9A57 100%)',
+				'gradient-blue': 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)',
+				'gradient-violet': 'linear-gradient(90deg, #805AD5 0%, #9F7AEA 100%)'
 			},
 			boxShadow: {
-				'glow': '0 0 15px rgba(139, 92, 246, 0.5)',
+				'glow': '0 0 15px rgba(255, 107, 0, 0.5)',
 				'card': '0 10px 30px rgba(0, 0, 0, 0.1)',
-				'button': '0 4px 14px rgba(139, 92, 246, 0.25)'
+				'button': '0 4px 14px rgba(255, 107, 0, 0.25)'
 			},
 			fontFamily: {
 				'sans': ['Inter', 'sans-serif'],
