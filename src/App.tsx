@@ -10,6 +10,9 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Onboarding from "./pages/Onboarding";
 import Interviews from "./pages/Interviews";
+import { InterviewInProgress } from "./components/interviews/InterviewInProgress";
+import { InterviewComplete } from "./components/interviews/InterviewComplete";
+import { InterviewDisqualified } from "./components/interviews/InterviewDisqualified";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +27,9 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/interviews" element={<Interviews />} />
+          <Route path="/interviews/active/:id" element={<InterviewInProgress />} />
+          <Route path="/interviews/complete/:id" element={<InterviewComplete />} />
+          <Route path="/interviews/disqualified/:id" element={<InterviewDisqualified />} />
           <Route path="/onboarding" element={<Onboarding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

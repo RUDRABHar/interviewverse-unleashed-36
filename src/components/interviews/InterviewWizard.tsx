@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckIcon, ArrowRight, ArrowLeft, RotateCcw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
@@ -17,6 +19,7 @@ const stepVariants = {
 };
 
 export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selections, setSelections] = useState({
     types: [] as string[],
@@ -48,7 +51,8 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
     if (currentStep < totalSteps) {
       setCurrentStep(prev => prev + 1);
     } else {
-      onComplete();
+      // Final step - start interview
+      startInterview();
     }
   };
   
@@ -68,6 +72,31 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
       language: 'english',
       mode: 'ai-only'
     });
+  };
+  
+  const startInterview = () => {
+    // Validate selections
+    if (selections.types.length === 0) {
+      toast.error("Please select at least one interview type");
+      return;
+    }
+    
+    try {
+      // Generate a unique ID for this interview
+      const interviewId = `interview-${Date.now()}`;
+      
+      // Store interview configuration in localStorage (in a real app, this would go to a database)
+      localStorage.setItem(`interview_config_${interviewId}`, JSON.stringify(selections));
+      
+      // Notify parent component that configuration is complete
+      onComplete();
+      
+      // Navigate to the interview screen
+      navigate(`/interviews/active/${interviewId}`);
+    } catch (error) {
+      console.error("Error starting interview:", error);
+      toast.error("Failed to start interview. Please try again.");
+    }
   };
   
   const interviewTypes = [
