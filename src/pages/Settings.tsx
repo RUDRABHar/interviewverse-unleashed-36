@@ -24,7 +24,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -83,6 +82,7 @@ const Settings: React.FC = () => {
     loading,
     saving,
     userSettings,
+    setUserSettings,
     updateProfile,
     updatePreferences,
     updateNotifications,
@@ -151,6 +151,32 @@ const Settings: React.FC = () => {
       </div>
     );
   }
+
+  // Handler for updating full name input
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (userSettings && setUserSettings) {
+      setUserSettings({
+        ...userSettings,
+        profile: {
+          ...userSettings.profile,
+          full_name: e.target.value
+        }
+      });
+    }
+  };
+
+  // Handler for updating preferred language
+  const handleLanguageChange = (value: string) => {
+    if (userSettings && setUserSettings) {
+      setUserSettings({
+        ...userSettings,
+        profile: {
+          ...userSettings.profile,
+          preferred_language: value
+        }
+      });
+    }
+  };
 
   return (
     <motion.div 
@@ -224,15 +250,7 @@ const Settings: React.FC = () => {
                     <Input 
                       id="fullName"
                       value={userSettings.profile.full_name || ''}
-                      onChange={(e) => {
-                        setUserSettings({
-                          ...userSettings,
-                          profile: {
-                            ...userSettings.profile,
-                            full_name: e.target.value
-                          }
-                        });
-                      }}
+                      onChange={handleFullNameChange}
                       placeholder="Your full name" 
                     />
                   </div>
@@ -254,15 +272,7 @@ const Settings: React.FC = () => {
                     <Label htmlFor="language">Preferred Language</Label>
                     <Select
                       value={userSettings.profile.preferred_language}
-                      onValueChange={(value) => {
-                        setUserSettings({
-                          ...userSettings,
-                          profile: {
-                            ...userSettings.profile,
-                            preferred_language: value
-                          }
-                        });
-                      }}
+                      onValueChange={handleLanguageChange}
                     >
                       <SelectTrigger id="language">
                         <SelectValue placeholder="Select language" />

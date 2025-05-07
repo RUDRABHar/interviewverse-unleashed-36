@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/components/ui/toaster';
+import { useToast } from '@/hooks/use-toast';
 
 interface UserProfile {
   id: string;
@@ -42,6 +41,7 @@ export interface UserSettings {
 }
 
 export const useUserSettings = (userId: string | undefined) => {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [userSettings, setUserSettings] = useState<UserSettings | null>(null);
@@ -314,6 +314,7 @@ export const useUserSettings = (userId: string | undefined) => {
     loading,
     saving,
     userSettings,
+    setUserSettings, // Make sure we're exporting this function
     updateProfile,
     updatePreferences,
     updateNotifications,

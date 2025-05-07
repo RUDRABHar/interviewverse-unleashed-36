@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/components/ui/toaster';
+import { useToast } from '@/hooks/use-toast';
 
 export interface FAQItem {
   id: string;
@@ -29,6 +29,7 @@ export interface ChatMessage {
 }
 
 export const useSupportCenter = (userId: string | undefined) => {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
