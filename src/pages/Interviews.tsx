@@ -27,7 +27,7 @@ const Interviews = () => {
     activeTab = 'all', // Provide default value
     handleTabChange = () => {}, // Provide default function
     refreshInterviews = () => {} // Provide default function
-  } = useInterviewsList(user);
+  } = useInterviewsList(user) || {}; // Handle case where hook returns undefined
 
   // Fetch user data
   useEffect(() => {
@@ -104,10 +104,10 @@ const Interviews = () => {
             
             <InterviewsContent
               tabs={tabs || []}
-              activeTab={activeTab}
+              activeTab={activeTab || 'all'}
               loading={interviewsLoading}
               interviews={interviews || []}
-              onTabChange={handleTabChange}
+              onTabChange={handleTabChange || (() => {})}
             />
           </main>
         </div>

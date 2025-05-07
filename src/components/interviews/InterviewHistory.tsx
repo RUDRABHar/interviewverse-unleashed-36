@@ -56,7 +56,7 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
   ];
   
   // Filter interviews based on selected filter
-  const filteredInterviews = mockInterviews
+  const filteredInterviews = Array.isArray(mockInterviews) ? mockInterviews
     .filter(interview => {
       if (filter !== 'all' && interview.status !== filter) return false;
       if (typeFilter !== 'all' && !interview.types.includes(typeFilter)) return false;
@@ -69,7 +69,7 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
       if (sortBy === 'highest') return b.score - a.score;
       if (sortBy === 'lowest') return a.score - b.score;
       return 0;
-    });
+    }) : [];
   
   return (
     <PremiumCard 
@@ -122,7 +122,7 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
       
       {/* Interview Cards or Empty State */}
       <div className="relative z-10">
-        {filteredInterviews.length > 0 ? (
+        {Array.isArray(filteredInterviews) && filteredInterviews.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredInterviews.map(interview => (
               <InterviewCard key={interview.id} interview={interview} />

@@ -67,7 +67,7 @@ export const useInterviewsList = (user: any) => {
 
   return {
     loading,
-    interviews,
+    interviews: interviews || [],
     tabs,
     activeTab,
     handleTabChange,
