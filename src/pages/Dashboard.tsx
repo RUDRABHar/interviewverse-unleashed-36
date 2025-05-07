@@ -20,8 +20,12 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/ui/design-system/animations';
-import GlassCard from '@/components/ui/design-system/GlassCard';
+import PremiumCard from '@/components/ui/design-system/PremiumCard';
 import GradientButton from '@/components/ui/design-system/GradientButton';
+import EnhancedParticles from '@/components/ui/design-system/EnhancedParticles';
+
+// Import the new CSS styles
+import '@/styles/gradients.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -148,16 +152,27 @@ const Dashboard = () => {
   }];
   
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="flex flex-col items-center space-y-4">
           <div className="h-16 w-16 border-t-4 border-b-4 border-orange-500 rounded-full animate-spin"></div>
           <div className="text-white font-sora text-xl">Loading your dashboard...</div>
         </div>
-      </div>;
+      </div>
+    );
   }
   
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen w-full bg-gradient-luxury dark:from-gray-900 dark:to-gray-800">
+      <EnhancedParticles
+        count={20}
+        minSize={4}
+        maxSize={12}
+        depth={true}
+        speed={30}
+        className="opacity-50"
+      />
+      
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <DashboardSidebar />
@@ -167,7 +182,7 @@ const Dashboard = () => {
             
             <main className="flex-1 overflow-auto p-4 md:p-6">
               <motion.div 
-                className="max-w-7xl mx-auto space-y-6"
+                className="max-w-7xl mx-auto space-y-8"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -178,36 +193,58 @@ const Dashboard = () => {
                 
                 {/* Recent Interview Activity */}
                 <motion.section variants={itemVariants}>
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Recent Interview Activity</h2>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 font-sora">Recent Interview Activity</h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => (
                       <ActivityCard key={activity.id} activity={activity} />
                     )) : (
-                      <GlassCard className="col-span-full" glassOpacity="medium" hoverEffect>
+                      <PremiumCard className="col-span-full" glassOpacity="medium" hoverEffect>
                         <CardContent className="flex flex-col items-center justify-center py-10">
-                          <div className="w-32 h-32 mb-4 bg-interview-primary/10 rounded-full flex items-center justify-center">
-                            <BarChart className="w-16 h-16 text-interview-primary/70" />
-                          </div>
-                          <h3 className="text-xl font-medium text-gray-700 dark:text-gray-200 mb-2 font-sora">
+                          <motion.div 
+                            className="w-36 h-36 mb-4 bg-interview-primary/10 dark:bg-interview-primary/20 rounded-full flex items-center justify-center"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                          >
+                            <motion.div
+                              initial={{ scale: 0.8 }}
+                              animate={{ scale: 1 }}
+                              transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                            >
+                              <BarChart className="w-16 h-16 text-interview-primary dark:text-interview-primary/80" />
+                            </motion.div>
+                          </motion.div>
+                          <h3 className="text-2xl font-medium text-gray-700 dark:text-gray-200 mb-3 font-sora">
                             Your journey starts here. No interviews yet.
                           </h3>
-                          <GradientButton className="mt-4 group">
+                          <p className="text-muted-foreground mb-6 max-w-md text-center">
+                            Complete your first interview to see your performance data and get personalized recommendations.
+                          </p>
+                          <GradientButton className="group">
                             Start Your First Interview
-                            <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                            <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                           </GradientButton>
                         </CardContent>
-                      </GlassCard>
+                      </PremiumCard>
                     )}
                   </div>
                 </motion.section>
                 
                 {/* Data Visualizations */}
                 <motion.section variants={itemVariants}>
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Your Performance Insights</h2>
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 font-sora">Your Performance Insights</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <GlassCard glassOpacity="light" hoverEffect borderEffect>
+                    <PremiumCard glassOpacity="light" hoverEffect borderEffect gradientBorder>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Progress Over Time</CardTitle>
+                        <CardTitle className="text-xl font-sora flex items-center">
+                          <motion.div
+                            animate={{ y: [0, -3, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="mr-2"
+                          >
+                            <BarChart3 className="h-5 w-5 text-interview-primary" />
+                          </motion.div>
+                          Progress Over Time
+                        </CardTitle>
                         <CardDescription>Your performance trajectory</CardDescription>
                       </CardHeader>
                       <CardContent className="pt-0">
@@ -215,11 +252,20 @@ const Dashboard = () => {
                           <PerformanceChart />
                         </div>
                       </CardContent>
-                    </GlassCard>
+                    </PremiumCard>
                     
-                    <GlassCard glassOpacity="light" hoverEffect borderEffect>
+                    <PremiumCard glassOpacity="light" hoverEffect borderEffect gradientBorder>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Skill Mapping</CardTitle>
+                        <CardTitle className="text-xl font-sora flex items-center">
+                          <motion.div
+                            animate={{ rotate: [-5, 5, -5] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="mr-2"
+                          >
+                            <Lightbulb className="h-5 w-5 text-interview-primary" />
+                          </motion.div>
+                          Skill Mapping
+                        </CardTitle>
                         <CardDescription>Your strengths and areas to improve</CardDescription>
                       </CardHeader>
                       <CardContent className="pt-0">
@@ -227,11 +273,20 @@ const Dashboard = () => {
                           <SkillsRadarChart />
                         </div>
                       </CardContent>
-                    </GlassCard>
+                    </PremiumCard>
                     
-                    <GlassCard glassOpacity="light" hoverEffect borderEffect>
+                    <PremiumCard glassOpacity="light" hoverEffect borderEffect gradientBorder>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Interview Categories</CardTitle>
+                        <CardTitle className="text-xl font-sora flex items-center">
+                          <motion.div
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="mr-2"
+                          >
+                            <BarChart className="h-5 w-5 text-interview-primary" />
+                          </motion.div>
+                          Interview Categories
+                        </CardTitle>
                         <CardDescription>Types of interviews you've practiced</CardDescription>
                       </CardHeader>
                       <CardContent className="pt-0">
@@ -239,13 +294,13 @@ const Dashboard = () => {
                           <InterviewTypeChart />
                         </div>
                       </CardContent>
-                    </GlassCard>
+                    </PremiumCard>
                   </div>
                 </motion.section>
                 
                 {/* AI-Powered Recommendations */}
                 <motion.section variants={itemVariants}>
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 font-sora">
                     AI-Powered Recommendations
                   </h2>
                   <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
@@ -259,7 +314,7 @@ const Dashboard = () => {
                 <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Upcoming Interviews */}
                   <div className="lg:col-span-2">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-6">
                       <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 font-sora">
                         Upcoming Interviews
                       </h2>
@@ -267,8 +322,8 @@ const Dashboard = () => {
                         variant="outline" 
                         size="sm" 
                         asChild
-                        gradientFrom="from-interview-blue/20" 
-                        gradientTo="to-interview-blue/20"
+                        gradientFrom="from-interview-blue/10" 
+                        gradientTo="to-interview-blue/10"
                         className="bg-white dark:bg-gray-800 text-interview-blue border border-interview-blue/30"
                       >
                         <Link to="/schedule" className="flex items-center gap-1">
@@ -278,14 +333,14 @@ const Dashboard = () => {
                       </GradientButton>
                     </div>
                     
-                    <GlassCard glassOpacity="light">
+                    <PremiumCard glassOpacity="light" variant="elevated">
                       {user && <UpcomingInterviews userId={user.id} limit={3} />}
-                    </GlassCard>
+                    </PremiumCard>
                   </div>
                   
                   {/* Pro Upgrade CTA */}
                   <div>
-                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
+                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 font-sora">
                       Upgrade
                     </h2>
                     <ProUpgradeCard />

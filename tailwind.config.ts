@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -93,6 +92,24 @@ export default {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
 				},
+				'float-slow': {
+					'0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+					'50%': { transform: 'translateY(-15px) rotate(1deg)' }
+				},
+				'shimmer': {
+					'0%': { backgroundPosition: '-500% 0' },
+					'100%': { backgroundPosition: '500% 0' }
+				},
+				'aurora': {
+					'0%, 100%': { 
+						backgroundPosition: '0% 50%',
+						backgroundSize: '200% 200%'
+					},
+					'50%': { 
+						backgroundPosition: '100% 50%',
+						backgroundSize: '200% 200%'
+					}
+				},
 				'pulse-soft': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
@@ -161,6 +178,9 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'float': 'float 6s ease-in-out infinite',
+				'float-slow': 'float-slow 8s ease-in-out infinite',
+				'shimmer': 'shimmer 8s ease-in-out infinite',
+				'aurora': 'aurora 15s ease-in-out infinite',
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
 				'gradient-flow': 'gradient-flow 6s ease infinite',
 				'spin-slow': 'spin-slow 10s linear infinite',
@@ -176,6 +196,9 @@ export default {
 				'gradient-blue': 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)',
 				'gradient-violet': 'linear-gradient(90deg, #805AD5 0%, #9F7AEA 100%)',
 				'gradient-purple-blue': 'linear-gradient(135deg, #9b87f5 0%, #0EA5E9 100%)',
+				'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
+				'gradient-luxury': 'linear-gradient(135deg, rgba(249, 249, 255, 0.8) 0%, rgba(241, 241, 254, 0.8) 100%)',
+				'gradient-premium': 'linear-gradient(135deg, #ffffff 0%, #f9f9ff 100%)'
 			},
 			boxShadow: {
 				'glow': '0 0 15px rgba(155, 135, 245, 0.5)',
@@ -183,6 +206,8 @@ export default {
 				'button': '0 4px 14px rgba(155, 135, 245, 0.25)',
 				'glass': '0 8px 32px rgba(0, 0, 0, 0.08)',
 				'glass-dark': '0 8px 32px rgba(0, 0, 0, 0.3)',
+				'luxury': '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 5px 15px -5px rgba(0, 0, 0, 0.05)',
+				'luxury-lg': '0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.01)'
 			},
 			fontFamily: {
 				'sans': ['Inter', 'sans-serif'],
