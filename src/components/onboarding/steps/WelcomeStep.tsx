@@ -9,47 +9,29 @@ interface WelcomeStepProps {
 
 const WelcomeStep = ({ onboardingData, updateOnboardingData }: WelcomeStepProps) => {
   return (
-    <div className="text-center py-10">
+    <div className="py-6 text-center">
       <div className="mb-6">
-        <div className="relative w-24 h-24 mx-auto mb-4">
-          {/* AI avatar with pulsing animation */}
-          <div className="w-full h-full rounded-full bg-gradient-primary shadow-glow animate-pulse-soft flex items-center justify-center">
-            <span className="text-white text-xl font-semibold">AI</span>
-          </div>
-          {/* Orbiting particles */}
-          <div className="absolute top-0 left-0 w-full h-full">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-3 h-3 bg-interview-violet rounded-full opacity-70"
-                style={{
-                  animation: `float ${4 + i}s infinite ease-in-out ${i * 0.8}s`,
-                  top: `${10 + i * 30}%`,
-                  left: `${70 + i * 10}%`
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-4">
+          Welcome to <span className="text-[#FF6B00]">InterviewXpert</span>
+        </h1>
+        <p className="text-xl text-gray-600 max-w-lg mx-auto">
+          Master Your Dream Job with the Power of AI.
+        </p>
       </div>
-
-      <h1 className="text-3xl font-sora font-bold mb-4">
-        Welcome to <span className="gradient-text">InterviewXpert</span>
-      </h1>
       
-      <p className="text-gray-700 mb-8 max-w-md mx-auto">
-        Let's customize your experience so we can create the perfect mock interviews just for you. This will only take a minute.
-      </p>
-
-      <div className="flex justify-center">
-        <div className="w-12 h-12 relative">
-          {/* Animated arrow pointing down */}
-          <div className="w-full h-full flex items-center justify-center animate-bounce">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 4V20M12 20L5 13M12 20L19 13" stroke="#4D47C3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
+      <div className="my-10">
+        <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-[#FF6B00]/10 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
         </div>
+        
+        <p className="text-gray-600 max-w-md mx-auto">
+          Let's personalize your experience so we can provide the most relevant interview practice and feedback.
+        </p>
       </div>
     </div>
   );

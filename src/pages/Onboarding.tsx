@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { ParticlesBackground } from '@/components/auth/ParticlesBackground';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import { toast } from '@/hooks/use-toast';
 
@@ -70,20 +69,14 @@ const Onboarding = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-interview-primary font-sora text-xl">Loading...</div>
+        <div className="animate-pulse text-[#FF6B00] text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-12 overflow-hidden">
-      <ParticlesBackground />
-      
-      {session && (
-        <div className="z-10 w-full max-w-3xl">
-          <OnboardingWizard userId={session.user.id} />
-        </div>
-      )}
+    <div className="min-h-screen w-full overflow-hidden">
+      {session && <OnboardingWizard userId={session.user.id} />}
     </div>
   );
 };
