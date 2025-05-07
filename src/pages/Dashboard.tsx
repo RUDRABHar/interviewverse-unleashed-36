@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,36 +15,34 @@ import { InterviewTypeChart } from '@/components/dashboard/InterviewTypeChart';
 import { UpcomingInterview } from '@/components/dashboard/UpcomingInterview';
 import { ProUpgradeCard } from '@/components/dashboard/ProUpgradeCard';
 import { SidebarProvider } from '@/components/ui/sidebar';
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [interviewActivities, setInterviewActivities] = useState([]);
-
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: {
+          session
+        }
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate('/auth');
         return;
       }
-      
       setUser(session.user);
-      
+
       // Fetch user profile
       if (session.user) {
-        const { data: profile, error } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-          
+        const {
+          data: profile,
+          error
+        } = await supabase.from('user_profiles').select('*').eq('id', session.user.id).single();
         if (!error && profile) {
           setProfile(profile);
-          
+
           // Redirect to onboarding if not completed
           if (!profile.onboarding_completed) {
             navigate('/onboarding');
@@ -53,98 +50,82 @@ const Dashboard = () => {
           }
         }
       }
-      
       setLoading(false);
     };
-    
     checkAuth();
-    
+
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: {
+        subscription
+      }
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         navigate('/auth');
       }
     });
-    
     return () => subscription.unsubscribe();
   }, [navigate]);
 
   // Sample data for charts and cards
-  const mockRecentActivity = [
-    {
-      id: '1',
-      title: 'React JS Technical Round',
-      score: 78,
-      result: 'Pass',
-      mode: 'AI',
-      status: 'Completed',
-      time: '32 mins',
-      date: '2025-05-01'
-    },
-    {
-      id: '2',
-      title: 'System Design Interview',
-      score: 65,
-      result: 'Needs Improvement',
-      mode: 'AI',
-      status: 'Completed',
-      time: '45 mins',
-      date: '2025-04-28'
-    }
-  ];
-
-  const mockRecommendations = [
-    {
-      id: '1',
-      type: 'challenge',
-      title: 'Try this next',
-      content: 'Practice handling behavioral questions about conflict resolution',
-      icon: <ArrowUpRight className="h-5 w-5 text-orange-500" />
-    },
-    {
-      id: '2',
-      type: 'tip',
-      title: 'Daily Tip',
-      content: 'Speak 15% slower for clarity and to avoid rushing through important points',
-      icon: <Lightbulb className="h-5 w-5 text-purple-500" />
-    },
-    {
-      id: '3',
-      type: 'improvement',
-      title: 'Profile Suggestion',
-      content: 'Add more details about your recent project to strengthen your portfolio',
-      icon: <ChevronRight className="h-5 w-5 text-blue-500" />
-    }
-  ];
-
-  const mockUpcomingInterviews = [
-    {
-      id: '1',
-      title: 'Frontend Developer Mock Interview',
-      datetime: '2025-05-10T13:00:00',
-      type: 'Technical'
-    },
-    {
-      id: '2',
-      title: 'Leadership Skills Assessment',
-      datetime: '2025-05-15T15:30:00',
-      type: 'Behavioral'
-    }
-  ];
-
+  const mockRecentActivity = [{
+    id: '1',
+    title: 'React JS Technical Round',
+    score: 78,
+    result: 'Pass',
+    mode: 'AI',
+    status: 'Completed',
+    time: '32 mins',
+    date: '2025-05-01'
+  }, {
+    id: '2',
+    title: 'System Design Interview',
+    score: 65,
+    result: 'Needs Improvement',
+    mode: 'AI',
+    status: 'Completed',
+    time: '45 mins',
+    date: '2025-04-28'
+  }];
+  const mockRecommendations = [{
+    id: '1',
+    type: 'challenge',
+    title: 'Try this next',
+    content: 'Practice handling behavioral questions about conflict resolution',
+    icon: <ArrowUpRight className="h-5 w-5 text-orange-500" />
+  }, {
+    id: '2',
+    type: 'tip',
+    title: 'Daily Tip',
+    content: 'Speak 15% slower for clarity and to avoid rushing through important points',
+    icon: <Lightbulb className="h-5 w-5 text-purple-500" />
+  }, {
+    id: '3',
+    type: 'improvement',
+    title: 'Profile Suggestion',
+    content: 'Add more details about your recent project to strengthen your portfolio',
+    icon: <ChevronRight className="h-5 w-5 text-blue-500" />
+  }];
+  const mockUpcomingInterviews = [{
+    id: '1',
+    title: 'Frontend Developer Mock Interview',
+    datetime: '2025-05-10T13:00:00',
+    type: 'Technical'
+  }, {
+    id: '2',
+    title: 'Leadership Skills Assessment',
+    datetime: '2025-05-15T15:30:00',
+    type: 'Behavioral'
+  }];
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="flex flex-col items-center space-y-4">
           <div className="h-16 w-16 border-t-4 border-b-4 border-orange-500 rounded-full animate-spin"></div>
           <div className="text-white font-sora text-xl">Loading your dashboard...</div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <DashboardSidebar />
         
@@ -159,12 +140,7 @@ const Dashboard = () => {
               <section>
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Recent Interview Activity</h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {mockRecentActivity.length > 0 ? (
-                    mockRecentActivity.map(activity => (
-                      <ActivityCard key={activity.id} activity={activity} />
-                    ))
-                  ) : (
-                    <Card className="col-span-full bg-white dark:bg-gray-800 shadow-lg border-0">
+                  {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => <ActivityCard key={activity.id} activity={activity} />) : <Card className="col-span-full bg-white dark:bg-gray-800 shadow-lg border-0">
                       <CardContent className="flex flex-col items-center justify-center py-10">
                         <div className="w-32 h-32 mb-4">
                           <img src="/placeholder.svg" alt="No interviews yet" className="w-full h-full" />
@@ -176,8 +152,7 @@ const Dashboard = () => {
                           Start Your First Interview
                         </Button>
                       </CardContent>
-                    </Card>
-                  )}
+                    </Card>}
                 </div>
               </section>
               
@@ -229,9 +204,7 @@ const Dashboard = () => {
                   AI-Powered Recommendations
                 </h2>
                 <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                  {mockRecommendations.map(recommendation => (
-                    <RecommendationCard key={recommendation.id} recommendation={recommendation} />
-                  ))}
+                  {mockRecommendations.map(recommendation => <RecommendationCard key={recommendation.id} recommendation={recommendation} />)}
                 </div>
               </section>
               
@@ -243,23 +216,17 @@ const Dashboard = () => {
                     Upcoming Interviews
                   </h2>
                   <div className="space-y-4">
-                    {mockUpcomingInterviews.map(interview => (
-                      <UpcomingInterview key={interview.id} interview={interview} />
-                    ))}
+                    {mockUpcomingInterviews.map(interview => <UpcomingInterview key={interview.id} interview={interview} />)}
                   </div>
                 </div>
                 
                 {/* Pro Upgrade CTA */}
-                <div className="lg:col-span-1">
-                  <ProUpgradeCard />
-                </div>
+                
               </div>
             </div>
           </main>
         </div>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default Dashboard;
