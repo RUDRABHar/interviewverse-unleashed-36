@@ -45,14 +45,21 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
   // Format date safely with validation
   const formatDateSafely = (dateString: string, formatStr: string) => {
     try {
+      // Check if dateString is valid
+      if (!dateString || dateString === 'Invalid date') {
+        return 'N/A';
+      }
+      
       const date = new Date(dateString);
+      
       // Check if date is valid
       if (isNaN(date.getTime())) {
         return 'Invalid date';
       }
+      
       return format(date, formatStr);
     } catch (error) {
-      console.error("Error formatting date:", error);
+      console.error("Error formatting date:", error, "Date string was:", dateString);
       return 'Invalid date';
     }
   };
