@@ -8,7 +8,7 @@ import {
   BookOpen, 
   Settings, 
   HelpCircle,
-  Calendar,
+  FileText,
   User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -39,13 +39,13 @@ export const DashboardSidebar = () => {
       icon: MessageSquare,
       label: 'My Interviews',
       href: '/interviews',
-      active: currentPath.includes('/interviews')
+      active: currentPath === '/interviews'
     },
     {
-      icon: Calendar,
-      label: 'Practice Sets',
-      href: '/practice',
-      active: currentPath.includes('/practice')
+      icon: FileText,
+      label: 'Test History',
+      href: '/test-history',
+      active: currentPath === '/test-history'
     },
     {
       icon: User,

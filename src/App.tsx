@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
 import Interviews from './pages/Interviews';
 import Analytics from './pages/Analytics';
+import TestHistory from './pages/TestHistory';
 import { InterviewInProgress } from './components/interviews/InterviewInProgress';
 import NotFound from './pages/NotFound';
 import { InterviewComplete } from './components/interviews/InterviewComplete';
@@ -21,6 +22,7 @@ function App() {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/interviews" element={<Interviews />} />
       <Route path="/analytics" element={<Analytics />} />
+      <Route path="/test-history" element={<TestHistory />} />
       <Route path="/interviews/:id" element={<InterviewInProgress />} />
       <Route path="/interviews/active/:id" element={<InterviewInProgress />} />
       <Route path="/interviews/complete/:id" element={<InterviewComplete />} />
