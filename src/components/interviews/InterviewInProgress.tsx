@@ -61,10 +61,15 @@ export const InterviewInProgress: React.FC = () => {
 
   // Show error view if something went wrong
   if (error || !session) {
+    // Check if error is related to permissions/RLS
+    const isPermissionError = error?.includes('row-level security') || 
+                              error?.includes('violates row-level security policy') || 
+                              error?.includes('Failed to store interview questions');
+
     return <InterviewErrorView 
       error={error || "Session not found"} 
       onRetry={handleRetry} 
-      errorType={errorType}
+      errorType={isPermissionError ? 'permissions' : errorType}
     />;
   }
 

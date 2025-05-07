@@ -45,7 +45,7 @@ interface UseInterviewSessionResult {
   session: InterviewSession | null;
   loading: boolean;
   error: string | null;
-  errorType?: 'profile' | 'general';
+  errorType?: 'profile' | 'general' | 'permissions';
   dbSessionId: string | null;
   generatingQuestions: boolean;
   handleAnswerSubmit: (questionId: string, answer: string, isCorrect?: boolean) => Promise<void>;
@@ -57,7 +57,7 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [errorType, setErrorType] = useState<'profile' | 'general'>('general');
+  const [errorType, setErrorType] = useState<'profile' | 'general' | 'permissions'>('general');
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [generatingQuestions, setGeneratingQuestions] = useState(true);
@@ -117,6 +117,7 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
             setErrorType('profile');
           } else {
             setError(`Failed to create interview session: ${sessionError.message}`);
+            setErrorType('general');
           }
           setLoading(false);
           setGeneratingQuestions(false);
@@ -153,7 +154,25 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
 
           if (questionsError) {
             console.error("Error storing questions:", questionsError);
-            throw new Error("Failed to store interview questions");
+            
+            // Check if this is a permission/RLS error
+            if (questionsError.message?.includes('violates row-level security policy') || 
+                questionsError.message?.includes('new row violates row-level security policy')) {
+              setError("Failed to store interview questions: Database permission error");
+              setErrorType('permissions');
+              
+              // Update the session status to error
+              if (sessionData?.id) {
+                await supabase
+                  .from('interview_sessions')
+                  .update({ status: 'error' })
+                  .eq('id', sessionData.id);
+              }
+              
+              throw new Error("Failed to store interview questions due to database permissions");
+            } else {
+              throw new Error("Failed to store interview questions");
+            }
           }
           
           // Create session object
@@ -175,7 +194,18 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
         } catch (err: any) {
           console.error("Error generating interview questions:", err);
           toast.error("Error generating interview questions");
-          setError(`Failed to generate questions: ${err.message}`);
+          
+          // Check if this is a permission error
+          if (err.message?.includes('violates row-level security policy') || 
+              err.message?.includes('permission') || 
+              err.message?.includes('Failed to store interview questions')) {
+            setError(`Failed to store interview questions: Database permission error`);
+            setErrorType('permissions');
+          } else {
+            setError(`Failed to generate questions: ${err.message}`);
+            setErrorType('general');
+          }
+          
           setGeneratingQuestions(false);
           
           // Update session status to error
@@ -193,8 +223,10 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
           toast.error("Error starting interview. Retrying...");
           // Let the parent component handle retry logic
           setError("Error starting interview");
+          setErrorType('general');
         } else {
           setError("Unable to start interview at the moment. Please try again later.");
+          setErrorType('general');
         }
       } finally {
         setLoading(false);

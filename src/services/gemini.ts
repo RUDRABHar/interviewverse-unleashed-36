@@ -525,6 +525,15 @@ const parseQuestionsFromResponse = (response: any, config: InterviewConfig): Que
     console.error('Error parsing questions from response:', error);
     toast.error('Failed to parse questions from the API response');
     
+    // Check if this is a database permission error
+    if (error.message?.includes('row-level security') ||
+        error.message?.includes('violates row-level security policy')) {
+      toast.error('Database permission error: Failed to store interview questions');
+      throw new Error('Failed to store interview questions due to database permissions');
+    } else {
+      toast.error('Failed to parse questions from the API response');
+    }
+    
     // In development, fall back to mock questions
     if (import.meta.env.DEV) {
       toast.warning('Using mock questions instead');
