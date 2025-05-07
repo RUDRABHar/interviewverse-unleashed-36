@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -35,8 +35,10 @@ export const AuthForm = ({
   setVerificationEmailSent
 }: AuthFormProps) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Separate password visibility states for login and signup forms
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -44,7 +46,8 @@ export const AuthForm = ({
     defaultValues: {
       email: '',
       password: ''
-    }
+    },
+    mode: 'onSubmit' // Only validate on form submission
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -54,8 +57,18 @@ export const AuthForm = ({
       email: '',
       password: '',
       confirmPassword: ''
-    }
+    },
+    mode: 'onSubmit' // Only validate on form submission
   });
+
+  // Reset forms when toggling between login and signup
+  useEffect(() => {
+    if (isLogin) {
+      signupForm.reset();
+    } else {
+      loginForm.reset();
+    }
+  }, [isLogin, loginForm, signupForm]);
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
@@ -192,7 +205,7 @@ export const AuthForm = ({
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       <FormControl>
                         <Input 
-                          type={showPassword ? "text" : "password"} 
+                          type={showLoginPassword ? "text" : "password"} 
                           placeholder="Password" 
                           className="pl-10 pr-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
                           {...field} 
@@ -200,10 +213,10 @@ export const AuthForm = ({
                       </FormControl>
                       <button 
                         type="button" 
-                        onClick={() => setShowPassword(!showPassword)} 
+                        onClick={() => setShowLoginPassword(!showLoginPassword)} 
                         className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                       >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showLoginPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
                     <FormMessage />
@@ -279,7 +292,7 @@ export const AuthForm = ({
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       <FormControl>
                         <Input 
-                          type={showPassword ? "text" : "password"} 
+                          type={showSignupPassword ? "text" : "password"} 
                           placeholder="Password" 
                           className="pl-10 pr-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
                           {...field} 
@@ -287,10 +300,10 @@ export const AuthForm = ({
                       </FormControl>
                       <button 
                         type="button" 
-                        onClick={() => setShowPassword(!showPassword)} 
+                        onClick={() => setShowSignupPassword(!showSignupPassword)} 
                         className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                       >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showSignupPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
                     <FormMessage />
@@ -307,7 +320,7 @@ export const AuthForm = ({
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       <FormControl>
                         <Input 
-                          type={showConfirmPassword ? "text" : "password"} 
+                          type={showSignupConfirmPassword ? "text" : "password"} 
                           placeholder="Confirm password" 
                           className="pl-10 pr-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
                           {...field} 
@@ -315,10 +328,10 @@ export const AuthForm = ({
                       </FormControl>
                       <button 
                         type="button" 
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                        onClick={() => setShowSignupConfirmPassword(!showSignupConfirmPassword)} 
                         className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                       >
-                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showSignupConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
                     <FormMessage />
