@@ -10,10 +10,11 @@ interface LoadingScreenProps {
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ 
   message = "Preparing your interview experience..." 
 }) => {
+  // Customize loading steps based on domain/interview type
   const loadingSteps = [
     "Analyzing your preferences...",
     "Crafting personalized questions...",
-    "Preparing interview scenarios...",
+    "Preparing domain-specific scenarios...",
     "Setting up your virtual interview..."
   ];
   

@@ -60,14 +60,43 @@ const buildDynamicPrompt = (config: InterviewConfig): string => {
 
 // Technical interview prompt template
 const buildTechnicalPrompt = (config: InterviewConfig): string => {
-  return `You are an expert interviewer for ${config.domain || 'tech'} roles. Generate ${config.questions} high-quality technical interview questions in ${config.language} suitable for a candidate with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
+  let domainContext = "";
+  
+  // Domain-specific customization
+  if (config.domain) {
+    switch (config.domain.toLowerCase()) {
+      case 'web development':
+        domainContext = "Focus on frontend/backend technologies like React, Node.js, API design, and full-stack concepts. Include questions about web performance, accessibility, and responsive design.";
+        break;
+      case 'data science':
+        domainContext = "Focus on data analysis, machine learning, statistical methods, and data visualization. Include questions about Python libraries like pandas, scikit-learn, and real-world data problems.";
+        break;
+      case 'mobile development':
+        domainContext = "Focus on mobile app architecture, React Native, Swift, Kotlin, and mobile UX/UI concepts. Include questions about performance optimization for mobile and offline capabilities.";
+        break;
+      case 'devops':
+        domainContext = "Focus on CI/CD pipelines, containerization (Docker, Kubernetes), infrastructure as code, and cloud platforms (AWS, Azure, GCP). Include questions about scaling and monitoring systems.";
+        break;
+      case 'cybersecurity':
+        domainContext = "Focus on security principles, threat modeling, encryption, penetration testing, and secure coding practices. Include questions about common vulnerabilities and mitigation strategies.";
+        break;
+      default:
+        domainContext = `Focus on ${config.domain} specific knowledge including best practices, common tools, and industry standards.`;
+    }
+  }
+
+  return `You are an expert technical interviewer for ${config.domain || 'tech'} roles. Generate ${config.questions} high-quality technical interview questions in ${config.language} suitable for a candidate with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
+
+  ${domainContext}
 
   The questions should test real-world problem-solving skills, domain expertise, algorithms, system thinking, and technical communication. Ensure questions cover a broad range of core subtopics in ${config.domain || 'the technical field'}.
   
-  Include a MIX of different question formats:
-  1. Coding questions (30-40% of questions) - Include test cases with example inputs and expected outputs
-  2. Multiple choice questions (30-40% of questions) - Include 4-5 answer choices per question and mark which one is correct (but this won't be shown to the user)
-  3. Short answer technical questions (20-40% of questions)
+  Include a MIX of different question formats with the following EXACT distribution:
+  1. Coding questions (40% of questions) - Include test cases with specific example inputs and expected outputs
+  2. Multiple choice questions (30% of questions) - Include 4-5 answer choices per question and mark which one is correct (but this won't be shown to the user)
+  3. Short answer technical questions (30% of questions)
+  
+  IMPORTANT: Make questions COMPLETELY DISTINCT from other question types like behavioral, communication, or language. Focus EXCLUSIVELY on technical skills and knowledge.
   
   Each question should be in the following format:
   - Question content: clear, structured, and concise instructions
@@ -90,17 +119,46 @@ const buildTechnicalPrompt = (config: InterviewConfig): string => {
 
 // Behavioral interview prompt template
 const buildBehavioralPrompt = (config: InterviewConfig): string => {
+  let domainContext = "";
+  
+  // Domain-specific customization
+  if (config.domain) {
+    switch (config.domain.toLowerCase()) {
+      case 'leadership':
+        domainContext = "Focus on leadership challenges, team management, mentoring junior employees, and handling complex stakeholder situations.";
+        break;
+      case 'customer service':
+        domainContext = "Focus on handling difficult customer interactions, service recovery, managing expectations, and maintaining composure under pressure.";
+        break;
+      case 'project management':
+        domainContext = "Focus on managing project deadlines, resource allocation, scope creep, and cross-functional team coordination.";
+        break;
+      case 'sales':
+        domainContext = "Focus on relationship building, negotiation scenarios, handling rejections, and adapting sales strategies to different clients.";
+        break;
+      case 'healthcare':
+        domainContext = "Focus on patient care scenarios, medical ethics, interdisciplinary collaboration, and handling sensitive health information.";
+        break;
+      default:
+        domainContext = `Focus on ${config.domain} specific behavioral scenarios including typical workplace challenges in this field.`;
+    }
+  }
+
   return `You are an HR expert conducting behavioral interviews. Generate ${config.questions} behavioral interview questions in ${config.language} for a candidate applying to a ${config.domain || 'professional'} role with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
 
+  ${domainContext}
+  
   These questions should evaluate:
   - Past behavior and mindset
   - Problem ownership and leadership potential
   - Conflict resolution and team interaction
   - Adaptability and decision-making
   
-  Include a mix of formats:
-  1. Open-ended STAR format questions (60-70% of questions) - Use answerFormat: "text"
-  2. Multiple choice scenario questions (30-40% of questions) - Include 4-5 answer choices that represent different approaches to handling a situation, with one being the most appropriate. Use answerFormat: "mcq"
+  Include a mix of formats with the following EXACT distribution:
+  1. Open-ended STAR format questions (60% of questions) - Use answerFormat: "text"
+  2. Multiple choice scenario questions (40% of questions) - Include 4-5 answer choices that represent different approaches to handling a situation, with one being the most appropriate. Use answerFormat: "mcq"
+  
+  IMPORTANT: Make questions COMPLETELY DISTINCT from other question types like technical, communication, or language. Focus EXCLUSIVELY on past behaviors and situations.
   
   Each question should follow the STAR (Situation, Task, Action, Result) framework where applicable. Avoid repetition and make questions challenging but realistic.
   
@@ -115,17 +173,47 @@ const buildBehavioralPrompt = (config: InterviewConfig): string => {
 
 // Communication skills interview prompt template
 const buildCommunicationPrompt = (config: InterviewConfig): string => {
+  let domainContext = "";
+  
+  // Domain-specific customization
+  if (config.domain) {
+    switch (config.domain.toLowerCase()) {
+      case 'marketing':
+        domainContext = "Focus on brand messaging, campaign communication, audience targeting, and persuasive content creation.";
+        break;
+      case 'teaching':
+        domainContext = "Focus on explaining complex concepts, adapting communication styles to different learning needs, and providing constructive feedback.";
+        break;
+      case 'management':
+        domainContext = "Focus on team announcements, performance reviews, delegating tasks, and building rapport with direct reports.";
+        break;
+      case 'public relations':
+        domainContext = "Focus on crisis communications, media interactions, spokesperson responsibilities, and maintaining brand voice.";
+        break;
+      case 'customer success':
+        domainContext = "Focus on onboarding communications, troubleshooting guidance, upselling conversations, and maintaining customer relationships.";
+        break;
+      default:
+        domainContext = `Focus on ${config.domain} specific communication challenges including how to effectively convey information in this field.`;
+    }
+  }
+
   return `You are assessing professional communication skills. Generate ${config.questions} interview questions in ${config.language} that evaluate communication ability for a candidate in a ${config.domain || 'professional'} role with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
 
+  ${domainContext}
+  
   The questions should assess:
   - Clarity of thought
   - Verbal articulation
   - Active listening and empathy
   - Presentation or storytelling abilities
   
-  Include a mix of formats:
-  1. Scenario-based open questions (50-60% of questions) - Use answerFormat: "text"
-  2. Multiple choice questions about communication strategies (40-50% of questions) - Include 4-5 answer choices with one best answer. Use answerFormat: "mcq"
+  Include a mix of formats with the following EXACT distribution:
+  1. Scenario-based open questions (50% of questions) - Use answerFormat: "text"
+  2. Multiple choice questions about communication strategies (30% of questions) - Include 4-5 answer choices with one best answer. Use answerFormat: "mcq"
+  3. Role-play scenarios requiring response preparation (20% of questions) - Use answerFormat: "text"
+  
+  IMPORTANT: Make questions COMPLETELY DISTINCT from other question types like technical, behavioral, or language. Focus EXCLUSIVELY on communication skills.
   
   Use realistic workplace scenarios or client-facing situations. Avoid yes/no questions.
   
@@ -140,26 +228,56 @@ const buildCommunicationPrompt = (config: InterviewConfig): string => {
 
 // Language proficiency interview prompt template
 const buildLanguagePrompt = (config: InterviewConfig): string => {
-  return `You are testing practical language proficiency of a candidate in ${config.language}. Generate ${config.questions} language-based interview questions suitable for a ${config.domain || 'professional'} professional with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
+  let domainContext = "";
+  const targetLanguage = config.language || 'English';
+  
+  // Domain-specific customization
+  if (config.domain) {
+    switch (config.domain.toLowerCase()) {
+      case 'international business':
+        domainContext = "Focus on business negotiation vocabulary, formal email writing, and cross-cultural communication norms.";
+        break;
+      case 'tourism':
+        domainContext = "Focus on hospitality phrases, local cultural knowledge explanation, and handling diverse customer requests.";
+        break;
+      case 'academia':
+        domainContext = "Focus on academic vocabulary, presenting research findings, and scholarly discussion phrases.";
+        break;
+      case 'technology':
+        domainContext = "Focus on technical documentation, explaining technical concepts to non-technical audiences, and industry-specific terminology.";
+        break;
+      case 'healthcare':
+        domainContext = "Focus on medical terminology, patient communication, and explaining treatments in accessible language.";
+        break;
+      default:
+        domainContext = `Focus on ${config.domain} specific language usage including specialized vocabulary and communication styles in this field.`;
+    }
+  }
 
+  return `You are testing practical ${targetLanguage} language proficiency of a candidate. Generate ${config.questions} language-based interview questions suitable for a ${config.domain || 'professional'} professional with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
+
+  ${domainContext}
+  
   Questions should assess:
   - Grammar, vocabulary, sentence construction
-  - Listening comprehension (if audio questions enabled)
   - Reading understanding
-  - Spoken expression and fluency
+  - Written expression
+  - Language usage in professional contexts
   
-  Include a mix of formats:
-  1. Open-ended questions requiring detailed responses (40-50%) - Use answerFormat: "text"
-  2. Multiple choice language questions (30-40%) - Include 4-5 answer choices with one correct answer. Use answerFormat: "mcq"
-  3. Audio-based response questions (20-30%) - Questions where the candidate would respond via audio. Use answerFormat: "audio"
+  Include a mix of formats with the following EXACT distribution:
+  1. Open-ended questions requiring detailed responses (40% of questions) - Use answerFormat: "text"
+  2. Multiple choice language questions (40% of questions) - Include 4-5 answer choices with one correct answer. Use answerFormat: "mcq"
+  3. Reading comprehension questions (20% of questions) - Include a short passage followed by questions. Use answerFormat: "text" or "mcq"
   
-  Use context from ${config.domain || 'the professional field'} to make it professionally relevant. Mix question types such as sentence correction, audio comprehension, short paragraph responses, and spoken tasks. Format should be suitable for digital UI delivery.
+  IMPORTANT: Make questions COMPLETELY DISTINCT from other question types like technical, behavioral, or communication. Focus EXCLUSIVELY on language proficiency.
+  
+  Use context from ${config.domain || 'the professional field'} to make it professionally relevant. Format should be suitable for digital UI delivery.
   
   Return the response as a valid JSON array of objects, where each object has these properties:
   - id: a unique string identifier
   - content: the full question text
   - type: "language"
-  - answerFormat: "text", "mcq", or "audio" depending on question type
+  - answerFormat: "text" or "mcq" depending on question type
   - options: array of strings for MCQ choices (only for MCQs)
   - correctOption: integer index of the correct option (only for MCQs)`;
 };
@@ -186,19 +304,38 @@ const buildMultiTypePrompt = (config: InterviewConfig): string => {
   const questionsPerType = Math.floor(config.questions / config.types.length);
   let remainingQuestions = config.questions % config.types.length;
   
+  // Domain-specific instructions
+  let domainInstructions = "";
+  if (config.domain) {
+    domainInstructions = `
+    Apply the following domain-specific focus based on the question type:
+    
+    - For technical questions about ${config.domain}: Focus on technical skills, tools, and knowledge specific to ${config.domain}.
+    - For behavioral questions about ${config.domain}: Focus on typical workplace situations and challenges in ${config.domain} environments.
+    - For communication questions about ${config.domain}: Focus on communication scenarios common in ${config.domain} contexts.
+    - For language questions about ${config.domain}: Focus on vocabulary and expressions commonly used in ${config.domain}.
+    
+    Each question type should be CLEARLY DISTINCT from other types, with no overlap in content or format.`;
+  }
+  
   let combinedPrompt = `Generate ${config.questions} professional interview questions divided across ${config.types.length} different question types for a ${config.domain || 'professional'} role. 
 
   Questions should be in ${config.language} and suitable for a candidate with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
+  
+  ${domainInstructions}
+  
+  IMPORTANT: Ensure that each question type is DISTINCTLY DIFFERENT from others:
+  - Technical questions should focus EXCLUSIVELY on skills, knowledge, and problem-solving
+  - Behavioral questions should focus EXCLUSIVELY on past actions and reactions to situations
+  - Communication questions should focus EXCLUSIVELY on articulation, presentation, and interpersonal skills
+  - Language questions should focus EXCLUSIVELY on grammar, vocabulary, and language usage
   
   For ALL question types, include a mix of formats:
   1. Open-ended questions requiring detailed responses - Use answerFormat: "text"
   2. Multiple choice questions - Include 4-5 answer choices with one best answer. Use answerFormat: "mcq"
   
-  For technical questions:
+  For technical questions only:
   - Include some coding questions with example test cases - Use answerFormat: "code"
-  
-  For language proficiency questions:
-  - Include some audio response questions - Use answerFormat: "audio"
   
   Please generate questions divided as follows:`;
   
@@ -216,7 +353,7 @@ const buildMultiTypePrompt = (config: InterviewConfig): string => {
   - id: a unique string identifier
   - content: the full question text
   - type: the question type (one of ${config.types.join(', ')})
-  - answerFormat: "text", "code", "mcq", or "audio" depending on question type
+  - answerFormat: "text", "code", or "mcq" depending on question type
   - options: array of strings for MCQ choices (only for MCQs)
   - correctOption: integer index of the correct option (only for MCQs)
   - testCases: array of objects with "input" and "expectedOutput" fields (only for coding questions)`;
@@ -445,11 +582,6 @@ const determineAnswerFormat = (content: string, type: string): string => {
     return 'code';
   }
   
-  if (type === 'language' || content_lower.includes('pronounce') || 
-      content_lower.includes('speak') || content_lower.includes('audio')) {
-    return 'audio';
-  }
-  
   return 'text';
 };
 
@@ -458,8 +590,6 @@ const getDefaultAnswerFormat = (type: string): string => {
   switch (type) {
     case 'technical':
       return Math.random() > 0.5 ? 'code' : 'text';
-    case 'language':
-      return Math.random() > 0.5 ? 'audio' : 'text';
     default:
       return 'text';
   }
@@ -520,9 +650,35 @@ const generateMockResponse = () => {
       },
       {
         id: "q-6",
-        content: "Record yourself pronouncing these technical terms correctly: API, SQL, HTTPS, and IoT.",
+        content: "Which of the following is the most effective way to begin a presentation to senior executives?",
+        type: "communication",
+        answerFormat: "mcq",
+        options: [
+          "Start with a lengthy introduction about yourself and your team",
+          "Begin with a detailed explanation of the methodology used",
+          "Open with the key findings and recommendations upfront",
+          "Start with an unrelated joke to break the ice"
+        ],
+        correctOption: 2
+      },
+      {
+        id: "q-7",
+        content: "Select the grammatically correct sentence:",
         type: "language",
-        answerFormat: "audio"
+        answerFormat: "mcq",
+        options: [
+          "The team discussed about the new project.",
+          "The team discussed the new project.",
+          "The team were discussing about the new project.",
+          "The team was discussing on the new project."
+        ],
+        correctOption: 1
+      },
+      {
+        id: "q-8",
+        content: "Write a professional email requesting additional resources for your project, explaining why they are necessary.",
+        type: "language",
+        answerFormat: "text"
       }
     ]
   };
@@ -539,14 +695,12 @@ const generateMockQuestions = (config: InterviewConfig): Question[] => {
     const type = questionTypes[i % questionTypes.length] as 'technical' | 'behavioral' | 'communication' | 'language';
     
     // Decide on answer format - mix it up
-    let answerFormat: 'text' | 'code' | 'mcq' | 'audio';
+    let answerFormat: 'text' | 'code' | 'mcq';
     
     if (i % 3 === 0) {
       answerFormat = 'mcq'; // Every 3rd question is MCQ
     } else if (type === 'technical' && i % 2 === 0) {
       answerFormat = 'code'; // Half of technical questions are code
-    } else if (type === 'language' && i % 2 === 0) {
-      answerFormat = 'audio'; // Half of language questions are audio
     } else {
       answerFormat = 'text'; // Default to text
     }
@@ -558,73 +712,200 @@ const generateMockQuestions = (config: InterviewConfig): Question[] => {
       answerFormat: answerFormat,
     };
     
-    // Generate question content based on type, difficulty and answer format
+    // Generate domain-specific question content
+    const domain = config.domain || 'general';
+    
+    // Generate question content based on type, domain, difficulty and answer format
     switch (type) {
       case 'technical':
-        if (answerFormat === 'mcq') {
-          question.content = 'Which of the following is NOT a valid way to declare a variable in JavaScript?';
-          question.options = [
-            'let x = 5;',
-            'const y = 10;',
-            'var z = 15;',
-            'int w = 20;'
-          ];
-          question.correctOption = 3;
-        } else if (answerFormat === 'code') {
-          question.content = 'Implement a function to find the longest substring without repeating characters.';
-          question.testCases = [
-            { input: "abcabcbb", expectedOutput: "abc" },
-            { input: "bbbbb", expectedOutput: "b" }
-          ];
+        if (domain === 'web development') {
+          if (answerFormat === 'mcq') {
+            question.content = 'Which of the following is NOT a valid CSS selector?';
+            question.options = [
+              '#myId',
+              '.myClass',
+              ':hover',
+              '/myElement/'
+            ];
+            question.correctOption = 3;
+          } else if (answerFormat === 'code') {
+            question.content = 'Write a JavaScript function that fetches data from an API and handles both success and error cases using Promises.';
+            question.testCases = [
+              { input: "fetchData('https://api.example.com/data')", expectedOutput: "Returns a promise that resolves with data or rejects with error" }
+            ];
+          } else {
+            question.content = 'Explain the difference between server-side rendering and client-side rendering in web applications.';
+          }
+        } else if (domain === 'data science') {
+          if (answerFormat === 'mcq') {
+            question.content = 'Which algorithm is most appropriate for detecting outliers in a dataset?';
+            question.options = [
+              'Linear Regression',
+              'K-means Clustering',
+              'Isolation Forest',
+              'Naive Bayes'
+            ];
+            question.correctOption = 2;
+          } else if (answerFormat === 'code') {
+            question.content = 'Write a Python function to perform a simple linear regression using NumPy.';
+            question.testCases = [
+              { input: "X = np.array([1, 2, 3, 4, 5]), y = np.array([2, 4, 5, 4, 5])", expectedOutput: "Model with slope and intercept" }
+            ];
+          } else {
+            question.content = 'Explain the bias-variance tradeoff in machine learning models.';
+          }
         } else {
-          question.content = 'Explain the differences between REST and GraphQL APIs and when you would choose one over the other.';
+          // Generic technical questions
+          if (answerFormat === 'mcq') {
+            question.content = 'Which of the following is NOT a valid way to improve algorithm efficiency?';
+            question.options = [
+              'Memoization',
+              'Using appropriate data structures',
+              'Always using recursion instead of iteration',
+              'Time-space tradeoffs'
+            ];
+            question.correctOption = 2;
+          } else if (answerFormat === 'code') {
+            question.content = 'Implement a function to check if a string is a palindrome.';
+            question.testCases = [
+              { input: "racecar", expectedOutput: "true" },
+              { input: "hello", expectedOutput: "false" }
+            ];
+          } else {
+            question.content = 'Explain the difference between HTTP and HTTPS protocols.';
+          }
         }
         break;
         
       case 'behavioral':
-        if (answerFormat === 'mcq') {
-          question.content = 'Your team is falling behind on a critical project deadline. What would be your FIRST action?';
-          question.options = [
-            'Work overtime to complete your tasks',
-            'Analyze the bottlenecks and suggest process improvements',
-            'Ask management to extend the deadline',
-            'Blame the team members who are underperforming'
-          ];
-          question.correctOption = 1;
+        if (domain === 'leadership') {
+          if (answerFormat === 'mcq') {
+            question.content = 'Your team member is consistently underperforming. What would be your first approach?';
+            question.options = [
+              'Immediately escalate to HR',
+              'Have a private conversation to understand any challenges they might be facing',
+              'Reduce their responsibilities without discussion',
+              'Ignore the issue hoping it resolves itself'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'Describe a time when you had to make a difficult decision as a leader. What was the situation, and how did you handle it?';
+          }
+        } else if (domain === 'customer service') {
+          if (answerFormat === 'mcq') {
+            question.content = 'A customer is extremely angry about a problem that was not caused by your company. What is the best approach?';
+            question.options = [
+              'Tell them it\'s not your company\'s fault',
+              'Listen empathetically, acknowledge their frustration, and offer solutions',
+              'Transfer them to another department',
+              'Ask them to calm down before you can help them'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'Tell me about a time when you went above and beyond for a customer. What was the situation and what was the outcome?';
+          }
         } else {
-          question.content = 'Tell me about a time when you had to deal with a team member who wasn\'t pulling their weight. How did you handle the situation?';
+          // Generic behavioral questions
+          if (answerFormat === 'mcq') {
+            question.content = 'Your team is falling behind on a critical project deadline. What would be your FIRST action?';
+            question.options = [
+              'Work overtime to complete your tasks',
+              'Analyze the bottlenecks and suggest process improvements',
+              'Ask management to extend the deadline',
+              'Blame the team members who are underperforming'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'Tell me about a time when you had to deal with a team member who wasn\'t pulling their weight. How did you handle the situation?';
+          }
         }
         break;
         
       case 'communication':
-        if (answerFormat === 'mcq') {
-          question.content = 'A non-technical stakeholder asks you why a feature is taking longer than expected. The best approach to communicate this is:';
-          question.options = [
-            'Provide a detailed technical explanation of all the challenges',
-            'Simply state it\'s more complicated than initially thought',
-            'Explain the key challenges in non-technical terms and provide a revised timeline',
-            'Suggest they speak to your manager instead'
-          ];
-          question.correctOption = 2;
+        if (domain === 'marketing') {
+          if (answerFormat === 'mcq') {
+            question.content = 'You need to explain a complex marketing analytics report to a non-technical client. Which approach is most effective?';
+            question.options = [
+              'Send the full technical report with all data points',
+              'Simplify key insights with visual aids and relate them to business outcomes',
+              'Have a technical specialist explain the methodology in detail',
+              'Focus only on positive results to keep the client happy'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'How would you craft a message about a product price increase to minimize negative customer reactions?';
+          }
+        } else if (domain === 'teaching') {
+          if (answerFormat === 'mcq') {
+            question.content = 'A student is struggling to understand a concept you\'ve explained multiple times. The best approach is:';
+            question.options = [
+              'Repeat the exact same explanation but louder',
+              'Try a completely different approach using visual aids or analogies',
+              'Tell them to study harder on their own time',
+              'Move on to the next topic and come back later'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'Explain how you would adapt your communication style for students with different learning preferences.';
+          }
         } else {
-          question.content = 'Explain the concept of cryptocurrency to a non-technical person in under 2 minutes.';
+          // Generic communication questions
+          if (answerFormat === 'mcq') {
+            question.content = 'A non-technical stakeholder asks you why a project is taking longer than expected. The best approach to communicate this is:';
+            question.options = [
+              'Provide a detailed technical explanation of all the challenges',
+              'Simply state it\'s more complicated than initially thought',
+              'Explain the key challenges in non-technical terms and provide a revised timeline',
+              'Suggest they speak to your manager instead'
+            ];
+            question.correctOption = 2;
+          } else {
+            question.content = 'How would you explain a complex technical concept to someone with no technical background?';
+          }
         }
         break;
         
       case 'language':
-        if (answerFormat === 'mcq') {
-          question.content = 'Which sentence is grammatically correct?';
-          question.options = [
-            'Between you and I, this project is challenging.',
-            'Between you and me, this project is challenging.',
-            'Between yourself and I, this project is challenging.',
-            'Between yourself and me, this project is challenging.'
-          ];
-          question.correctOption = 1;
-        } else if (answerFormat === 'audio') {
-          question.content = 'Record yourself explaining what you would do if you encountered a difficult technical problem that you couldn\'t solve immediately.';
+        if (domain === 'international business') {
+          if (answerFormat === 'mcq') {
+            question.content = 'Which sentence is most appropriate for a formal business email to an international client?';
+            question.options = [
+              'Hey there, just checking in on that order!',
+              'I wanted to follow up regarding your recent purchase.',
+              'You need to confirm your order ASAP.',
+              'As per my last email, please respond immediately.'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'Write a professional email to a potential international business partner introducing your company and proposing a collaboration.';
+          }
+        } else if (domain === 'healthcare') {
+          if (answerFormat === 'mcq') {
+            question.content = 'Which phrase would be most appropriate when explaining a medical procedure to a patient?';
+            question.options = [
+              'We\'re going to do a bilateral myringotomy with tympanostomy tube insertion.',
+              'There\'s a small chance this could be fatal.',
+              'We\'ll be making small openings in both eardrums to place tiny tubes that help drain fluid.',
+              'It\'s just a standard procedure, don\'t worry about the details.'
+            ];
+            question.correctOption = 2;
+          } else {
+            question.content = 'Write a paragraph explaining a common medication\'s side effects in language that would be clear to patients.';
+          }
         } else {
-          question.content = 'Write a professional email requesting additional resources for your project, explaining why they are necessary.';
+          // Generic language questions
+          if (answerFormat === 'mcq') {
+            question.content = 'Which sentence is grammatically correct?';
+            question.options = [
+              'Between you and I, this project is challenging.',
+              'Between you and me, this project is challenging.',
+              'Between yourself and I, this project is challenging.',
+              'Between yourself and me, this project is challenging.'
+            ];
+            question.correctOption = 1;
+          } else {
+            question.content = 'Write a professional email requesting additional resources for your project, explaining why they are necessary.';
+          }
         }
         break;
     }
@@ -634,3 +915,4 @@ const generateMockQuestions = (config: InterviewConfig): Question[] => {
   
   return questions;
 };
+
