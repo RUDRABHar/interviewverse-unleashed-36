@@ -59,6 +59,7 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
   const filteredInterviews = Array.isArray(mockInterviews) ? mockInterviews
     .filter(interview => {
       if (filter !== 'all' && interview.status !== filter) return false;
+      if (typeFilter !== 'all' && !Array.isArray(interview.types)) return false;
       if (typeFilter !== 'all' && !interview.types.includes(typeFilter)) return false;
       if (searchQuery && !interview.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       return true;

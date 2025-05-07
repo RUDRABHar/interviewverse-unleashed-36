@@ -23,6 +23,10 @@ interface InterviewCardProps {
 }
 
 export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
+  if (!interview) {
+    return null; // Return early if no interview data
+  }
+
   const statusColor = {
     completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
     pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
@@ -34,6 +38,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
     behavioral: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
     communication: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
     language: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+    system_design: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
   };
   
   const ratingColor = {
@@ -78,11 +83,11 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
       >
         <CardHeader className="px-4 py-3 bg-gradient-to-r from-gray-50/80 to-gray-100/80 dark:from-gray-800/60 dark:to-gray-900/60 border-b dark:border-gray-800/50">
           <div className="flex items-start justify-between">
-            <h3 className="font-semibold dark:text-white line-clamp-1 text-gray-800" title={interview.title}>
-              {interview.title}
+            <h3 className="font-semibold dark:text-white line-clamp-1 text-gray-800" title={interview.title || 'Untitled Interview'}>
+              {interview.title || 'Untitled Interview'}
             </h3>
-            <span className={`text-xs px-2 py-0.5 rounded-full ${statusColor[interview.status as keyof typeof statusColor]}`}>
-              {interview.status.charAt(0).toUpperCase() + interview.status.slice(1)}
+            <span className={`text-xs px-2 py-0.5 rounded-full ${statusColor[interview.status as keyof typeof statusColor] || statusColor.pending}`}>
+              {interview.status ? (interview.status.charAt(0).toUpperCase() + interview.status.slice(1)) : 'Pending'}
             </span>
           </div>
         </CardHeader>
@@ -94,32 +99,32 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
                 {formatDateSafely(interview.date, 'MMM d, yyyy')}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {formatDateSafely(interview.date, 'h:mm a')} • {interview.duration} min
+                {formatDateSafely(interview.date, 'h:mm a')} • {interview.duration || 30} min
               </div>
             </div>
             
-            <ScoreCircle score={interview.score} />
+            <ScoreCircle score={interview.score || 0} />
           </div>
           
           <div className="flex flex-wrap gap-2 mb-4">
-            {interview.types.map(type => (
+            {Array.isArray(interview.types) && interview.types.map(type => (
               <span 
                 key={type} 
                 className={`text-xs px-2 py-0.5 rounded-full ${typeColor[type as keyof typeof typeColor] || 'bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-gray-200'}`}
               >
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+                {type ? (type.charAt(0).toUpperCase() + type.slice(1)) : 'Unknown'}
               </span>
             ))}
             
             <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-gray-200">
-              {interview.language.charAt(0).toUpperCase() + interview.language.slice(1)}
+              {interview.language ? (interview.language.charAt(0).toUpperCase() + interview.language.slice(1)) : 'English'}
             </span>
           </div>
           
           <div className="flex items-center">
             <span className="text-sm font-medium dark:text-white">AI Rating:</span>
             <span className={`ml-2 text-sm font-medium ${ratingColor[interview.rating as keyof typeof ratingColor] || ''}`}>
-              {interview.rating}
+              {interview.rating || 'Beginner'}
             </span>
           </div>
         </CardContent>
