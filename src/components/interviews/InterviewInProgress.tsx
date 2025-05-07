@@ -113,11 +113,11 @@ export const InterviewInProgress: React.FC = () => {
           // Store questions in Supabase
           const questionsToInsert = questions.map((q, index) => ({
             session_id: sessionData.id,
-            question_text: q.question,
+            question_text: q.content,
             question_type: q.type || 'descriptive',
             category: config.types[0] || 'general',
             question_meta: q.options ? { options: q.options } : null,
-            expected_answer_format: q.expectedAnswerFormat || null,
+            expected_answer_format: q.answerFormat || null,
             question_order: index + 1
           }));
 

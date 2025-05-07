@@ -6,6 +6,7 @@ import confetti from 'canvas-confetti';
 import { CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface InterviewResult {
   id: string;
@@ -21,6 +22,7 @@ export const InterviewComplete: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [result, setResult] = useState<InterviewResult | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Trigger confetti effect on component mount
@@ -33,31 +35,58 @@ export const InterviewComplete: React.FC = () => {
     // Fetch the interview results from Supabase and local storage
     const fetchResult = async () => {
       try {
+        setLoading(true);
         const storedSession = localStorage.getItem(`interview_session_${id}`);
         
         if (storedSession) {
           const session = JSON.parse(storedSession);
           const answersCount = Object.keys(session.answers).length;
           
-          // Try to get additional data from Supabase
-          const { data: sessionData } = await supabase
+          // Get data from Supabase
+          const { data: sessionData, error } = await supabase
             .from('interview_sessions')
-            .select('*')
+            .select('*, interview_questions(count)')
             .eq('id', id)
             .maybeSingle();
           
-          setResult({
-            id: session.id,
-            title: session.title,
-            duration: session.durationInMinutes,
-            questionsAnswered: answersCount,
-            totalQuestions: session.questions.length,
-            completedAt: new Date().toISOString(),
-            score: sessionData?.score || null,
-          });
+          if (error) {
+            console.error("Error fetching interview data:", error);
+            toast.error("Failed to load interview results");
+            return;
+          }
+          
+          if (sessionData) {
+            setResult({
+              id: session.id,
+              title: session.title || `Interview ${new Date(sessionData.created_at).toLocaleString()}`,
+              duration: session.durationInMinutes || 
+                        (sessionData.duration_taken ? 
+                          Math.ceil(parseInt(sessionData.duration_taken) / 60) : 30),
+              questionsAnswered: answersCount,
+              totalQuestions: session.questions.length,
+              completedAt: sessionData.completed_at || new Date().toISOString(),
+              score: sessionData.score,
+            });
+          } else {
+            // Fallback to local data if no database record
+            setResult({
+              id: session.id,
+              title: session.title,
+              duration: session.durationInMinutes,
+              questionsAnswered: answersCount,
+              totalQuestions: session.questions.length,
+              completedAt: new Date().toISOString(),
+              score: null,
+            });
+          }
+        } else {
+          toast.error("Interview session data not found");
         }
       } catch (err) {
         console.error("Error loading interview results:", err);
+        toast.error("Error loading interview results");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,6 +100,17 @@ export const InterviewComplete: React.FC = () => {
   const handleReturnToDashboard = () => {
     navigate('/interviews');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading results...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
