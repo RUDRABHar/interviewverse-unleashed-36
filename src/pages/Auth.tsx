@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { EmailVerificationPopup } from '@/components/auth/EmailVerificationPopup';
 import { ParticlesBackground } from '@/components/auth/ParticlesBackground';
-import { AuthTabs } from '@/components/auth/AuthTabs';
+import { AuthForm } from '@/components/auth/AuthForm';
+import { motion } from 'framer-motion';
 
 const Auth = () => {
   const [verificationEmailSent, setVerificationEmailSent] = useState(false);
@@ -58,11 +59,27 @@ const Auth = () => {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* Enhanced background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.06]"></div>
+        
+        {/* Decorative gradient orbs */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-interview-primary/10 filter blur-[120px] animate-blob"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-interview-blue/10 filter blur-[100px] animate-blob animation-delay-2000"></div>
+        <div className="absolute top-2/3 left-1/3 w-[300px] h-[300px] rounded-full bg-purple-200/20 filter blur-[80px] animate-blob animation-delay-4000"></div>
+      </div>
+
       <ParticlesBackground />
       
-      <div className="z-10 w-full max-w-md">
-        <AuthTabs setVerificationEmailSent={setVerificationEmailSent} />
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="z-10 w-full max-w-md"
+      >
+        <AuthForm setVerificationEmailSent={setVerificationEmailSent} />
+      </motion.div>
       
       {verificationEmailSent && (
         <EmailVerificationPopup onClose={() => setVerificationEmailSent(false)} />

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { OAuthButton } from './OAuthButton';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -30,53 +31,25 @@ interface AuthFormProps {
   setVerificationEmailSent: (sent: boolean) => void;
 }
 
-export const AuthForm = ({
-  setVerificationEmailSent
-}: AuthFormProps) => {
+export const AuthForm = ({ setVerificationEmailSent }: AuthFormProps) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showSignupPassword, setShowSignupPassword] = useState(false);
-  const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Create separate login form
+  
+  // Password visibility toggles
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Login form
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: ''
-    },
-    mode: 'onSubmit' 
+    defaultValues: { email: '', password: '' }
   });
 
-  // Create separate signup form
+  // Signup form
   const signupForm = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      fullName: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    },
-    mode: 'onSubmit'
+    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' }
   });
-
-  // Reset forms when toggling between login and signup
-  useEffect(() => {
-    if (isLogin) {
-      signupForm.reset({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      });
-    } else {
-      loginForm.reset({
-        email: '',
-        password: ''
-      });
-    }
-  }, [isLogin, loginForm, signupForm]);
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
@@ -85,6 +58,7 @@ export const AuthForm = ({
         email: values.email,
         password: values.password
       });
+      
       if (error) {
         toast({
           variant: "destructive",
@@ -115,6 +89,7 @@ export const AuthForm = ({
           }
         }
       });
+      
       if (error) {
         toast({
           variant: "destructive",
@@ -145,6 +120,7 @@ export const AuthForm = ({
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google'
       });
+      
       if (error) {
         toast({
           variant: "destructive",
@@ -163,253 +139,325 @@ export const AuthForm = ({
     }
   };
 
+  const formVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.4,
+        ease: "easeOut" 
+      }
+    },
+    exit: { 
+      opacity: 0,
+      y: -20,
+      transition: { 
+        duration: 0.3,
+        ease: "easeIn"
+      }
+    }
+  };
+
   return (
-    <div className="glass rounded-xl p-6 md:p-8 shadow-lg backdrop-blur-lg bg-white/80 border border-white/20">
-      <div className="text-center mb-6">
+    <div className="glass-effect rounded-xl p-6 md:p-8 shadow-lg">
+      <motion.div 
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="text-center mb-6"
+      >
         <h2 className="text-3xl font-sora font-bold gradient-text">InterviewXpert</h2>
-        <div className="flex justify-center space-x-2 mt-6 mb-8">
-          <button 
+        <div className="inline-flex bg-gray-100/50 backdrop-blur-sm p-1 rounded-full mt-6 mb-4">
+          <motion.button 
             type="button"
             onClick={() => setIsLogin(true)} 
-            className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${isLogin ? 'bg-gradient-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'}`}
+            className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 relative ${isLogin ? 'text-white' : 'text-gray-600 hover:text-gray-800'}`}
           >
-            Login
-          </button>
-          <button 
+            {isLogin && (
+              <motion.div 
+                layoutId="activeTab"
+                className="absolute inset-0 bg-gradient-primary rounded-full"
+                initial={false}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">Login</span>
+          </motion.button>
+          <motion.button 
             type="button"
             onClick={() => setIsLogin(false)} 
-            className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${!isLogin ? 'bg-gradient-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'}`}
+            className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 relative ${!isLogin ? 'text-white' : 'text-gray-600 hover:text-gray-800'}`}
           >
-            Sign up
-          </button>
+            {!isLogin && (
+              <motion.div 
+                layoutId="activeTab"
+                className="absolute inset-0 bg-gradient-primary rounded-full"
+                initial={false}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">Sign up</span>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
-      {isLogin ? (
-        <>
-          <h3 className="text-xl font-semibold mb-1">Welcome Back</h3>
-          <p className="text-gray-600 mb-6 text-sm">Log in to your AI interview dashboard</p>
+      <AnimatePresence mode="wait">
+        {isLogin ? (
+          <motion.div
+            key="login"
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <h3 className="text-xl font-semibold mb-1">Welcome Back</h3>
+            <p className="text-gray-600 mb-6 text-sm">Log in to your AI interview dashboard</p>
 
-          <Form {...loginForm}>
-            <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
-              <FormField
-                control={loginForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <FormControl>
-                        <Input 
-                          placeholder="Email address" 
-                          type="email"
-                          className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
-                          {...field} 
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Form {...loginForm}>
+              <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
+                <FormField
+                  control={loginForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative form-focus-effect">
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <FormControl>
+                          <Input 
+                            placeholder="Email address" 
+                            type="email"
+                            className="pl-10 bg-white/50 backdrop-blur-sm border border-gray-200 focus:border-interview-primary transition-all" 
+                            {...field} 
+                          />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={loginForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <FormControl>
-                        <Input 
-                          type={showLoginPassword ? "text" : "password"} 
-                          placeholder="Password" 
-                          className="pl-10 pr-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <button 
-                        type="button" 
-                        onClick={() => setShowLoginPassword(!showLoginPassword)} 
-                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                      >
-                        {showLoginPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={loginForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative form-focus-effect">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <FormControl>
+                          <Input 
+                            type={showPassword ? "text" : "password"} 
+                            placeholder="Password" 
+                            className="pl-10 pr-10 bg-white/50 backdrop-blur-sm border border-gray-200 focus:border-interview-primary transition-all" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <motion.button 
+                          type="button" 
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setShowPassword(!showPassword)} 
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </motion.button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <div className="flex justify-end">
-                <button 
-                  type="button" 
-                  className="text-sm text-interview-primary hover:text-interview-violet transition-colors"
+                <div className="flex justify-end">
+                  <motion.button 
+                    type="button" 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="text-sm text-interview-primary hover:text-interview-blue transition-colors"
+                  >
+                    Forgot password?
+                  </motion.button>
+                </div>
+
+                <motion.div
+                  whileHover={{ y: -2, boxShadow: "0 4px 12px rgba(155, 135, 245, 0.3)" }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  Forgot password?
-                </button>
-              </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-primary hover:shadow-button transition-all duration-300" 
+                    disabled={loading}
+                  >
+                    {loading ? "Logging in..." : "Log In"}
+                  </Button>
+                </motion.div>
+              </form>
+            </Form>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="signup"
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <h3 className="text-xl font-semibold mb-1">Create Your Account</h3>
+            <p className="text-gray-600 mb-6 text-sm">Start your AI-powered mock interview journey</p>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-primary hover:shadow-button transition-all duration-300 hover:scale-[1.02]" 
-                disabled={loading}
-              >
-                {loading ? "Logging in..." : "Log In"}
-              </Button>
-            </form>
-          </Form>
-        </>
-      ) : (
-        <>
-          <h3 className="text-xl font-semibold mb-1">Create Your Account</h3>
-          <p className="text-gray-600 mb-6 text-sm">Start your AI-powered mock interview journey</p>
+            <Form {...signupForm}>
+              <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
+                <FormField
+                  control={signupForm.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative form-focus-effect">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <FormControl>
+                          <Input 
+                            placeholder="Full name" 
+                            type="text"
+                            className="pl-10 bg-white/50 backdrop-blur-sm border border-gray-200 focus:border-interview-primary transition-all"
+                            {...field}
+                          />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <Form {...signupForm}>
-            <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
-              <FormField
-                control={signupForm.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <FormControl>
-                        <Input 
-                          placeholder="Full name" 
-                          type="text"
-                          className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={signupForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative form-focus-effect">
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <FormControl>
+                          <Input 
+                            placeholder="Email address" 
+                            type="email"
+                            className="pl-10 bg-white/50 backdrop-blur-sm border border-gray-200 focus:border-interview-primary transition-all" 
+                            {...field} 
+                          />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={signupForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <FormControl>
-                        <Input 
-                          placeholder="Email address" 
-                          type="email"
-                          className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
-                          {...field} 
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={signupForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative form-focus-effect">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <FormControl>
+                          <Input 
+                            type={showPassword ? "text" : "password"} 
+                            placeholder="Password" 
+                            className="pl-10 pr-10 bg-white/50 backdrop-blur-sm border border-gray-200 focus:border-interview-primary transition-all" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <motion.button 
+                          type="button" 
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setShowPassword(!showPassword)} 
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </motion.button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={signupForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <FormControl>
-                        <Input 
-                          type={showSignupPassword ? "text" : "password"} 
-                          placeholder="Password" 
-                          className="pl-10 pr-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <button 
-                        type="button" 
-                        onClick={() => setShowSignupPassword(!showSignupPassword)} 
-                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                      >
-                        {showSignupPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={signupForm.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative form-focus-effect">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <FormControl>
+                          <Input 
+                            type={showConfirmPassword ? "text" : "password"} 
+                            placeholder="Confirm password" 
+                            className="pl-10 pr-10 bg-white/50 backdrop-blur-sm border border-gray-200 focus:border-interview-primary transition-all" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <motion.button 
+                          type="button" 
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                        >
+                          {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </motion.button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={signupForm.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <FormControl>
-                        <Input 
-                          type={showSignupConfirmPassword ? "text" : "password"} 
-                          placeholder="Confirm password" 
-                          className="pl-10 pr-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <button 
-                        type="button" 
-                        onClick={() => setShowSignupConfirmPassword(!showSignupConfirmPassword)} 
-                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                      >
-                        {showSignupConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-primary hover:shadow-button transition-all duration-300 hover:scale-[1.02]" 
-                disabled={loading}
-              >
-                {loading ? "Creating account..." : "Sign Up"}
-              </Button>
-            </form>
-          </Form>
-        </>
-      )}
+                <motion.div
+                  whileHover={{ y: -2, boxShadow: "0 4px 12px rgba(155, 135, 245, 0.3)" }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-primary hover:shadow-button transition-all duration-300" 
+                    disabled={loading}
+                  >
+                    {loading ? "Creating account..." : "Sign Up"}
+                  </Button>
+                </motion.div>
+              </form>
+            </Form>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="my-6 flex items-center">
-        <div className="flex-grow h-px bg-gray-300"></div>
+        <div className="flex-grow h-px bg-gray-300/50"></div>
         <span className="px-4 text-sm text-gray-500">or</span>
-        <div className="flex-grow h-px bg-gray-300"></div>
+        <div className="flex-grow h-px bg-gray-300/50"></div>
       </div>
 
-      <OAuthButton provider="google" onClick={handleGoogleSignIn} disabled={loading} />
+      <motion.div
+        whileHover={{ y: -2, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <OAuthButton provider="google" onClick={handleGoogleSignIn} disabled={loading} />
+      </motion.div>
 
-      <div className="mt-6 text-center">
-        {isLogin ? (
-          <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
-            <button 
-              type="button"
-              onClick={() => setIsLogin(false)} 
-              className="text-interview-primary hover:text-interview-violet font-medium transition-colors"
-            >
-              Sign up
-            </button>
-          </p>
-        ) : (
-          <p className="text-sm text-gray-600">
-            Already have an account?{" "}
-            <button 
-              type="button"
-              onClick={() => setIsLogin(true)} 
-              className="text-interview-primary hover:text-interview-violet font-medium transition-colors"
-            >
-              Log in
-            </button>
-          </p>
-        )}
-      </div>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="mt-6 text-center"
+      >
+        <p className="text-sm text-gray-600">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          <motion.button 
+            type="button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsLogin(!isLogin)} 
+            className="text-interview-primary hover:text-interview-blue font-medium transition-all"
+          >
+            {isLogin ? "Sign up" : "Log in"}
+          </motion.button>
+        </p>
+      </motion.div>
     </div>
   );
 };
