@@ -4,19 +4,23 @@ import { parseISO, differenceInDays } from 'date-fns';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface PerformanceInsightsPanelProps {
-  data: any[];
+  data: any[] | { performanceOverTime: any[], performanceByCategory: any[] };
 }
 
 export const PerformanceInsightsPanel: React.FC<PerformanceInsightsPanelProps> = ({ data }) => {
   const insights = useMemo(() => {
+    // Convert data to array format if it's not already
+    const dataArray = Array.isArray(data) ? data : (data?.performanceOverTime || []);
+    
     // Sort data by completed_at (newest first)
-    const sortedData = [...data].sort((a, b) => {
+    const sortedData = [...dataArray].sort((a, b) => {
+      if (!a.completed_at || !b.completed_at) return 0;
       return new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime();
     });
     
     // Calculate average score
-    const totalScore = data.reduce((sum, interview) => sum + (interview.score || 0), 0);
-    const averageScore = data.length > 0 ? Math.round(totalScore / data.length) : 0;
+    const totalScore = dataArray.reduce((sum, interview) => sum + (interview.score || 0), 0);
+    const averageScore = dataArray.length > 0 ? Math.round(totalScore / dataArray.length) : 0;
     
     // Calculate recent trend (last 3 interviews compared to previous 3)
     const recentInterviews = sortedData.slice(0, 3);
@@ -41,14 +45,14 @@ export const PerformanceInsightsPanel: React.FC<PerformanceInsightsPanelProps> =
     
     // Find best and worst categories
     const categoryScores: Record<string, { total: number, count: number }> = {};
-    data.forEach(session => {
+    dataArray.forEach(session => {
       const questions = Array.isArray(session.interview_questions) ? session.interview_questions : [];
       const sessionScore = session.score || 0;
       
       // Count questions by category for this session
       const sessionCategories: Record<string, number> = {};
       questions.forEach(q => {
-        if (q.category) {
+        if (q?.category) {
           sessionCategories[q.category] = (sessionCategories[q.category] || 0) + 1;
         }
       });
@@ -78,18 +82,22 @@ export const PerformanceInsightsPanel: React.FC<PerformanceInsightsPanelProps> =
     
     // Calculate interview frequency
     let frequency = 'Low';
-    if (data.length >= 2) {
-      const firstInterview = parseISO(sortedData[sortedData.length - 1].completed_at);
-      const lastInterview = parseISO(sortedData[0].completed_at);
+    if (dataArray.length >= 2) {
+      const firstInterview = sortedData.length > 0 && sortedData[sortedData.length - 1].completed_at
+        ? parseISO(sortedData[sortedData.length - 1].completed_at)
+        : new Date();
+      const lastInterview = sortedData.length > 0 && sortedData[0].completed_at
+        ? parseISO(sortedData[0].completed_at)
+        : new Date();
       const daysBetween = differenceInDays(lastInterview, firstInterview);
-      const interviewsPerWeek = data.length / (daysBetween / 7 || 1);
+      const interviewsPerWeek = dataArray.length / (daysBetween / 7 || 1);
       
       if (interviewsPerWeek >= 3) frequency = 'High';
       else if (interviewsPerWeek >= 1) frequency = 'Medium';
     }
     
     return {
-      totalInterviews: data.length,
+      totalInterviews: dataArray.length,
       averageScore,
       trend,
       trendValue: Math.abs(trendValue),

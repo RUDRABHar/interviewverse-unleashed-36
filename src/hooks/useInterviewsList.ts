@@ -75,7 +75,7 @@ export const useInterviewsList = (user: any) => {
           date: interview.created_at,
           language: interview.preferred_language || 'english',
           duration: interview.duration_taken 
-            ? Math.round(interview.duration_taken.minutes || 30)
+            ? Math.round((interview.duration_taken as any)?.minutes || 30)
             : 30
         }));
         
