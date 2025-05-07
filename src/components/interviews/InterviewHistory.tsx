@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/interviews/EmptyState';
 import { InterviewCard } from '@/components/interviews/InterviewCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PremiumCard from '@/components/ui/design-system/PremiumCard';
+import EnhancedParticles from '@/components/ui/design-system/EnhancedParticles';
 
 interface InterviewHistoryProps {
   filter: 'all' | 'completed' | 'pending' | 'draft';
@@ -70,9 +72,15 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
     });
   
   return (
-    <div className="space-y-6">
+    <PremiumCard 
+      className="space-y-6 p-6 relative overflow-hidden" 
+      glassOpacity="light"
+      borderEffect
+    >
+      <EnhancedParticles count={15} className="opacity-30" />
+      
       {/* Filters and Search */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between relative z-10">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
           <input
@@ -80,13 +88,13 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
             placeholder="Search interviews..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-interview-primary/50 transition-all"
           />
         </div>
         
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
           <Select defaultValue={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
               <SelectValue placeholder="Filter by type" />
             </SelectTrigger>
             <SelectContent>
@@ -99,7 +107,7 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
           </Select>
           
           <Select defaultValue={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -113,15 +121,17 @@ export const InterviewHistory: React.FC<InterviewHistoryProps> = ({ filter }) =>
       </div>
       
       {/* Interview Cards or Empty State */}
-      {filteredInterviews.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredInterviews.map(interview => (
-            <InterviewCard key={interview.id} interview={interview} />
-          ))}
-        </div>
-      ) : (
-        <EmptyState />
-      )}
-    </div>
+      <div className="relative z-10">
+        {filteredInterviews.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredInterviews.map(interview => (
+              <InterviewCard key={interview.id} interview={interview} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState />
+        )}
+      </div>
+    </PremiumCard>
   );
 };

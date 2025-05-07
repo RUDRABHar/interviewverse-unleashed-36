@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
@@ -12,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, X, FileText, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import EnhancedParticles from '@/components/ui/design-system/EnhancedParticles';
+import PremiumCard from '@/components/ui/design-system/PremiumCard';
 
 const Interviews = () => {
   const navigate = useNavigate();
@@ -99,6 +100,10 @@ const Interviews = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+        {/* Background decorative elements */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-interview-primary/5 filter blur-[100px] animate-blob"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-interview-blue/5 filter blur-[80px] animate-blob animation-delay-2000"></div>
+        
         <DashboardSidebar />
         
         <div className="flex-1 flex flex-col">
@@ -111,44 +116,52 @@ const Interviews = () => {
               initial="hidden"
               animate="visible"
             >
-              <motion.div variants={itemVariants} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-lg bg-interview-primary/10 flex items-center justify-center">
-                      <FileText className="h-6 w-6 text-interview-primary" />
-                    </div>
-                    <div>
-                      <h1 className="text-3xl font-bold font-sora text-gray-800 dark:text-gray-100">My Interviews</h1>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">Create, manage and track your interview practice sessions</p>
-                    </div>
-                  </div>
+              <motion.div variants={itemVariants}>
+                <PremiumCard 
+                  className="p-6 relative overflow-hidden"
+                  glassOpacity="medium"
+                  variant="elevated"
+                >
+                  <EnhancedParticles count={10} className="opacity-30" />
                   
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={() => navigate('/schedule')}
-                      variant="outline"
-                      className="gap-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 hover:bg-white dark:hover:bg-gray-800"
-                    >
-                      <Calendar className="h-5 w-5 text-interview-primary" />
-                      Schedule Interview
-                    </Button>
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-interview-primary/20 to-interview-primary/10 flex items-center justify-center shadow-glow-primary">
+                        <FileText className="h-6 w-6 text-interview-primary" />
+                      </div>
+                      <div>
+                        <h1 className="text-3xl font-bold font-sora text-gray-800 dark:text-gray-100">My Interviews</h1>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">Create, manage and track your interview practice sessions</p>
+                      </div>
+                    </div>
                     
-                    <Button
-                      onClick={() => setWizardOpen(!wizardOpen)}
-                      className="px-4 py-2 bg-interview-primary hover:bg-interview-primary/90 text-white rounded-lg flex items-center gap-2 transition-all shadow-md hover:shadow-lg"
-                    >
-                      {wizardOpen ? (
-                        <>
-                          <X className="h-5 w-5" /> Hide Wizard
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="h-5 w-5" /> Create New Interview
-                        </>
-                      )}
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => navigate('/schedule')}
+                        variant="outline"
+                        className="gap-2 border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-900/70 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 shadow-sm hover:shadow-md transition-all"
+                      >
+                        <Calendar className="h-5 w-5 text-interview-primary" />
+                        Schedule Interview
+                      </Button>
+                      
+                      <Button
+                        onClick={() => setWizardOpen(!wizardOpen)}
+                        className="px-4 py-2 bg-interview-primary hover:bg-interview-primary/90 text-white rounded-lg flex items-center gap-2 transition-all shadow-md hover:shadow-lg"
+                      >
+                        {wizardOpen ? (
+                          <>
+                            <X className="h-5 w-5" /> Hide Wizard
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="h-5 w-5" /> Create New Interview
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                </PremiumCard>
               </motion.div>
               
               {wizardOpen && (
@@ -157,33 +170,36 @@ const Interviews = () => {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 ease-in-out"
                 >
-                  <InterviewWizard onComplete={handleInterviewCreated} />
+                  <PremiumCard className="p-6" glassOpacity="heavy" gradientBorder>
+                    <InterviewWizard onInterviewCreated={handleInterviewCreated} />
+                  </PremiumCard>
                 </motion.div>
               )}
               
               <motion.div variants={itemVariants}>
-                <Tabs defaultValue="all" className="w-full">
-                  <TabsList className="mb-4 bg-gray-100 dark:bg-gray-700">
-                    <TabsTrigger value="all">All Interviews</TabsTrigger>
-                    <TabsTrigger value="completed">Completed</TabsTrigger>
-                    <TabsTrigger value="pending">Pending</TabsTrigger>
-                    <TabsTrigger value="draft">Drafts</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="all" className="animate-fade-in">
-                    <InterviewHistory filter="all" />
-                  </TabsContent>
-                  <TabsContent value="completed" className="animate-fade-in">
-                    <InterviewHistory filter="completed" />
-                  </TabsContent>
-                  <TabsContent value="pending" className="animate-fade-in">
-                    <InterviewHistory filter="pending" />
-                  </TabsContent>
-                  <TabsContent value="draft" className="animate-fade-in">
-                    <InterviewHistory filter="draft" />
-                  </TabsContent>
-                </Tabs>
+                <PremiumCard className="p-6" glassOpacity="medium">
+                  <Tabs defaultValue="all" className="w-full">
+                    <TabsList className="grid grid-cols-4 mb-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                      <TabsTrigger value="all">All Interviews</TabsTrigger>
+                      <TabsTrigger value="completed">Completed</TabsTrigger>
+                      <TabsTrigger value="pending">In Progress</TabsTrigger>
+                      <TabsTrigger value="draft">Drafts</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="all" className="mt-0">
+                      <InterviewHistory filter="all" />
+                    </TabsContent>
+                    <TabsContent value="completed" className="mt-0">
+                      <InterviewHistory filter="completed" />
+                    </TabsContent>
+                    <TabsContent value="pending" className="mt-0">
+                      <InterviewHistory filter="pending" />
+                    </TabsContent>
+                    <TabsContent value="draft" className="mt-0">
+                      <InterviewHistory filter="draft" />
+                    </TabsContent>
+                  </Tabs>
+                </PremiumCard>
               </motion.div>
             </motion.div>
           </main>

@@ -1,15 +1,91 @@
 
-/* Keyframe Animations */
+/* Essential animations for luxury UI */
+
+/* Floating animation */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
 
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(1deg); }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% { background-position: -500% 0; }
+  100% { background-position: 500% 0; }
+}
+
+/* Aurora effect for gradients */
+@keyframes aurora {
+  0%, 100% { 
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+  50% { 
+    background-position: 100% 50%;
+    background-size: 200% 200%;
+  }
+}
+
+/* Soft pulse animation */
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
 }
 
+/* Gradient flow animation */
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Slow spinning animation */
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in from right animation */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale up animation */
+@keyframes scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Blob move animation */
 @keyframes blob {
   0% {
     transform: translate(0px, 0px) scale(1);
@@ -25,154 +101,96 @@
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(155, 135, 245, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(155, 135, 245, 0.8);
+/* Slow ping animation */
+@keyframes ping-slow {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 
-/* Animation Classes */
+/* Animation classes */
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+.animate-aurora {
+  animation: aurora 15s ease-in-out infinite;
 }
 
 .animate-pulse-soft {
   animation: pulse-soft 3s ease-in-out infinite;
 }
 
+.animate-gradient-flow {
+  animation: gradient-flow 6s ease infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-in-out;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.3s ease-in-out;
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
 
-.animate-shimmer {
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0) 0%, 
-    rgba(255,255,255,0.2) 50%, 
-    rgba(255,255,255,0) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-.animate-glow {
-  animation: glow 3s infinite;
+/* Animation delay utilities */
+.animation-delay-100 {
+  animation-delay: 0.1s;
 }
 
-/* Animation Delays */
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-700 {
+  animation-delay: 0.7s;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
 .animation-delay-2000 {
   animation-delay: 2s;
 }
 
+.animation-delay-3000 {
+  animation-delay: 3s;
+}
+
 .animation-delay-4000 {
   animation-delay: 4s;
-}
-
-/* Gradient backgrounds */
-.bg-gradient-primary {
-  background: linear-gradient(90deg, #9b87f5 0%, #0EA5E9 100%);
-}
-
-.bg-gradient-subtle {
-  background: linear-gradient(135deg, rgba(155, 135, 245, 0.05) 0%, rgba(14, 165, 233, 0.1) 100%);
-}
-
-/* Glassmorphism effects */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.glass-effect-strong {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
-}
-
-.dark .glass-card {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.2),
-    0 2px 4px -1px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-}
-
-/* Form focus effects */
-.form-focus-effect:focus-within {
-  box-shadow: 0 0 0 3px rgba(155, 135, 245, 0.25);
-  border-color: #9b87f5;
-}
-
-/* Button hover effects */
-.button-hover-effect {
-  transition: all 0.3s ease;
-}
-
-.button-hover-effect:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(155, 135, 245, 0.3);
-}
-
-/* Enhanced shadow effects */
-.shadow-soft {
-  box-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.shadow-elegant {
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.shadow-glow {
-  box-shadow: 0 0 15px rgba(155, 135, 245, 0.5);
-}
-
-/* Input focus styles */
-.input-focus-ring {
-  transition: all 0.2s ease;
-}
-
-.input-focus-ring:focus-visible {
-  outline: none;
-  border-color: #9b87f5;
-  box-shadow: 0 0 0 3px rgba(155, 135, 245, 0.25);
-}
-
-/* Luxury border styles */
-.border-luxury {
-  border: 1px solid rgba(155, 135, 245, 0.5);
-}
-
-/* Enhanced transitions */
-.transition-elegant {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -1,45 +1,47 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { type ButtonProps } from '@/components/ui/button';
 
-interface GradientButtonProps extends ButtonProps {
+interface GradientButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  className?: string;
   gradientFrom?: string;
   gradientTo?: string;
-  className?: string;
-  asChild?: boolean;
   glowEffect?: boolean;
 }
 
-const GradientButton = ({
+const GradientButton: React.FC<GradientButtonProps> = ({
   children,
+  className = '',
   gradientFrom = 'from-interview-primary',
   gradientTo = 'to-interview-blue',
-  className = '',
-  asChild = false,
   glowEffect = false,
   ...props
-}: GradientButtonProps) => {
+}) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className={glowEffect ? "animate-glow" : ""}
     >
       <Button
         className={cn(
-          `relative bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white rounded-xl shadow-md hover:shadow-lg transition-all overflow-hidden`,
+          `relative overflow-hidden bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white rounded-xl transition-all duration-300`,
+          glowEffect && 'hover:shadow-glow-primary',
           className
         )}
-        asChild={asChild}
         {...props}
       >
-        <span className="relative z-10 flex items-center justify-center gap-2">
+        <div className="relative z-10 flex items-center">
           {children}
-        </span>
+        </div>
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
+          initial={{ x: '-100%', opacity: 0 }}
+          whileHover={{ x: '100%', opacity: 0.3 }}
+          transition={{ duration: 0.7 }}
+        />
       </Button>
     </motion.div>
   );
