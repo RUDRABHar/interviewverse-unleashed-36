@@ -20,6 +20,7 @@ function App() {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/interviews" element={<Interviews />} />
       <Route path="/interviews/:id" element={<InterviewInProgress />} />
+      <Route path="/interviews/active/:id" element={<InterviewInProgress />} />
       <Route path="/interviews/complete/:id" element={<InterviewComplete />} />
       <Route path="/interviews/results/:id" element={<InterviewResults />} />
       <Route path="*" element={<NotFound />} />

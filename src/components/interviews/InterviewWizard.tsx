@@ -98,8 +98,8 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
       // Notify parent component that configuration is complete
       onComplete();
       
-      // Navigate to the interview screen
-      navigate(`/interviews/active/${interviewId}`);
+      // Navigate to the interview screen - using the correct route path
+      navigate(`/interviews/${interviewId}`);
     } catch (error) {
       console.error("Error starting interview:", error);
       toast.error("Failed to start interview. Please try again.");
