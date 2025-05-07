@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,6 +18,10 @@ import { UpcomingInterviews } from '@/components/schedules/UpcomingInterviews';
 import { ProUpgradeCard } from '@/components/dashboard/ProUpgradeCard';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/ui/design-system/animations';
+import GlassCard from '@/components/ui/design-system/GlassCard';
+import GradientButton from '@/components/ui/design-system/GradientButton';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -24,6 +29,27 @@ const Dashboard = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [interviewActivities, setInterviewActivities] = useState([]);
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+  
   useEffect(() => {
     const checkAuth = async () => {
       const {
@@ -120,6 +146,7 @@ const Dashboard = () => {
     datetime: '2025-05-15T15:30:00',
     type: 'Behavioral'
   }];
+  
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="flex flex-col items-center space-y-4">
@@ -128,7 +155,9 @@ const Dashboard = () => {
         </div>
       </div>;
   }
-  return <SidebarProvider>
+  
+  return (
+    <SidebarProvider>
       <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <DashboardSidebar />
         
@@ -136,34 +165,46 @@ const Dashboard = () => {
           <DashboardHeader user={user} profile={profile} />
           
           <main className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="max-w-7xl mx-auto space-y-6">
-              <WelcomeHero profile={profile} />
+            <motion.div 
+              className="max-w-7xl mx-auto space-y-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={itemVariants}>
+                <WelcomeHero profile={profile} />
+              </motion.div>
               
               {/* Recent Interview Activity */}
-              <section>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Recent Interview Activity</h2>
+              <motion.section variants={itemVariants}>
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Recent Interview Activity</h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => <ActivityCard key={activity.id} activity={activity} />) : <Card className="col-span-full bg-white dark:bg-gray-800 shadow-lg border-0">
+                  {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => (
+                    <ActivityCard key={activity.id} activity={activity} />
+                  )) : (
+                    <GlassCard className="col-span-full" glassOpacity="medium" hoverEffect>
                       <CardContent className="flex flex-col items-center justify-center py-10">
-                        <div className="w-32 h-32 mb-4">
-                          <img src="/placeholder.svg" alt="No interviews yet" className="w-full h-full" />
+                        <div className="w-32 h-32 mb-4 bg-interview-primary/10 rounded-full flex items-center justify-center">
+                          <BarChart className="w-16 h-16 text-interview-primary/70" />
                         </div>
-                        <h3 className="text-xl font-medium text-gray-700 dark:text-gray-200 mb-2">
+                        <h3 className="text-xl font-medium text-gray-700 dark:text-gray-200 mb-2 font-sora">
                           Your journey starts here. No interviews yet.
                         </h3>
-                        <Button className="mt-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white">
+                        <GradientButton className="mt-4 group">
                           Start Your First Interview
-                        </Button>
+                          <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                        </GradientButton>
                       </CardContent>
-                    </Card>}
+                    </GlassCard>
+                  )}
                 </div>
-              </section>
+              </motion.section>
               
               {/* Data Visualizations */}
-              <section>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Your Performance Insights</h2>
+              <motion.section variants={itemVariants}>
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Your Performance Insights</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  <Card className="bg-white dark:bg-gray-800 shadow-lg border-0 overflow-hidden">
+                  <GlassCard glassOpacity="light" hoverEffect borderEffect>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg">Progress Over Time</CardTitle>
                       <CardDescription>Your performance trajectory</CardDescription>
@@ -173,9 +214,9 @@ const Dashboard = () => {
                         <PerformanceChart />
                       </div>
                     </CardContent>
-                  </Card>
+                  </GlassCard>
                   
-                  <Card className="bg-white dark:bg-gray-800 shadow-lg border-0 overflow-hidden">
+                  <GlassCard glassOpacity="light" hoverEffect borderEffect>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg">Skill Mapping</CardTitle>
                       <CardDescription>Your strengths and areas to improve</CardDescription>
@@ -185,9 +226,9 @@ const Dashboard = () => {
                         <SkillsRadarChart />
                       </div>
                     </CardContent>
-                  </Card>
+                  </GlassCard>
                   
-                  <Card className="bg-white dark:bg-gray-800 shadow-lg border-0 overflow-hidden">
+                  <GlassCard glassOpacity="light" hoverEffect borderEffect>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg">Interview Categories</CardTitle>
                       <CardDescription>Types of interviews you've practiced</CardDescription>
@@ -197,52 +238,64 @@ const Dashboard = () => {
                         <InterviewTypeChart />
                       </div>
                     </CardContent>
-                  </Card>
+                  </GlassCard>
                 </div>
-              </section>
+              </motion.section>
               
               {/* AI-Powered Recommendations */}
-              <section>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+              <motion.section variants={itemVariants}>
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
                   AI-Powered Recommendations
                 </h2>
                 <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                  {mockRecommendations.map(recommendation => <RecommendationCard key={recommendation.id} recommendation={recommendation} />)}
+                  {mockRecommendations.map(recommendation => (
+                    <RecommendationCard key={recommendation.id} recommendation={recommendation} />
+                  ))}
                 </div>
-              </section>
+              </motion.section>
               
               {/* Two Column Layout for Upcoming Interviews and Pro Upgrade */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Upcoming Interviews */}
                 <div className="lg:col-span-2">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 font-sora">
                       Upcoming Interviews
                     </h2>
-                    <Button variant="outline" size="sm" asChild>
+                    <GradientButton 
+                      variant="outline" 
+                      size="sm" 
+                      asChild
+                      gradientFrom="from-interview-blue/20" 
+                      gradientTo="to-interview-blue/20"
+                      className="bg-white dark:bg-gray-800 text-interview-blue border border-interview-blue/30"
+                    >
                       <Link to="/schedule" className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         <span>Schedule New</span>
                       </Link>
-                    </Button>
+                    </GradientButton>
                   </div>
                   
-                  {user && <UpcomingInterviews userId={user.id} limit={3} />}
+                  <GlassCard glassOpacity="light">
+                    {user && <UpcomingInterviews userId={user.id} limit={3} />}
+                  </GlassCard>
                 </div>
                 
                 {/* Pro Upgrade CTA */}
                 <div>
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
                     Upgrade
                   </h2>
                   <ProUpgradeCard />
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </main>
         </div>
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 };
 
 export default Dashboard;
