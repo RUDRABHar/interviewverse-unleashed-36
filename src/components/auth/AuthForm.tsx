@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { Eye, EyeOff, Mail, User, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -35,21 +34,22 @@ export const AuthForm = ({
   setVerificationEmailSent
 }: AuthFormProps) => {
   const [isLogin, setIsLogin] = useState(true);
-  // Separate password visibility states for login and signup forms
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Create separate login form
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: ''
     },
-    mode: 'onSubmit' // Only validate on form submission
+    mode: 'onSubmit' 
   });
 
+  // Create separate signup form
   const signupForm = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -58,15 +58,23 @@ export const AuthForm = ({
       password: '',
       confirmPassword: ''
     },
-    mode: 'onSubmit' // Only validate on form submission
+    mode: 'onSubmit'
   });
 
   // Reset forms when toggling between login and signup
   useEffect(() => {
     if (isLogin) {
-      signupForm.reset();
+      signupForm.reset({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
     } else {
-      loginForm.reset();
+      loginForm.reset({
+        email: '',
+        password: ''
+      });
     }
   }, [isLogin, loginForm, signupForm]);
 
@@ -160,10 +168,18 @@ export const AuthForm = ({
       <div className="text-center mb-6">
         <h2 className="text-3xl font-sora font-bold gradient-text">InterviewXpert</h2>
         <div className="flex justify-center space-x-2 mt-6 mb-8">
-          <button onClick={() => setIsLogin(true)} className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${isLogin ? 'bg-gradient-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'}`}>
+          <button 
+            type="button"
+            onClick={() => setIsLogin(true)} 
+            className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${isLogin ? 'bg-gradient-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'}`}
+          >
             Login
           </button>
-          <button onClick={() => setIsLogin(false)} className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${!isLogin ? 'bg-gradient-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'}`}>
+          <button 
+            type="button"
+            onClick={() => setIsLogin(false)} 
+            className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${!isLogin ? 'bg-gradient-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'}`}
+          >
             Sign up
           </button>
         </div>
@@ -186,6 +202,7 @@ export const AuthForm = ({
                       <FormControl>
                         <Input 
                           placeholder="Email address" 
+                          type="email"
                           className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
                           {...field} 
                         />
@@ -225,12 +242,19 @@ export const AuthForm = ({
               />
 
               <div className="flex justify-end">
-                <button type="button" className="text-sm text-interview-primary hover:text-interview-violet transition-colors">
+                <button 
+                  type="button" 
+                  className="text-sm text-interview-primary hover:text-interview-violet transition-colors"
+                >
                   Forgot password?
                 </button>
               </div>
 
-              <Button type="submit" className="w-full bg-gradient-primary hover:shadow-button transition-all duration-300 hover:scale-[1.02]" disabled={loading}>
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-primary hover:shadow-button transition-all duration-300 hover:scale-[1.02]" 
+                disabled={loading}
+              >
                 {loading ? "Logging in..." : "Log In"}
               </Button>
             </form>
@@ -253,6 +277,7 @@ export const AuthForm = ({
                       <FormControl>
                         <Input 
                           placeholder="Full name" 
+                          type="text"
                           className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all"
                           {...field}
                         />
@@ -273,6 +298,7 @@ export const AuthForm = ({
                       <FormControl>
                         <Input 
                           placeholder="Email address" 
+                          type="email"
                           className="pl-10 bg-white/50 border border-gray-200 focus:border-interview-primary transition-all" 
                           {...field} 
                         />
@@ -363,14 +389,22 @@ export const AuthForm = ({
         {isLogin ? (
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
-            <button onClick={() => setIsLogin(false)} className="text-interview-primary hover:text-interview-violet font-medium transition-colors">
+            <button 
+              type="button"
+              onClick={() => setIsLogin(false)} 
+              className="text-interview-primary hover:text-interview-violet font-medium transition-colors"
+            >
               Sign up
             </button>
           </p>
         ) : (
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
-            <button onClick={() => setIsLogin(true)} className="text-interview-primary hover:text-interview-violet font-medium transition-colors">
+            <button 
+              type="button"
+              onClick={() => setIsLogin(true)} 
+              className="text-interview-primary hover:text-interview-violet font-medium transition-colors"
+            >
               Log in
             </button>
           </p>
