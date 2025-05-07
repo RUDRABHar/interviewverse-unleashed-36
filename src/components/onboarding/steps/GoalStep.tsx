@@ -1,12 +1,7 @@
 
 import React from 'react';
-import { OnboardingData } from '../OnboardingWizard';
 import { Card } from '@/components/ui/card';
-
-interface GoalStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
+import { useOnboarding } from '../context/OnboardingContext';
 
 const goals = [
   { id: 'faang', label: 'Crack FAANG Companies', icon: '🚀' },
@@ -17,7 +12,9 @@ const goals = [
   { id: 'other', label: 'Other', icon: '✨' }
 ];
 
-const GoalStep = ({ onboardingData, updateOnboardingData }: GoalStepProps) => {
+const GoalStep = () => {
+  const { onboardingData, updateOnboardingData } = useOnboarding();
+  
   return (
     <div className="py-6">
       <h2 className="text-3xl font-bold mb-2">

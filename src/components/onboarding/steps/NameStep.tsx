@@ -1,15 +1,12 @@
 
 import React from 'react';
-import { OnboardingData } from '../OnboardingWizard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useOnboarding } from '../context/OnboardingContext';
 
-interface NameStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
-
-const NameStep = ({ onboardingData, updateOnboardingData }: NameStepProps) => {
+const NameStep = () => {
+  const { onboardingData, updateOnboardingData } = useOnboarding();
+  
   return (
     <div className="py-6">
       <h1 className="text-3xl font-bold mb-2">What should we call you?</h1>

@@ -1,14 +1,11 @@
 
 import React, { useEffect } from 'react';
-import { OnboardingData } from '../OnboardingWizard';
 import confetti from 'canvas-confetti';
+import { useOnboarding } from '../context/OnboardingContext';
 
-interface FinalStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
-
-const FinalStep = ({ onboardingData }: FinalStepProps) => {
+const FinalStep = () => {
+  const { onboardingData } = useOnboarding();
+  
   useEffect(() => {
     // Launch confetti when component mounts
     const launchConfetti = () => {

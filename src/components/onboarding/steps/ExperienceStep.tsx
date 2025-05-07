@@ -1,12 +1,7 @@
 
 import React from 'react';
-import { OnboardingData } from '../OnboardingWizard';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-
-interface ExperienceStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
+import { useOnboarding } from '../context/OnboardingContext';
 
 const experiences = [
   { id: 'Beginner', label: 'Beginner', description: 'No prior interview experience' },
@@ -14,7 +9,9 @@ const experiences = [
   { id: 'Advanced', label: 'Advanced', description: 'Pro-level or already working' }
 ];
 
-const ExperienceStep = ({ onboardingData, updateOnboardingData }: ExperienceStepProps) => {
+const ExperienceStep = () => {
+  const { onboardingData, updateOnboardingData } = useOnboarding();
+
   return (
     <div className="py-6">
       <h2 className="text-3xl font-bold mb-2">

@@ -1,13 +1,8 @@
 
 import React from 'react';
-import { OnboardingData } from '../OnboardingWizard';
+import { useOnboarding } from '../context/OnboardingContext';
 
-interface WelcomeStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
-
-const WelcomeStep = ({ onboardingData, updateOnboardingData }: WelcomeStepProps) => {
+const WelcomeStep = () => {
   return (
     <div className="py-6 text-center">
       <div className="mb-6">

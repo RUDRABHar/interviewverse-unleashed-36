@@ -1,12 +1,7 @@
 
 import React from 'react';
-import { OnboardingData } from '../OnboardingWizard';
 import { Card } from '@/components/ui/card';
-
-interface LanguageStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
+import { useOnboarding } from '../context/OnboardingContext';
 
 const languages = [
   { id: 'English', label: 'English', flag: '🇺🇸' },
@@ -17,7 +12,9 @@ const languages = [
   { id: 'Kannada', label: 'Kannada', flag: '🇮🇳' }
 ];
 
-const LanguageStep = ({ onboardingData, updateOnboardingData }: LanguageStepProps) => {
+const LanguageStep = () => {
+  const { onboardingData, updateOnboardingData } = useOnboarding();
+
   return (
     <div className="py-6">
       <h2 className="text-3xl font-bold mb-2">

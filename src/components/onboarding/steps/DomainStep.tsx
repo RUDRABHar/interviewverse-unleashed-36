@@ -1,14 +1,9 @@
 
 import React from 'react';
-import { OnboardingData } from '../OnboardingWizard';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-interface DomainStepProps {
-  onboardingData: OnboardingData;
-  updateOnboardingData: (field: keyof OnboardingData, value: string) => void;
-}
+import { useOnboarding } from '../context/OnboardingContext';
 
 const domains = [
   { id: 'web-dev', label: 'Web Development', icon: '🌐' },
@@ -21,7 +16,8 @@ const domains = [
   { id: 'other', label: 'Other', icon: '✨' }
 ];
 
-const DomainStep = ({ onboardingData, updateOnboardingData }: DomainStepProps) => {
+const DomainStep = () => {
+  const { onboardingData, updateOnboardingData } = useOnboarding();
   const [showCustomInput, setShowCustomInput] = React.useState(false);
   
   const handleDomainSelect = (domainId: string) => {
