@@ -15,7 +15,7 @@ export const GalaxyControls: React.FC<GalaxyControlsProps> = ({
     <TooltipProvider>
       <div className="bg-gray-900/80 backdrop-blur-sm rounded-lg p-3 border border-gray-800">
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger>
             <div className="flex items-center">
               <span className="text-xs text-gray-400 mr-2">Performance</span>
               <label className="relative inline-flex items-center cursor-pointer">

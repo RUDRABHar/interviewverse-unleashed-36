@@ -13,7 +13,7 @@ export const ViewToggle: React.FC<ViewToggleProps> = ({ currentView, onChange })
       <div className="bg-gray-900/80 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-800">
         <div className="flex">
           <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger>
               <button
                 onClick={() => onChange('galaxy')}
                 className={`flex items-center justify-center px-4 py-2 ${
@@ -35,7 +35,7 @@ export const ViewToggle: React.FC<ViewToggleProps> = ({ currentView, onChange })
           </Tooltip>
           
           <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger>
               <button
                 onClick={() => onChange('neural')}
                 className={`flex items-center justify-center px-4 py-2 ${
@@ -43,7 +43,7 @@ export const ViewToggle: React.FC<ViewToggleProps> = ({ currentView, onChange })
                 }`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9.5 3h5V7l6.4 3.2c.8.4 1.6.8 1.6 2.4 0 1.5-.7 2-1.6 2.4L15 18v4H9v-4l-6.4-3.2c-.8-.4-1.6-.8-1.6-2.4 0-1.5.7-2 1.6-2.4L9.5 7V3z"></path>
+                  <path d="M9.5 3h5V7l6.4 3.2c.8.4 1.6.8 1.6 2.4 0 1.5-.7 2 1.6 2.4L15 18v4H9v-4l-6.4-3.2c-.8-.4-1.6-.8-1.6-2.4 0-1.5.7-2 1.6-2.4L9.5 7V3z"></path>
                   <circle cx="12" cy="8" r="2"></circle>
                   <circle cx="12" cy="16" r="2"></circle>
                   <path d="M12 10v4"></path>
