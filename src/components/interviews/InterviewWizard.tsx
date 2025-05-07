@@ -27,10 +27,11 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
     duration: 30,
     difficulty: 'medium',
     language: 'english',
+    domain: '',
     mode: 'ai-only'
   });
   
-  const totalSteps = 6;
+  const totalSteps = 7;
   
   const updateSelection = (key: string, value: any) => {
     setSelections(prev => ({ ...prev, [key]: value }));
@@ -70,6 +71,7 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
       duration: 30,
       difficulty: 'medium',
       language: 'english',
+      domain: '',
       mode: 'ai-only'
     });
   };
@@ -78,6 +80,11 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
     // Validate selections
     if (selections.types.length === 0) {
       toast.error("Please select at least one interview type");
+      return;
+    }
+
+    if (!selections.domain) {
+      toast.error("Please select a domain");
       return;
     }
     
@@ -124,6 +131,22 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
       description: 'Test language skills for specific roles',
       icon: '🌐'
     }
+  ];
+
+  const domainOptions = [
+    { value: "software_engineering", label: "Software Engineering" },
+    { value: "data_science", label: "Data Science" },
+    { value: "product_management", label: "Product Management" },
+    { value: "ux_design", label: "UX/UI Design" },
+    { value: "marketing", label: "Marketing" },
+    { value: "sales", label: "Sales" },
+    { value: "finance", label: "Finance" },
+    { value: "hr", label: "Human Resources" },
+    { value: "customer_success", label: "Customer Success" },
+    { value: "operations", label: "Operations" },
+    { value: "legal", label: "Legal" },
+    { value: "healthcare", label: "Healthcare" },
+    { value: "education", label: "Education" }
   ];
   
   return (
@@ -324,8 +347,51 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
               </div>
             </motion.div>
           )}
-          
+
           {currentStep === 5 && (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={stepVariants}
+              className="space-y-6"
+            >
+              <h3 className="text-xl font-medium dark:text-white">Select Domain</h3>
+              <p className="text-gray-600 dark:text-gray-300">Choose the relevant professional field</p>
+              
+              <div className="space-y-4">
+                <Select 
+                  value={selections.domain} 
+                  onValueChange={(value) => updateSelection('domain', value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select domain" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {domainOptions.map(option => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Domain selection</span> helps our AI generate more relevant questions aligned with your industry and role.
+                  </p>
+                </div>
+
+                {selections.types.includes('technical') && (
+                  <div className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <p className="text-sm text-amber-800 dark:text-amber-300">
+                      <span className="font-medium">Note:</span> For technical interviews, domain selection determines the specific technical questions you'll receive.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+          
+          {currentStep === 6 && (
             <motion.div
               initial="hidden"
               animate="visible"
@@ -364,7 +430,7 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
             </motion.div>
           )}
           
-          {currentStep === 6 && (
+          {currentStep === 7 && (
             <motion.div
               initial="hidden"
               animate="visible"
@@ -398,6 +464,13 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
                 <div className="flex justify-between py-2 border-b dark:border-gray-700">
                   <span className="text-gray-600 dark:text-gray-300">Difficulty</span>
                   <span className="font-medium dark:text-white capitalize">{selections.difficulty}</span>
+                </div>
+                
+                <div className="flex justify-between py-2 border-b dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-300">Domain</span>
+                  <span className="font-medium dark:text-white">
+                    {domainOptions.find(d => d.value === selections.domain)?.label || 'Not selected'}
+                  </span>
                 </div>
                 
                 <div className="flex justify-between py-2">
@@ -436,9 +509,16 @@ export const InterviewWizard: React.FC<InterviewWizardProps> = ({ onComplete }) 
             
             <Button 
               onClick={handleNext}
-              className={`bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white flex items-center space-x-2 
-                ${(currentStep === 1 && selections.types.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={currentStep === 1 && selections.types.length === 0}
+              className={`bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white flex items-center space-x-2 ${
+                (currentStep === 1 && selections.types.length === 0) || 
+                (currentStep === 5 && !selections.domain)
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : ''
+              }`}
+              disabled={
+                (currentStep === 1 && selections.types.length === 0) ||
+                (currentStep === 5 && !selections.domain)
+              }
             >
               <span>{currentStep === totalSteps ? 'Start Interview' : 'Next'}</span>
               {currentStep !== totalSteps && <ArrowRight className="h-4 w-4" />}

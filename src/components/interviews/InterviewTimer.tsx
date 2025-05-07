@@ -16,6 +16,7 @@ export const InterviewTimer: React.FC<InterviewTimerProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState(durationInMinutes * 60);
   const [isWarning, setIsWarning] = useState(false);
+  const [isCritical, setIsCritical] = useState(false);
   
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -23,9 +24,10 @@ export const InterviewTimer: React.FC<InterviewTimerProps> = ({
       return;
     }
 
-    // Set warning state when less than 10% of time remains
+    // Set warning states based on remaining time
     if (timeLeft <= durationInMinutes * 60 * 0.1) {
       setIsWarning(true);
+      setIsCritical(timeLeft <= durationInMinutes * 60 * 0.05);
     }
 
     const timerId = setInterval(() => {
@@ -45,13 +47,18 @@ export const InterviewTimer: React.FC<InterviewTimerProps> = ({
     <div 
       className={cn(
         "flex items-center px-3 py-1.5 rounded-lg font-medium transition-colors",
-        isWarning 
-          ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" 
-          : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+        isCritical 
+          ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 animate-pulse" 
+          : isWarning 
+            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" 
+            : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
         className
       )}
     >
-      <Timer className="w-4 h-4 mr-2" />
+      <Timer className={cn(
+        "w-4 h-4 mr-2", 
+        isCritical && "animate-ping"
+      )} />
       <span>{formatTime(timeLeft)}</span>
     </div>
   );
