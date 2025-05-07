@@ -9,6 +9,179 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      interview_questions: {
+        Row: {
+          category: string
+          created_at: string | null
+          expected_answer_format: string | null
+          id: string
+          question_meta: Json | null
+          question_order: number
+          question_text: string
+          question_type: string
+          session_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          expected_answer_format?: string | null
+          id?: string
+          question_meta?: Json | null
+          question_order: number
+          question_text: string
+          question_type: string
+          session_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          expected_answer_format?: string | null
+          id?: string
+          question_meta?: Json | null
+          question_order?: number
+          question_text?: string
+          question_type?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_questions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interview_sessions: {
+        Row: {
+          attempt_count: number | null
+          completed_at: string | null
+          created_at: string | null
+          difficulty_level: string
+          domain: string | null
+          duration_taken: unknown | null
+          exit_error_count: number | null
+          experience_level: string | null
+          id: string
+          interview_type: string
+          max_exit_errors: number | null
+          number_of_questions: number
+          preferred_language: string
+          score: number | null
+          started_at: string | null
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          attempt_count?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          difficulty_level: string
+          domain?: string | null
+          duration_taken?: unknown | null
+          exit_error_count?: number | null
+          experience_level?: string | null
+          id?: string
+          interview_type: string
+          max_exit_errors?: number | null
+          number_of_questions: number
+          preferred_language?: string
+          score?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          attempt_count?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          difficulty_level?: string
+          domain?: string | null
+          duration_taken?: unknown | null
+          exit_error_count?: number | null
+          experience_level?: string | null
+          id?: string
+          interview_type?: string
+          max_exit_errors?: number | null
+          number_of_questions?: number
+          preferred_language?: string
+          score?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_answers: {
+        Row: {
+          ai_feedback: string | null
+          answer_text: string | null
+          id: string
+          is_correct: boolean | null
+          question_id: string
+          session_id: string
+          submitted_at: string | null
+          time_taken: unknown | null
+          user_id: string
+        }
+        Insert: {
+          ai_feedback?: string | null
+          answer_text?: string | null
+          id?: string
+          is_correct?: boolean | null
+          question_id: string
+          session_id: string
+          submitted_at?: string | null
+          time_taken?: unknown | null
+          user_id: string
+        }
+        Update: {
+          ai_feedback?: string | null
+          answer_text?: string | null
+          id?: string
+          is_correct?: boolean | null
+          question_id?: string
+          session_id?: string
+          submitted_at?: string | null
+          time_taken?: unknown | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "interview_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_answers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           created_at: string | null

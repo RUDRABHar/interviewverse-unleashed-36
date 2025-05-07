@@ -8,6 +8,7 @@ import { InterviewTimer } from './InterviewTimer';
 import { LoadingScreen } from './LoadingScreen';
 import { generateInterviewQuestions } from '@/services/gemini';
 import { AlertCircle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface InterviewSession {
   id: string;
@@ -34,11 +35,33 @@ export const InterviewInProgress: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
   const [generatingQuestions, setGeneratingQuestions] = useState(true);
+  const [dbSessionId, setDbSessionId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Get the current user
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("Error fetching session:", error);
+        return;
+      }
+      if (data.session) {
+        setUserId(data.session.user.id);
+      } else {
+        // Handle case where user is not logged in
+        toast.error("You must be logged in to take an interview");
+        navigate('/auth');
+      }
+    };
+
+    getCurrentUser();
+  }, [navigate]);
 
   // Fetch interview session data and generate questions
   useEffect(() => {
     const fetchInterview = async () => {
-      if (!id) return;
+      if (!id || !userId) return;
 
       try {
         // In a real implementation, this would load from an API
@@ -52,6 +75,30 @@ export const InterviewInProgress: React.FC = () => {
         const config = JSON.parse(storedConfig);
         setGeneratingQuestions(true);
         
+        // Create Supabase interview session record
+        const { data: sessionData, error: sessionError } = await supabase
+          .from('interview_sessions')
+          .insert({
+            user_id: userId,
+            interview_type: config.types.join(','),
+            domain: config.domain || null,
+            preferred_language: config.language || 'English',
+            number_of_questions: config.numberOfQuestions || 5,
+            difficulty_level: config.difficulty || 'Medium',
+            experience_level: config.experienceLevel || null,
+            status: 'in_progress',
+            started_at: new Date().toISOString(),
+          })
+          .select()
+          .single();
+
+        if (sessionError) {
+          console.error("Error creating interview session:", sessionError);
+          throw new Error("Failed to create interview session in database");
+        }
+
+        setDbSessionId(sessionData.id);
+        
         // Generate questions using Gemini API
         try {
           console.log("Generating questions with config:", config);
@@ -62,6 +109,26 @@ export const InterviewInProgress: React.FC = () => {
           }
           
           console.log("Generated questions:", questions);
+          
+          // Store questions in Supabase
+          const questionsToInsert = questions.map((q, index) => ({
+            session_id: sessionData.id,
+            question_text: q.question,
+            question_type: q.type || 'descriptive',
+            category: config.types[0] || 'general',
+            question_meta: q.options ? { options: q.options } : null,
+            expected_answer_format: q.expectedAnswerFormat || null,
+            question_order: index + 1
+          }));
+
+          const { error: questionsError } = await supabase
+            .from('interview_questions')
+            .insert(questionsToInsert);
+
+          if (questionsError) {
+            console.error("Error storing questions:", questionsError);
+            throw new Error("Failed to store interview questions");
+          }
           
           // Create session object
           const session: InterviewSession = {
@@ -84,6 +151,14 @@ export const InterviewInProgress: React.FC = () => {
           toast.error("Error generating interview questions");
           setError(`Failed to generate questions: ${err.message}`);
           setGeneratingQuestions(false);
+          
+          // Update session status to error
+          if (sessionData?.id) {
+            await supabase
+              .from('interview_sessions')
+              .update({ status: 'error' })
+              .eq('id', sessionData.id);
+          }
         }
       } catch (err: any) {
         console.error("Error starting interview:", err);
@@ -102,10 +177,38 @@ export const InterviewInProgress: React.FC = () => {
     };
 
     fetchInterview();
-  }, [id, retryCount]);
+  }, [id, retryCount, userId, navigate]);
 
-  const handleAnswerSubmit = (questionId: string, answer: string, isCorrect?: boolean) => {
-    if (!session) return;
+  const handleAnswerSubmit = async (questionId: string, answer: string, isCorrect?: boolean) => {
+    if (!session || !dbSessionId || !userId) return;
+
+    // Store the answer in Supabase
+    try {
+      // Find the question in the database
+      const { data: questionData } = await supabase
+        .from('interview_questions')
+        .select('id')
+        .eq('session_id', dbSessionId)
+        .eq('question_order', currentQuestionIndex + 1)
+        .single();
+
+      if (questionData) {
+        // Store the answer
+        await supabase
+          .from('user_answers')
+          .insert({
+            question_id: questionData.id,
+            session_id: dbSessionId,
+            user_id: userId,
+            answer_text: answer,
+            is_correct: isCorrect !== undefined ? isCorrect : null,
+            submitted_at: new Date().toISOString()
+          });
+      }
+    } catch (err) {
+      console.error("Error storing answer:", err);
+      // Continue even if storage fails - don't block the user
+    }
 
     // Store the answer and score (if provided)
     const updatedSession = { 
@@ -127,13 +230,53 @@ export const InterviewInProgress: React.FC = () => {
     if (currentQuestionIndex < session.questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      // Complete interview
+      // Complete interview in Supabase
+      if (dbSessionId) {
+        try {
+          // Calculate score if applicable
+          let score = null;
+          const scorableAnswers = Object.values(updatedSession.scores).filter(val => val !== null);
+          if (scorableAnswers.length > 0) {
+            const correctAnswers = scorableAnswers.filter(val => val === true).length;
+            score = (correctAnswers / scorableAnswers.length) * 100;
+          }
+
+          await supabase
+            .from('interview_sessions')
+            .update({ 
+              status: 'completed',
+              completed_at: new Date().toISOString(),
+              score: score
+            })
+            .eq('id', dbSessionId);
+        } catch (err) {
+          console.error("Error updating session completion status:", err);
+        }
+      }
+
+      // Navigate to results page
       navigate(`/interviews/complete/${id}`);
     }
   };
 
-  const handleTimeUp = () => {
+  const handleTimeUp = async () => {
     toast.warning("Time's up! Your interview session has ended.");
+    
+    // Update session status in Supabase
+    if (dbSessionId) {
+      try {
+        await supabase
+          .from('interview_sessions')
+          .update({ 
+            status: 'completed',
+            completed_at: new Date().toISOString()
+          })
+          .eq('id', dbSessionId);
+      } catch (err) {
+        console.error("Error updating session completion status:", err);
+      }
+    }
+    
     // Navigate to results page
     navigate(`/interviews/complete/${id}`);
   };

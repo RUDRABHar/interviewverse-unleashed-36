@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
 
 interface InterviewResult {
   id: string;
@@ -13,6 +14,7 @@ interface InterviewResult {
   questionsAnswered: number;
   totalQuestions: number;
   completedAt: string;
+  score: number | null;
 }
 
 export const InterviewComplete: React.FC = () => {
@@ -28,15 +30,21 @@ export const InterviewComplete: React.FC = () => {
       origin: { y: 0.6 }
     });
 
-    // In a real implementation, fetch the results from an API
-    // For now, we'll simulate from localStorage
-    const fetchResult = () => {
+    // Fetch the interview results from Supabase and local storage
+    const fetchResult = async () => {
       try {
         const storedSession = localStorage.getItem(`interview_session_${id}`);
         
         if (storedSession) {
           const session = JSON.parse(storedSession);
           const answersCount = Object.keys(session.answers).length;
+          
+          // Try to get additional data from Supabase
+          const { data: sessionData } = await supabase
+            .from('interview_sessions')
+            .select('*')
+            .eq('id', id)
+            .maybeSingle();
           
           setResult({
             id: session.id,
@@ -45,6 +53,7 @@ export const InterviewComplete: React.FC = () => {
             questionsAnswered: answersCount,
             totalQuestions: session.questions.length,
             completedAt: new Date().toISOString(),
+            score: sessionData?.score || null,
           });
         }
       } catch (err) {
@@ -95,6 +104,12 @@ export const InterviewComplete: React.FC = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">Duration</p>
                 <p className="font-medium dark:text-white">{result.duration} minutes</p>
               </div>
+              {result.score !== null && (
+                <div className="text-left col-span-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Score</p>
+                  <p className="font-medium dark:text-white">{Math.round(result.score)}%</p>
+                </div>
+              )}
             </div>
           </div>
         )}
