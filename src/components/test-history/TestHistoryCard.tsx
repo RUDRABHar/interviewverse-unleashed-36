@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { format, formatDistance } from 'date-fns';
+import { format } from 'date-fns';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -40,10 +40,10 @@ export const TestHistoryCard: React.FC<TestHistoryCardProps> = ({ interview }) =
   };
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-800 dark:bg-gray-900/50 backdrop-blur-sm overflow-hidden">
+    <Card className="transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-800 dark:bg-gray-800 backdrop-blur-sm overflow-hidden animate-fade-in">
       <CardHeader className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/60 dark:to-gray-900/60 border-b dark:border-gray-800">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold dark:text-white line-clamp-1" title={interview.interview_type}>
+          <h3 className="font-semibold dark:text-white line-clamp-1 font-sora" title={interview.interview_type}>
             {interview.interview_type.charAt(0).toUpperCase() + interview.interview_type.slice(1)} - {interview.domain || 'General'}
           </h3>
           <Badge variant={statusMap[interview.status as keyof typeof statusMap]?.variant || 'default'}>

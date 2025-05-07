@@ -123,7 +123,7 @@ const Analytics = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="flex flex-col items-center space-y-4">
-          <div className="h-16 w-16 border-t-4 border-b-4 border-orange-500 rounded-full animate-spin"></div>
+          <div className="h-16 w-16 border-t-4 border-b-4 border-interview-primary rounded-full animate-spin"></div>
           <div className="text-white font-sora text-xl">Loading analytics...</div>
         </div>
       </div>
@@ -138,22 +138,22 @@ const Analytics = () => {
         <div className="flex-1 flex flex-col">
           <DashboardHeader user={user} profile={profile} />
           
-          <main className="flex-1 overflow-auto p-4 md:p-6">
+          <main className="flex-1 overflow-auto p-4 md:p-6 animate-fade-in">
             <div className="max-w-7xl mx-auto space-y-8">
               <div>
-                <h1 className="text-3xl font-bold tracking-tight mb-1">Analytics</h1>
+                <h1 className="text-3xl font-bold tracking-tight font-sora mb-1 text-gray-800 dark:text-white">Analytics</h1>
                 <p className="text-gray-500 dark:text-gray-400">
                   Track your interview performance and improvement over time
                 </p>
               </div>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="col-span-full lg:col-span-2">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="col-span-full lg:col-span-2 transition-all duration-300 hover:shadow-lg">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                      <h2 className="text-xl font-semibold mb-2 sm:mb-0">Performance Over Time</h2>
+                      <h2 className="text-xl font-semibold mb-2 sm:mb-0 text-gray-800 dark:text-white">Performance Over Time</h2>
                       <Tabs defaultValue="month" className="w-full sm:w-auto">
-                        <TabsList className="grid grid-cols-3 w-full sm:w-auto">
+                        <TabsList className="grid grid-cols-3 w-full sm:w-auto bg-gray-100 dark:bg-gray-700">
                           <TabsTrigger value="week">Week</TabsTrigger>
                           <TabsTrigger value="month">Month</TabsTrigger>
                           <TabsTrigger value="year">Year</TabsTrigger>
@@ -166,25 +166,25 @@ const Analytics = () => {
                   </div>
                 </div>
                 
-                <div className="col-span-full lg:col-span-1">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 h-full">
-                    <h2 className="text-xl font-semibold mb-6">Performance by Category</h2>
+                <div className="col-span-full lg:col-span-1 transition-all duration-300 hover:shadow-lg">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 h-full border border-gray-100 dark:border-gray-700">
+                    <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Performance by Category</h2>
                     <div className="h-[300px]">
                       <PerformanceByCategoryChart data={analyticsData.performanceByCategory} />
                     </div>
                   </div>
                 </div>
                 
-                <div className="col-span-full">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="col-span-full transition-all duration-300 hover:shadow-lg">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                      <h2 className="text-xl font-semibold mb-2 sm:mb-0">Interview Activity Calendar</h2>
+                      <h2 className="text-xl font-semibold mb-2 sm:mb-0 text-gray-800 dark:text-white">Interview Activity Calendar</h2>
                       <Tabs 
                         defaultValue="month" 
                         onValueChange={(value) => setDateRange(value as "week" | "month" | "year")}
                         className="w-full sm:w-auto"
                       >
-                        <TabsList className="grid grid-cols-3 w-full sm:w-auto">
+                        <TabsList className="grid grid-cols-3 w-full sm:w-auto bg-gray-100 dark:bg-gray-700">
                           <TabsTrigger value="week">Week</TabsTrigger>
                           <TabsTrigger value="month">Month</TabsTrigger>
                           <TabsTrigger value="year">Year</TabsTrigger>
@@ -192,12 +192,13 @@ const Analytics = () => {
                       </Tabs>
                     </div>
                     
-                    <InterviewActivityCalendar dateRange={dateRange} />
+                    {/* Pass the activity data and dateRange to the calendar component */}
+                    <InterviewActivityCalendar data={activityData} dateRange={dateRange} />
                   </div>
                 </div>
                 
-                <div className="col-span-full">
-                  <PerformanceInsightsPanel />
+                <div className="col-span-full transition-all duration-300 hover:shadow-lg">
+                  <PerformanceInsightsPanel data={analyticsData} />
                 </div>
               </div>
             </div>

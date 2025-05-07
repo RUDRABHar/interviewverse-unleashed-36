@@ -1,12 +1,11 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { InterviewScheduler } from '@/components/schedules/InterviewScheduler';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useEffect, useState } from 'react';
 
 const ScheduleInterview = () => {
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ const ScheduleInterview = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="flex flex-col items-center space-y-4">
-          <div className="h-16 w-16 border-t-4 border-b-4 border-orange-500 rounded-full animate-spin"></div>
+          <div className="h-16 w-16 border-t-4 border-b-4 border-interview-primary rounded-full animate-spin"></div>
           <div className="text-white font-sora text-xl">Loading...</div>
         </div>
       </div>
@@ -69,7 +68,7 @@ const ScheduleInterview = () => {
         <div className="flex-1 flex flex-col">
           <DashboardHeader user={user} profile={profile} />
           
-          <main className="flex-1 overflow-auto p-4 md:p-6">
+          <main className="flex-1 overflow-auto p-4 md:p-6 animate-fade-in">
             <div className="max-w-4xl mx-auto">
               <InterviewScheduler user={user} />
             </div>
