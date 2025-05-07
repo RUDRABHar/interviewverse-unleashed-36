@@ -1,11 +1,19 @@
 
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App.tsx'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { Toaster } from '@/components/ui/toaster'
 import './index.css'
 
-createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-);
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Router>
+      <ThemeProvider>
+        <App />
+        <Toaster />
+      </ThemeProvider>
+    </Router>
+  </React.StrictMode>,
+)
