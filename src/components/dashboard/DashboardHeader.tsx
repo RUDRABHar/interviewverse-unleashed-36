@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Bell, User, Sun, Moon, Settings, LogOut, Search } from 'lucide-react';
+import { Bell, User, Sun, Moon, Settings, LogOut, Search, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
