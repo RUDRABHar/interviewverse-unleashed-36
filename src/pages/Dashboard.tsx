@@ -157,144 +157,146 @@ const Dashboard = () => {
   }
   
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-        <DashboardSidebar />
-        
-        <div className="flex-1 flex flex-col">
-          <DashboardHeader user={user} profile={profile} />
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <DashboardSidebar />
           
-          <main className="flex-1 overflow-auto p-4 md:p-6">
-            <motion.div 
-              className="max-w-7xl mx-auto space-y-6"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div variants={itemVariants}>
-                <WelcomeHero profile={profile} />
-              </motion.div>
-              
-              {/* Recent Interview Activity */}
-              <motion.section variants={itemVariants}>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Recent Interview Activity</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => (
-                    <ActivityCard key={activity.id} activity={activity} />
-                  )) : (
-                    <GlassCard className="col-span-full" glassOpacity="medium" hoverEffect>
-                      <CardContent className="flex flex-col items-center justify-center py-10">
-                        <div className="w-32 h-32 mb-4 bg-interview-primary/10 rounded-full flex items-center justify-center">
-                          <BarChart className="w-16 h-16 text-interview-primary/70" />
+          <div className="flex-1 flex flex-col">
+            <DashboardHeader user={user} profile={profile} />
+            
+            <main className="flex-1 overflow-auto p-4 md:p-6">
+              <motion.div 
+                className="max-w-7xl mx-auto space-y-6"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.div variants={itemVariants}>
+                  <WelcomeHero profile={profile} />
+                </motion.div>
+                
+                {/* Recent Interview Activity */}
+                <motion.section variants={itemVariants}>
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Recent Interview Activity</h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => (
+                      <ActivityCard key={activity.id} activity={activity} />
+                    )) : (
+                      <GlassCard className="col-span-full" glassOpacity="medium" hoverEffect>
+                        <CardContent className="flex flex-col items-center justify-center py-10">
+                          <div className="w-32 h-32 mb-4 bg-interview-primary/10 rounded-full flex items-center justify-center">
+                            <BarChart className="w-16 h-16 text-interview-primary/70" />
+                          </div>
+                          <h3 className="text-xl font-medium text-gray-700 dark:text-gray-200 mb-2 font-sora">
+                            Your journey starts here. No interviews yet.
+                          </h3>
+                          <GradientButton className="mt-4 group">
+                            Start Your First Interview
+                            <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                          </GradientButton>
+                        </CardContent>
+                      </GlassCard>
+                    )}
+                  </div>
+                </motion.section>
+                
+                {/* Data Visualizations */}
+                <motion.section variants={itemVariants}>
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Your Performance Insights</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <GlassCard glassOpacity="light" hoverEffect borderEffect>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">Progress Over Time</CardTitle>
+                        <CardDescription>Your performance trajectory</CardDescription>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="h-[200px]">
+                          <PerformanceChart />
                         </div>
-                        <h3 className="text-xl font-medium text-gray-700 dark:text-gray-200 mb-2 font-sora">
-                          Your journey starts here. No interviews yet.
-                        </h3>
-                        <GradientButton className="mt-4 group">
-                          Start Your First Interview
-                          <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                        </GradientButton>
                       </CardContent>
                     </GlassCard>
-                  )}
-                </div>
-              </motion.section>
-              
-              {/* Data Visualizations */}
-              <motion.section variants={itemVariants}>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">Your Performance Insights</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  <GlassCard glassOpacity="light" hoverEffect borderEffect>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Progress Over Time</CardTitle>
-                      <CardDescription>Your performance trajectory</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="h-[200px]">
-                        <PerformanceChart />
-                      </div>
-                    </CardContent>
-                  </GlassCard>
-                  
-                  <GlassCard glassOpacity="light" hoverEffect borderEffect>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Skill Mapping</CardTitle>
-                      <CardDescription>Your strengths and areas to improve</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="h-[200px]">
-                        <SkillsRadarChart />
-                      </div>
-                    </CardContent>
-                  </GlassCard>
-                  
-                  <GlassCard glassOpacity="light" hoverEffect borderEffect>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Interview Categories</CardTitle>
-                      <CardDescription>Types of interviews you've practiced</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="h-[200px]">
-                        <InterviewTypeChart />
-                      </div>
-                    </CardContent>
-                  </GlassCard>
-                </div>
-              </motion.section>
-              
-              {/* AI-Powered Recommendations */}
-              <motion.section variants={itemVariants}>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
-                  AI-Powered Recommendations
-                </h2>
-                <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                  {mockRecommendations.map(recommendation => (
-                    <RecommendationCard key={recommendation.id} recommendation={recommendation} />
-                  ))}
-                </div>
-              </motion.section>
-              
-              {/* Two Column Layout for Upcoming Interviews and Pro Upgrade */}
-              <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Upcoming Interviews */}
-                <div className="lg:col-span-2">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 font-sora">
-                      Upcoming Interviews
-                    </h2>
-                    <GradientButton 
-                      variant="outline" 
-                      size="sm" 
-                      asChild
-                      gradientFrom="from-interview-blue/20" 
-                      gradientTo="to-interview-blue/20"
-                      className="bg-white dark:bg-gray-800 text-interview-blue border border-interview-blue/30"
-                    >
-                      <Link to="/schedule" className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>Schedule New</span>
-                      </Link>
-                    </GradientButton>
+                    
+                    <GlassCard glassOpacity="light" hoverEffect borderEffect>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">Skill Mapping</CardTitle>
+                        <CardDescription>Your strengths and areas to improve</CardDescription>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="h-[200px]">
+                          <SkillsRadarChart />
+                        </div>
+                      </CardContent>
+                    </GlassCard>
+                    
+                    <GlassCard glassOpacity="light" hoverEffect borderEffect>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">Interview Categories</CardTitle>
+                        <CardDescription>Types of interviews you've practiced</CardDescription>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="h-[200px]">
+                          <InterviewTypeChart />
+                        </div>
+                      </CardContent>
+                    </GlassCard>
+                  </div>
+                </motion.section>
+                
+                {/* AI-Powered Recommendations */}
+                <motion.section variants={itemVariants}>
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
+                    AI-Powered Recommendations
+                  </h2>
+                  <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
+                    {mockRecommendations.map(recommendation => (
+                      <RecommendationCard key={recommendation.id} recommendation={recommendation} />
+                    ))}
+                  </div>
+                </motion.section>
+                
+                {/* Two Column Layout for Upcoming Interviews and Pro Upgrade */}
+                <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Upcoming Interviews */}
+                  <div className="lg:col-span-2">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 font-sora">
+                        Upcoming Interviews
+                      </h2>
+                      <GradientButton 
+                        variant="outline" 
+                        size="sm" 
+                        asChild
+                        gradientFrom="from-interview-blue/20" 
+                        gradientTo="to-interview-blue/20"
+                        className="bg-white dark:bg-gray-800 text-interview-blue border border-interview-blue/30"
+                      >
+                        <Link to="/schedule" className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>Schedule New</span>
+                        </Link>
+                      </GradientButton>
+                    </div>
+                    
+                    <GlassCard glassOpacity="light">
+                      {user && <UpcomingInterviews userId={user.id} limit={3} />}
+                    </GlassCard>
                   </div>
                   
-                  <GlassCard glassOpacity="light">
-                    {user && <UpcomingInterviews userId={user.id} limit={3} />}
-                  </GlassCard>
-                </div>
-                
-                {/* Pro Upgrade CTA */}
-                <div>
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
-                    Upgrade
-                  </h2>
-                  <ProUpgradeCard />
-                </div>
+                  {/* Pro Upgrade CTA */}
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 font-sora">
+                      Upgrade
+                    </h2>
+                    <ProUpgradeCard />
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          </main>
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </div>
   );
 };
 
