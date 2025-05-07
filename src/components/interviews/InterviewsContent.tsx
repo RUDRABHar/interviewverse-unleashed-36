@@ -38,13 +38,13 @@ export const InterviewsContent: React.FC<InterviewsContentProps> = ({
   tabs,
   activeTab,
   loading,
-  interviews,
+  interviews = [], // Provide a default empty array
   onTabChange
 }) => {
   return (
     <Tabs defaultValue="all" value={activeTab} onValueChange={onTabChange}>
       <TabsList className="mb-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm">
-        {tabs.map(tab => (
+        {tabs && tabs.map(tab => (
           <TabsTrigger key={tab.id} value={tab.id}>{tab.name}</TabsTrigger>
         ))}
       </TabsList>
@@ -59,7 +59,7 @@ export const InterviewsContent: React.FC<InterviewsContentProps> = ({
               />
             ))}
           </div>
-        ) : interviews.length > 0 ? (
+        ) : interviews && interviews.length > 0 ? (
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={containerVariants}

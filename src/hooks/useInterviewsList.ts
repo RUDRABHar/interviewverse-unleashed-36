@@ -19,7 +19,10 @@ export const useInterviewsList = (user: any) => {
   // Fetch interviews when tab changes or refresh key updates
   useEffect(() => {
     const fetchInterviews = async () => {
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
       
       try {
         setLoading(true);
@@ -41,6 +44,7 @@ export const useInterviewsList = (user: any) => {
         setInterviews(data || []);
       } catch (error) {
         console.error('Error fetching interviews:', error);
+        setInterviews([]);
       } finally {
         setLoading(false);
       }
@@ -48,6 +52,8 @@ export const useInterviewsList = (user: any) => {
     
     if (user) {
       fetchInterviews();
+    } else {
+      setLoading(false); // Make sure loading is set to false if no user
     }
   }, [user, activeTab, refreshKey]);
 

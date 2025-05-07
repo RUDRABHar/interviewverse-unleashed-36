@@ -22,37 +22,42 @@ const Interviews = () => {
   // Use the custom hook for interview data
   const {
     loading: interviewsLoading,
-    interviews,
-    tabs,
-    activeTab,
-    handleTabChange,
-    refreshInterviews
+    interviews = [], // Provide default value
+    tabs = [], // Provide default value
+    activeTab = 'all', // Provide default value
+    handleTabChange = () => {}, // Provide default function
+    refreshInterviews = () => {} // Provide default function
   } = useInterviewsList(user);
 
   // Fetch user data
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/auth');
-        return;
-      }
-      
-      setUser(session.user);
-      
-      if (session.user) {
-        const { data: profile, error } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-          
-        if (!error && profile) {
-          setProfile(profile);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          navigate('/auth');
+          return;
         }
+        
+        setUser(session.user);
+        
+        if (session.user) {
+          const { data: profile, error } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+            
+          if (!error && profile) {
+            setProfile(profile);
+          }
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error("Error in checkAuth:", error);
+        setLoading(false);
       }
-      
-      setLoading(false);
     };
     
     checkAuth();
@@ -98,10 +103,10 @@ const Interviews = () => {
             <InterviewsHeader onNewInterview={handleNewInterview} />
             
             <InterviewsContent
-              tabs={tabs}
+              tabs={tabs || []}
               activeTab={activeTab}
               loading={interviewsLoading}
-              interviews={interviews}
+              interviews={interviews || []}
               onTabChange={handleTabChange}
             />
           </main>
