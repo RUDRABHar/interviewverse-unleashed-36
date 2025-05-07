@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Info, Database, ShieldAlert } from 'lucide-react';
+import { AlertCircle, Info, Database, ShieldAlert, ArrowLeftCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
@@ -45,6 +45,18 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
     }
   };
 
+  const getErrorDescription = () => {
+    if (errorType === 'permissions') {
+      return "There was a database permissions error. This typically happens when the database security policies are preventing the operation. Please try again or contact support if the issue persists.";
+    }
+    
+    if (error.includes("row-level security") || error.includes("violates row-level security policy")) {
+      return "A database permission error occurred. Your login session may have expired or you don't have permission to access this interview. Please try logging in again.";
+    }
+    
+    return error;
+  };
+
   const getActionButton = () => {
     switch (errorType) {
       case 'profile':
@@ -59,10 +71,10 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
       case 'permissions':
         return (
           <Button 
-            onClick={() => window.location.reload()}
+            onClick={() => navigate('/auth')}
             className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-300"
           >
-            Reload Application
+            Login Again
           </Button>
         );
       default:
@@ -77,14 +89,6 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
     }
   };
 
-  // Check if error is related to row-level security
-  const isPermissionError = error.includes('row-level security') || 
-                            error.includes('violates row-level security policy') || 
-                            error.includes('Failed to store interview questions');
-
-  // If we detect a permissions error but it wasn't explicitly set as the error type
-  const effectiveErrorType = isPermissionError && errorType === 'general' ? 'permissions' : errorType;
-
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
       <div className="text-center max-w-md p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
@@ -97,9 +101,7 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
         </h2>
         
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          {effectiveErrorType === 'permissions' 
-            ? "There was a database permissions error. This typically happens when the database security policies are preventing the operation. Please try again or contact support if the issue persists."
-            : error}
+          {getErrorDescription()}
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -109,6 +111,7 @@ export const InterviewErrorView: React.FC<InterviewErrorViewProps> = ({
             onClick={() => navigate('/interviews')}
             className="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-300"
           >
+            <ArrowLeftCircle className="mr-2 h-4 w-4" />
             Return to Interviews
           </Button>
         </div>
