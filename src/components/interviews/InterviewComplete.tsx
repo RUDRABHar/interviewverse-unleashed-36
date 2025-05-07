@@ -23,6 +23,7 @@ export const InterviewComplete: React.FC = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState<InterviewResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
     // Trigger confetti effect on component mount
@@ -70,6 +71,12 @@ export const InterviewComplete: React.FC = () => {
               completedAt: sessionData.completed_at || new Date().toISOString(),
               score: sessionData.score,
             });
+
+            // Begin analysis after fetching results
+            if (session.questions && session.answers) {
+              setAnalyzing(true);
+              await analyzeAnswers(session, id);
+            }
           } else {
             // Fallback to local data if no database record
             setResult({
@@ -96,6 +103,88 @@ export const InterviewComplete: React.FC = () => {
     fetchResult();
   }, [id]);
 
+  // Function to analyze answers using Gemini AI
+  const analyzeAnswers = async (session: any, sessionId: string) => {
+    try {
+      const questions = session.questions;
+      const answers = session.answers;
+
+      let totalAnalyzed = 0;
+      const totalToAnalyze = Object.keys(answers).length;
+      
+      toast.info(`Analyzing ${totalToAnalyze} answers with AI...`);
+
+      // Process each answer with Gemini
+      for (const questionId in answers) {
+        if (answers.hasOwnProperty(questionId)) {
+          try {
+            const userAnswer = answers[questionId];
+            
+            // Call the edge function to analyze this answer
+            const response = await fetch(`${window.location.origin}/api/analyze-interview-answers`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                session_id: sessionId,
+                question_id: questionId,
+                user_answer: userAnswer
+              })
+            });
+            
+            if (!response.ok) {
+              console.error(`Error analyzing answer for question ${questionId}:`, await response.text());
+              continue;
+            }
+            
+            totalAnalyzed++;
+            
+            // Update progress if many questions
+            if (totalToAnalyze > 3 && totalAnalyzed % 3 === 0) {
+              toast.info(`Analyzed ${totalAnalyzed}/${totalToAnalyze} answers...`);
+            }
+          } catch (error) {
+            console.error(`Error processing question ${questionId}:`, error);
+          }
+        }
+      }
+
+      // Calculate final score after all answers are analyzed
+      const { data, error } = await supabase
+        .from('user_answers')
+        .select('is_correct')
+        .eq('session_id', sessionId);
+      
+      if (error) {
+        console.error('Error fetching answers for score calculation:', error);
+      } else if (data && data.length > 0) {
+        const correct = data.filter(a => a.is_correct === true).length;
+        const partial = data.filter(a => a.is_correct === null).length;
+        const total = data.length;
+        
+        // Calculate score: correct answers + half points for partial answers
+        const finalScore = Math.round(((correct + (partial * 0.5)) / total) * 100);
+        
+        // Update session with final score
+        await supabase
+          .from('interview_sessions')
+          .update({ score: finalScore })
+          .eq('id', sessionId);
+      }
+      
+      toast.success('Analysis complete!');
+      setAnalyzing(false);
+      
+      // Navigate to results page after analysis is complete
+      navigate(`/interviews/results/${sessionId}`);
+    } catch (err) {
+      console.error('Error in answer analysis process:', err);
+      toast.error('Error analyzing answers');
+      setAnalyzing(false);
+    }
+  };
+
   const handleViewResults = () => {
     navigate(`/interviews/results/${id}`);
   };
@@ -110,6 +199,18 @@ export const InterviewComplete: React.FC = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">Loading results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (analyzing) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Analyzing your answers with AI...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-500">This may take a minute</p>
         </div>
       </div>
     );

@@ -15,6 +15,7 @@ import { InterviewTypeChart } from '@/components/dashboard/InterviewTypeChart';
 import { UpcomingInterview } from '@/components/dashboard/UpcomingInterview';
 import { ProUpgradeCard } from '@/components/dashboard/ProUpgradeCard';
 import { SidebarProvider } from '@/components/ui/sidebar';
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
@@ -221,7 +222,12 @@ const Dashboard = () => {
                 </div>
                 
                 {/* Pro Upgrade CTA */}
-                
+                <div>
+                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                    Upgrade
+                  </h2>
+                  <ProUpgradeCard />
+                </div>
               </div>
             </div>
           </main>
@@ -229,4 +235,5 @@ const Dashboard = () => {
       </div>
     </SidebarProvider>;
 };
+
 export default Dashboard;
