@@ -99,7 +99,6 @@ export const DashboardSidebar = () => {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
-                    asChild
                     isActive={item.active}
                     tooltip={item.label}
                   >

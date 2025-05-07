@@ -195,7 +195,7 @@ const Dashboard = () => {
                 <motion.section variants={itemVariants}>
                   <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 font-sora">Recent Interview Activity</h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => (
+                    {mockRecentActivity && mockRecentActivity.length > 0 ? mockRecentActivity.map(activity => (
                       <ActivityCard key={activity.id} activity={activity} />
                     )) : (
                       <PremiumCard className="col-span-full" glassOpacity="medium" hoverEffect>
@@ -220,8 +220,10 @@ const Dashboard = () => {
                             Complete your first interview to see your performance data and get personalized recommendations.
                           </p>
                           <GradientButton className="group">
-                            Start Your First Interview
-                            <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                            <div className="flex items-center">
+                              Start Your First Interview
+                              <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                            </div>
                           </GradientButton>
                         </CardContent>
                       </PremiumCard>
@@ -304,7 +306,7 @@ const Dashboard = () => {
                     AI-Powered Recommendations
                   </h2>
                   <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                    {mockRecommendations.map(recommendation => (
+                    {mockRecommendations && mockRecommendations.map(recommendation => (
                       <RecommendationCard key={recommendation.id} recommendation={recommendation} />
                     ))}
                   </div>
@@ -321,7 +323,6 @@ const Dashboard = () => {
                       <GradientButton 
                         variant="outline" 
                         size="sm" 
-                        asChild
                         gradientFrom="from-interview-blue/10" 
                         gradientTo="to-interview-blue/10"
                         className="bg-white dark:bg-gray-800 text-interview-blue border border-interview-blue/30"
