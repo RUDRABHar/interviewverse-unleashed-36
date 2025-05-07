@@ -10,6 +10,13 @@ interface LoadingScreenProps {
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ 
   message = "Preparing your interview experience..." 
 }) => {
+  const loadingSteps = [
+    "Analyzing your preferences...",
+    "Crafting personalized questions...",
+    "Preparing interview scenarios...",
+    "Setting up your virtual interview..."
+  ];
+  
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <motion.div
@@ -30,9 +37,28 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         <h2 className="text-2xl font-semibold mb-2 dark:text-white">
           {message}
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-          Generating personalized questions based on your preferences...
-        </p>
+        
+        <div className="max-w-md mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-6 space-y-2"
+          >
+            {loadingSteps.map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1 + index * 0.5 }}
+                className="flex items-center"
+              >
+                <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{step}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </motion.div>
 
       <motion.div

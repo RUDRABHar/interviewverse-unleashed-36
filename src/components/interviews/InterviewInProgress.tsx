@@ -21,6 +21,7 @@ interface InterviewSession {
     experienceLevel?: string;
   };
   answers: Record<string, string>;
+  scores: Record<string, boolean | null>; // Track correct/incorrect answers for MCQs
 }
 
 export const InterviewInProgress: React.FC = () => {
@@ -31,6 +32,7 @@ export const InterviewInProgress: React.FC = () => {
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
+  const [generatingQuestions, setGeneratingQuestions] = useState(true);
 
   // Fetch interview session data and generate questions
   useEffect(() => {
@@ -47,6 +49,7 @@ export const InterviewInProgress: React.FC = () => {
         }
         
         const config = JSON.parse(storedConfig);
+        setGeneratingQuestions(true);
         
         // Generate questions using Gemini API
         const questions = await generateInterviewQuestions(config);
@@ -58,12 +61,14 @@ export const InterviewInProgress: React.FC = () => {
           durationInMinutes: config.duration || 30,
           questions,
           config,
-          answers: {}
+          answers: {},
+          scores: {}
         };
         
         // Save session
         setSession(session);
         localStorage.setItem(`interview_session_${id}`, JSON.stringify(session));
+        setGeneratingQuestions(false);
       } catch (err: any) {
         console.error("Error starting interview:", err);
         
@@ -83,15 +88,19 @@ export const InterviewInProgress: React.FC = () => {
     fetchInterview();
   }, [id, retryCount]);
 
-  const handleAnswerSubmit = (questionId: string, answer: string) => {
+  const handleAnswerSubmit = (questionId: string, answer: string, isCorrect?: boolean) => {
     if (!session) return;
 
-    // Store the answer
+    // Store the answer and score (if provided)
     const updatedSession = { 
       ...session,
       answers: {
         ...session.answers,
         [questionId]: answer
+      },
+      scores: {
+        ...session.scores,
+        [questionId]: isCorrect !== undefined ? isCorrect : null
       }
     };
     
@@ -113,8 +122,8 @@ export const InterviewInProgress: React.FC = () => {
     navigate(`/interviews/complete/${id}`);
   };
 
-  if (loading) {
-    return <LoadingScreen />;
+  if (loading || generatingQuestions) {
+    return <LoadingScreen message={generatingQuestions ? "Generating personalized interview questions..." : undefined} />;
   }
 
   if (error || !session) {
@@ -147,6 +156,8 @@ export const InterviewInProgress: React.FC = () => {
             <InterviewTimer 
               durationInMinutes={session.durationInMinutes} 
               onTimeUp={handleTimeUp} 
+              currentQuestionIndex={currentQuestionIndex}
+              totalQuestions={session.questions.length}
             />
           </div>
         </header>

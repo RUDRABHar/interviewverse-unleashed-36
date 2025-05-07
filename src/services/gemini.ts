@@ -64,19 +64,28 @@ const buildTechnicalPrompt = (config: InterviewConfig): string => {
 
   The questions should test real-world problem-solving skills, domain expertise, algorithms, system thinking, and technical communication. Ensure questions cover a broad range of core subtopics in ${config.domain || 'the technical field'}.
   
-  Each question should be in the following format:
-  - Question Title
-  - Question Description (clear, structured, and concise)
-  - Optional code snippet or input/output format (if relevant)
-  - What interviewer expects as a good answer (answer not shown to user)
+  Include a MIX of different question formats:
+  1. Coding questions (30-40% of questions) - Include test cases with example inputs and expected outputs
+  2. Multiple choice questions (30-40% of questions) - Include 4-5 answer choices per question and mark which one is correct (but this won't be shown to the user)
+  3. Short answer technical questions (20-40% of questions)
   
-  Use clear formatting and do not include any hints or answers.
+  Each question should be in the following format:
+  - Question content: clear, structured, and concise instructions
+  - Question type: specify "technical" 
+  - Answer format: "code", "mcq", or "text" depending on the question type
+  - For MCQs: include an array of answer choices and index of the correct answer (0-based)
+  - For coding questions: include test cases with input and expected output examples
   
   Return the response as a valid JSON array of objects, where each object has these properties:
   - id: a unique string identifier
   - content: the full question text
   - type: "technical"
-  - answerFormat: either "text" or "code" depending on whether coding is required`;
+  - answerFormat: either "code", "mcq", or "text" depending on question type
+  - options: array of strings for MCQ choices (only for MCQs)
+  - correctOption: integer index of the correct option (only for MCQs)
+  - testCases: array of objects with "input" and "expectedOutput" fields (only for coding questions)
+  
+  Make sure all content is professional and realistic for a technical interview. Do NOT include hints or answers in the question content.`;
 };
 
 // Behavioral interview prompt template
@@ -89,13 +98,19 @@ const buildBehavioralPrompt = (config: InterviewConfig): string => {
   - Conflict resolution and team interaction
   - Adaptability and decision-making
   
-  Each question should follow the STAR (Situation, Task, Action, Result) framework where applicable. Avoid repetition and make questions challenging but realistic. Do not include sample answers or explanations.
+  Include a mix of formats:
+  1. Open-ended STAR format questions (60-70% of questions) - Use answerFormat: "text"
+  2. Multiple choice scenario questions (30-40% of questions) - Include 4-5 answer choices that represent different approaches to handling a situation, with one being the most appropriate. Use answerFormat: "mcq"
+  
+  Each question should follow the STAR (Situation, Task, Action, Result) framework where applicable. Avoid repetition and make questions challenging but realistic.
   
   Return the response as a valid JSON array of objects, where each object has these properties:
   - id: a unique string identifier
   - content: the full question text
   - type: "behavioral"
-  - answerFormat: "text"`;
+  - answerFormat: either "text" or "mcq" depending on question type
+  - options: array of strings for MCQ choices (only for MCQs)
+  - correctOption: integer index of the best option (only for MCQs)`;
 };
 
 // Communication skills interview prompt template
@@ -108,13 +123,19 @@ const buildCommunicationPrompt = (config: InterviewConfig): string => {
   - Active listening and empathy
   - Presentation or storytelling abilities
   
-  Use realistic workplace scenarios or client-facing situations. Include a variety of formats (e.g., scenario-based, response-based). Avoid yes/no questions. Do not include answers.
+  Include a mix of formats:
+  1. Scenario-based open questions (50-60% of questions) - Use answerFormat: "text"
+  2. Multiple choice questions about communication strategies (40-50% of questions) - Include 4-5 answer choices with one best answer. Use answerFormat: "mcq"
+  
+  Use realistic workplace scenarios or client-facing situations. Avoid yes/no questions.
   
   Return the response as a valid JSON array of objects, where each object has these properties:
   - id: a unique string identifier
   - content: the full question text
   - type: "communication"
-  - answerFormat: "text"`;
+  - answerFormat: either "text" or "mcq" depending on question type
+  - options: array of strings for MCQ choices (only for MCQs)
+  - correctOption: integer index of the best option (only for MCQs)`;
 };
 
 // Language proficiency interview prompt template
@@ -127,24 +148,37 @@ const buildLanguagePrompt = (config: InterviewConfig): string => {
   - Reading understanding
   - Spoken expression and fluency
   
-  Use context from ${config.domain || 'the professional field'} to make it professionally relevant. Mix question types such as sentence correction, audio comprehension, short paragraph responses, and spoken tasks. Format should be suitable for digital UI delivery. Do not include correct answers.
+  Include a mix of formats:
+  1. Open-ended questions requiring detailed responses (40-50%) - Use answerFormat: "text"
+  2. Multiple choice language questions (30-40%) - Include 4-5 answer choices with one correct answer. Use answerFormat: "mcq"
+  3. Audio-based response questions (20-30%) - Questions where the candidate would respond via audio. Use answerFormat: "audio"
+  
+  Use context from ${config.domain || 'the professional field'} to make it professionally relevant. Mix question types such as sentence correction, audio comprehension, short paragraph responses, and spoken tasks. Format should be suitable for digital UI delivery.
   
   Return the response as a valid JSON array of objects, where each object has these properties:
   - id: a unique string identifier
   - content: the full question text
   - type: "language"
-  - answerFormat: "audio"`;
+  - answerFormat: "text", "mcq", or "audio" depending on question type
+  - options: array of strings for MCQ choices (only for MCQs)
+  - correctOption: integer index of the correct option (only for MCQs)`;
 };
 
 // Default prompt as a fallback
 const buildDefaultPrompt = (config: InterviewConfig): string => {
   return `Generate ${config.questions} professional interview questions in ${config.language} for a ${config.domain || 'professional'} position with difficulty level ${config.difficulty}.
   
+  Include a mix of question formats:
+  1. Open-ended questions (50%) - Use answerFormat: "text"
+  2. Multiple choice questions (50%) - Include 4-5 answer choices with one best answer. Use answerFormat: "mcq"
+  
   Return the response as a valid JSON array of objects, where each object has these properties:
   - id: a unique string identifier
   - content: the full question text
   - type: one of ${config.types.join(', ')}
-  - answerFormat: "text"`;
+  - answerFormat: "text" or "mcq" depending on the question type
+  - options: array of strings for MCQ choices (only for MCQs)
+  - correctOption: integer index of the correct option (only for MCQs)`;
 };
 
 // Handle multiple question types by splitting the requested questions among the types
@@ -155,6 +189,16 @@ const buildMultiTypePrompt = (config: InterviewConfig): string => {
   let combinedPrompt = `Generate ${config.questions} professional interview questions divided across ${config.types.length} different question types for a ${config.domain || 'professional'} role. 
 
   Questions should be in ${config.language} and suitable for a candidate with ${mapDifficultyToExperience(config.difficulty)} years of experience (Difficulty: ${config.difficulty}).
+  
+  For ALL question types, include a mix of formats:
+  1. Open-ended questions requiring detailed responses - Use answerFormat: "text"
+  2. Multiple choice questions - Include 4-5 answer choices with one best answer. Use answerFormat: "mcq"
+  
+  For technical questions:
+  - Include some coding questions with example test cases - Use answerFormat: "code"
+  
+  For language proficiency questions:
+  - Include some audio response questions - Use answerFormat: "audio"
   
   Please generate questions divided as follows:`;
   
@@ -172,7 +216,10 @@ const buildMultiTypePrompt = (config: InterviewConfig): string => {
   - id: a unique string identifier
   - content: the full question text
   - type: the question type (one of ${config.types.join(', ')})
-  - answerFormat: "text", "code", or "audio" depending on question type`;
+  - answerFormat: "text", "code", "mcq", or "audio" depending on question type
+  - options: array of strings for MCQ choices (only for MCQs)
+  - correctOption: integer index of the correct option (only for MCQs)
+  - testCases: array of objects with "input" and "expectedOutput" fields (only for coding questions)`;
   
   return combinedPrompt;
 };
@@ -267,12 +314,29 @@ const parseQuestionsFromResponse = (response: any, config: InterviewConfig): Que
     
     // Convert parsed data to Question[] format
     return questionsData.map((q: any, index: number) => {
-      return {
+      const questionObj: Question = {
         id: q.id || `q-${index + 1}`,
         content: q.content || q.question || `Question ${index + 1}`,
         type: q.type || config.types[0] || 'technical',
         answerFormat: q.answerFormat || getDefaultAnswerFormat(q.type || config.types[0])
       };
+      
+      // Add MCQ options if available
+      if (q.options && Array.isArray(q.options) && q.options.length > 0) {
+        questionObj.options = q.options;
+        
+        // Add correct option if available (only used internally)
+        if (q.correctOption !== undefined) {
+          questionObj.correctOption = q.correctOption;
+        }
+      }
+      
+      // Add test cases for coding questions if available
+      if (q.testCases && Array.isArray(q.testCases)) {
+        questionObj.testCases = q.testCases;
+      }
+      
+      return questionObj;
     }).slice(0, config.questions); // Ensure we only return the requested number of questions
   } catch (error) {
     console.error('Error parsing questions from response:', error);
@@ -289,16 +353,59 @@ const extractQuestionsFromText = (text: string, config: InterviewConfig): any[] 
   for (let i = 0; i < Math.min(questionLines.length, config.questions); i++) {
     const content = questionLines[i].trim();
     if (content) {
-      questions.push({
+      const type = determineQuestionType(content, config.types[0]);
+      const answerFormat = determineAnswerFormat(content, type);
+      
+      // Create base question object
+      const question: any = {
         id: `q-${i + 1}`,
         content: content,
-        type: determineQuestionType(content, config.types[0]),
-        answerFormat: determineAnswerFormat(content, config.types[0])
-      });
+        type: type,
+        answerFormat: answerFormat
+      };
+      
+      // For MCQs, try to extract options from content
+      if (answerFormat === 'mcq') {
+        const options = extractMCQOptions(content);
+        if (options && options.length > 0) {
+          question.options = options;
+          question.correctOption = 0; // Default to first option as correct
+        }
+      }
+      
+      // For code questions, create simple test cases
+      if (answerFormat === 'code') {
+        question.testCases = [
+          { input: "example input", expectedOutput: "expected output" }
+        ];
+      }
+      
+      questions.push(question);
     }
   }
   
   return questions;
+};
+
+// Extract MCQ options from text
+const extractMCQOptions = (content: string): string[] | null => {
+  // Look for patterns like "a) option" or "A. option" or "1. option"
+  const optionMatches = content.match(/(?:^|\n)(?:[a-d][\)\.]|[A-D][\)\.:]|[1-4][\)\.:])\s*(.+?)(?=(?:\n(?:[a-d][\)\.]|[A-D][\)\.:]|[1-4][\)\.:])|$))/g);
+  
+  if (optionMatches && optionMatches.length > 0) {
+    // Extract just the option text without the prefix
+    return optionMatches.map(option => {
+      return option.replace(/(?:^|\n)(?:[a-d][\)\.]|[A-D][\)\.:]|[1-4][\)\.:])\s*/, '').trim();
+    });
+  }
+  
+  // If no structured options found, create generic ones
+  return [
+    "Option A", 
+    "Option B", 
+    "Option C", 
+    "Option D"
+  ];
 };
 
 // Determine question type from content
@@ -327,8 +434,14 @@ const determineQuestionType = (content: string, defaultType: string): string => 
 const determineAnswerFormat = (content: string, type: string): string => {
   const content_lower = content.toLowerCase();
   
+  // Check for MCQ patterns
+  if (content_lower.match(/(?:^|\n)(?:[a-d][\)\.]|[A-D][\)\.:]|[1-4][\)\.:])\s*(.+?)(?=(?:\n(?:[a-d][\)\.]|[A-D][\)\.:]|[1-4][\)\.:])|$))/)) {
+    return 'mcq';
+  }
+  
   if (content_lower.includes('code') || content_lower.includes('implement function') || 
-      content_lower.includes('write a program') || type === 'technical') {
+      content_lower.includes('write a program') || 
+      (type === 'technical' && content_lower.includes('algorithm'))) {
     return 'code';
   }
   
@@ -344,9 +457,9 @@ const determineAnswerFormat = (content: string, type: string): string => {
 const getDefaultAnswerFormat = (type: string): string => {
   switch (type) {
     case 'technical':
-      return 'code';
+      return Math.random() > 0.5 ? 'code' : 'text';
     case 'language':
-      return 'audio';
+      return Math.random() > 0.5 ? 'audio' : 'text';
     default:
       return 'text';
   }
@@ -360,19 +473,56 @@ const generateMockResponse = () => {
         id: "q-1",
         content: "Implement a function to find the longest substring without repeating characters.",
         type: "technical",
-        answerFormat: "code"
+        answerFormat: "code",
+        testCases: [
+          { input: "abcabcbb", expectedOutput: "abc" },
+          { input: "bbbbb", expectedOutput: "b" },
+          { input: "pwwkew", expectedOutput: "wke" }
+        ]
       },
       {
         id: "q-2",
+        content: "Which data structure would be most appropriate for implementing a task scheduler with priority levels?",
+        type: "technical",
+        answerFormat: "mcq",
+        options: [
+          "Array",
+          "Priority Queue",
+          "Hash Table",
+          "Linked List"
+        ],
+        correctOption: 1
+      },
+      {
+        id: "q-3", 
         content: "Tell me about a time when you had to resolve a conflict within your team. What was your approach and what was the outcome?",
         type: "behavioral",
         answerFormat: "text"
       },
       {
-        id: "q-3",
+        id: "q-4",
+        content: "In a team meeting, a colleague presents an idea that you believe has serious flaws. How would you handle this situation?",
+        type: "behavioral",
+        answerFormat: "mcq",
+        options: [
+          "Wait until after the meeting and speak to them privately",
+          "Immediately point out all the flaws in front of everyone",
+          "Ask probing questions to help them discover the flaws themselves",
+          "Say nothing and let them figure it out later"
+        ],
+        correctOption: 2
+      },
+      {
+        id: "q-5",
         content: "Explain the concept of cloud computing to someone without a technical background.",
         type: "communication",
         answerFormat: "text"
+      },
+      {
+        id: "q-6",
+        content: "Record yourself pronouncing these technical terms correctly: API, SQL, HTTPS, and IoT.",
+        type: "language",
+        answerFormat: "audio"
       }
     ]
   };
@@ -388,55 +538,94 @@ const generateMockQuestions = (config: InterviewConfig): Question[] => {
     // Cycle through question types
     const type = questionTypes[i % questionTypes.length] as 'technical' | 'behavioral' | 'communication' | 'language';
     
+    // Decide on answer format - mix it up
+    let answerFormat: 'text' | 'code' | 'mcq' | 'audio';
+    
+    if (i % 3 === 0) {
+      answerFormat = 'mcq'; // Every 3rd question is MCQ
+    } else if (type === 'technical' && i % 2 === 0) {
+      answerFormat = 'code'; // Half of technical questions are code
+    } else if (type === 'language' && i % 2 === 0) {
+      answerFormat = 'audio'; // Half of language questions are audio
+    } else {
+      answerFormat = 'text'; // Default to text
+    }
+    
     let question: Question = {
       id: `q-${i + 1}`,
       content: '',
       type: type,
-      answerFormat: 'text',
+      answerFormat: answerFormat,
     };
     
-    // Generate question content based on type and difficulty
+    // Generate question content based on type, difficulty and answer format
     switch (type) {
       case 'technical':
-        if (config.difficulty === 'easy') {
-          question.content = 'What is the difference between var, let, and const in JavaScript?';
-          question.answerFormat = 'text';
-        } else if (config.difficulty === 'medium') {
+        if (answerFormat === 'mcq') {
+          question.content = 'Which of the following is NOT a valid way to declare a variable in JavaScript?';
+          question.options = [
+            'let x = 5;',
+            'const y = 10;',
+            'var z = 15;',
+            'int w = 20;'
+          ];
+          question.correctOption = 3;
+        } else if (answerFormat === 'code') {
           question.content = 'Implement a function to find the longest substring without repeating characters.';
-          question.answerFormat = 'code';
+          question.testCases = [
+            { input: "abcabcbb", expectedOutput: "abc" },
+            { input: "bbbbb", expectedOutput: "b" }
+          ];
         } else {
-          question.content = 'Design a distributed caching system with high availability and fault tolerance. Discuss your approach, potential issues, and how you would address them.';
-          question.answerFormat = 'text';
+          question.content = 'Explain the differences between REST and GraphQL APIs and when you would choose one over the other.';
         }
         break;
         
       case 'behavioral':
-        if (config.difficulty === 'easy') {
-          question.content = 'Tell me about a time when you had to work under pressure or with tight deadlines.';
-        } else if (config.difficulty === 'medium') {
-          question.content = 'Describe a situation where you had to resolve a conflict within your team. What was your approach and what was the outcome?';
+        if (answerFormat === 'mcq') {
+          question.content = 'Your team is falling behind on a critical project deadline. What would be your FIRST action?';
+          question.options = [
+            'Work overtime to complete your tasks',
+            'Analyze the bottlenecks and suggest process improvements',
+            'Ask management to extend the deadline',
+            'Blame the team members who are underperforming'
+          ];
+          question.correctOption = 1;
         } else {
-          question.content = 'Tell me about a time when you had to make a difficult decision that impacted your entire team or organization. What was your thought process and how did you handle the aftermath?';
+          question.content = 'Tell me about a time when you had to deal with a team member who wasn\'t pulling their weight. How did you handle the situation?';
         }
         break;
         
       case 'communication':
-        if (config.difficulty === 'easy') {
-          question.content = 'Explain the concept of cloud computing to someone without a technical background.';
-        } else if (config.difficulty === 'medium') {
-          question.content = 'You need to communicate a project delay to stakeholders. Draft a concise email explaining the situation, reasons for the delay, and proposed next steps.';
+        if (answerFormat === 'mcq') {
+          question.content = 'A non-technical stakeholder asks you why a feature is taking longer than expected. The best approach to communicate this is:';
+          question.options = [
+            'Provide a detailed technical explanation of all the challenges',
+            'Simply state it\'s more complicated than initially thought',
+            'Explain the key challenges in non-technical terms and provide a revised timeline',
+            'Suggest they speak to your manager instead'
+          ];
+          question.correctOption = 2;
         } else {
-          question.content = 'Present a complex technical solution to a mixed audience of technical and non-technical stakeholders. Ensure your explanation is clear and effective for both groups.';
+          question.content = 'Explain the concept of cryptocurrency to a non-technical person in under 2 minutes.';
         }
         break;
         
       case 'language':
-        if (config.language.toLowerCase() !== 'english') {
-          question.content = `Introduce yourself and describe your professional background in ${config.language}.`;
+        if (answerFormat === 'mcq') {
+          question.content = 'Which sentence is grammatically correct?';
+          question.options = [
+            'Between you and I, this project is challenging.',
+            'Between you and me, this project is challenging.',
+            'Between yourself and I, this project is challenging.',
+            'Between yourself and me, this project is challenging.'
+          ];
+          question.correctOption = 1;
+        } else if (answerFormat === 'audio') {
+          question.content = 'Record yourself explaining what you would do if you encountered a difficult technical problem that you couldn\'t solve immediately.';
         } else {
-          question.content = 'Describe a challenging project you worked on and what you learned from it.';
+          question.content = 'Write a professional email requesting additional resources for your project, explaining why they are necessary.';
         }
-        question.answerFormat = 'audio';
         break;
     }
     

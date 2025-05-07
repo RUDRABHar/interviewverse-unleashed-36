@@ -7,12 +7,16 @@ interface InterviewTimerProps {
   durationInMinutes: number;
   onTimeUp: () => void;
   className?: string;
+  currentQuestionIndex?: number;
+  totalQuestions?: number;
 }
 
 export const InterviewTimer: React.FC<InterviewTimerProps> = ({ 
   durationInMinutes, 
   onTimeUp,
-  className
+  className,
+  currentQuestionIndex,
+  totalQuestions
 }) => {
   const [timeLeft, setTimeLeft] = useState(durationInMinutes * 60);
   const [isWarning, setIsWarning] = useState(false);
@@ -44,22 +48,30 @@ export const InterviewTimer: React.FC<InterviewTimerProps> = ({
   };
 
   return (
-    <div 
-      className={cn(
-        "flex items-center px-3 py-1.5 rounded-lg font-medium transition-colors",
-        isCritical 
-          ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 animate-pulse" 
-          : isWarning 
-            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" 
-            : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-        className
+    <div className="flex items-center gap-4">
+      {currentQuestionIndex !== undefined && totalQuestions !== undefined && (
+        <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          Question {currentQuestionIndex + 1}/{totalQuestions}
+        </div>
       )}
-    >
-      <Timer className={cn(
-        "w-4 h-4 mr-2", 
-        isCritical && "animate-ping"
-      )} />
-      <span>{formatTime(timeLeft)}</span>
+      
+      <div 
+        className={cn(
+          "flex items-center px-3 py-1.5 rounded-lg font-medium transition-colors",
+          isCritical 
+            ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 animate-pulse" 
+            : isWarning 
+              ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" 
+              : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+          className
+        )}
+      >
+        <Timer className={cn(
+          "w-4 h-4 mr-2", 
+          isCritical && "animate-ping"
+        )} />
+        <span>{formatTime(timeLeft)}</span>
+      </div>
     </div>
   );
 };
