@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -7,6 +8,8 @@ import { SkillGalaxyView } from '@/components/skill-galaxy/SkillGalaxyView';
 import { SkillModal } from '@/components/skill-galaxy/SkillModal';
 import { ViewToggle } from '@/components/skill-galaxy/ViewToggle';
 import { GalaxyControls } from '@/components/skill-galaxy/GalaxyControls';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 const SkillGalaxy = () => {
   const navigate = useNavigate();
@@ -58,6 +61,10 @@ const SkillGalaxy = () => {
     });
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -83,6 +90,19 @@ const SkillGalaxy = () => {
 
   return (
     <div className="h-screen w-full relative">
+      {/* Back Button */}
+      <div className="absolute top-6 left-6 z-10">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleGoBack}
+          className="bg-gray-900/60 text-white border-gray-700 hover:bg-gray-800"
+        >
+          <ArrowLeft className="mr-1 h-4 w-4" />
+          Back
+        </Button>
+      </div>
+
       {/* 3D Canvas Container */}
       <div className="absolute inset-0">
         <SkillGalaxyView 
