@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Accordion,
   AccordionContent,
@@ -38,29 +39,46 @@ const FAQs = () => {
   return (
     <section id="faqs" className="section-padding">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-3xl md:text-4xl font-sora font-bold mb-4">Frequently Asked Questions</h2>
           <p className="text-lg text-gray-700">
             Everything you need to know about InterviewXpert
           </p>
-        </div>
+        </motion.div>
         
-        <Accordion type="single" collapsible className="space-y-4">
+        <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <AccordionItem 
-              key={index} 
-              value={`item-${index}`}
-              className="bg-white rounded-lg shadow-sm border border-gray-100 px-6"
+            <motion.div 
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <AccordionTrigger className="text-left py-4 font-medium">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-gray-600 pb-4">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
+              <Accordion type="single" collapsible>
+                <AccordionItem 
+                  value={`item-${index}`}
+                  className="bg-white rounded-lg shadow-sm border border-gray-100 px-6 overflow-hidden"
+                >
+                  <AccordionTrigger className="text-left py-4 font-medium text-gray-800 hover:text-interview-primary transition-colors">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 pb-4">
+                    <div className="border-l-2 border-interview-primary/30 pl-4">
+                      {faq.answer}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
           ))}
-        </Accordion>
+        </div>
       </div>
     </section>
   );

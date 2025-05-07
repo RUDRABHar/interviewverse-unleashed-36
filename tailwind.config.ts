@@ -54,8 +54,8 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				interview: {
-					primary: '#FF6B00',
-					blue: '#3B82F6',
+					primary: '#9b87f5', // Updated to match CSS variable
+					blue: '#0EA5E9',
 					violet: '#805AD5',
 					indigo: '#6366F1',
 					light: '#EEF2FF',
@@ -102,6 +102,36 @@ export default {
 				'spin-slow': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' }
+				},
+				'fade-in': {
+					from: {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					to: {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'slide-in-right': {
+					from: {
+						opacity: '0',
+						transform: 'translateX(20px)'
+					},
+					to: {
+						opacity: '1',
+						transform: 'translateX(0)'
+					}
+				},
+				'scale-up': {
+					from: {
+						opacity: '0',
+						transform: 'scale(0.95)'
+					},
+					to: {
+						opacity: '1',
+						transform: 'scale(1)'
+					}
 				}
 			},
 			animation: {
@@ -110,18 +140,21 @@ export default {
 				'float': 'float 6s ease-in-out infinite',
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
 				'gradient-flow': 'gradient-flow 6s ease infinite',
-				'spin-slow': 'spin-slow 10s linear infinite'
+				'spin-slow': 'spin-slow 10s linear infinite',
+				'fade-in': 'fade-in 0.3s ease-in-out',
+				'slide-in-right': 'slide-in-right 0.4s ease-in-out',
+				'scale-up': 'scale-up 0.3s ease-in-out'
 			},
 			backgroundImage: {
 				'hero-pattern': 'url("/hero-pattern.svg")',
-				'gradient-primary': 'linear-gradient(90deg, #FF6B00 0%, #FF9A57 100%)',
+				'gradient-primary': 'linear-gradient(90deg, #9b87f5 0%, #a89af7 100%)',
 				'gradient-blue': 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)',
 				'gradient-violet': 'linear-gradient(90deg, #805AD5 0%, #9F7AEA 100%)'
 			},
 			boxShadow: {
-				'glow': '0 0 15px rgba(255, 107, 0, 0.5)',
+				'glow': '0 0 15px rgba(155, 135, 245, 0.5)',
 				'card': '0 10px 30px rgba(0, 0, 0, 0.1)',
-				'button': '0 4px 14px rgba(255, 107, 0, 0.25)'
+				'button': '0 4px 14px rgba(155, 135, 245, 0.25)'
 			},
 			fontFamily: {
 				'sans': ['Inter', 'sans-serif'],

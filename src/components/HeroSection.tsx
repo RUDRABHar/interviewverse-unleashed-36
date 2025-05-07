@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
@@ -40,7 +41,7 @@ const HeroSection = () => {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           radius: radius,
-          color: i % 3 === 0 ? '#4D47C3' : i % 2 === 0 ? '#3B82F6' : '#8B5CF6',
+          color: i % 3 === 0 ? '#9b87f5' : i % 2 === 0 ? '#0EA5E9' : '#8B5CF6', // Updated colors
           speed: Math.random() * 0.5 + 0.1,
           direction: Math.random() * 360
         });
@@ -104,7 +105,12 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 z-10">
         <div className="flex flex-col md:flex-row items-center">
-          <div className="w-full md:w-1/2 text-center md:text-left mb-12 md:mb-0">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="w-full md:w-1/2 text-center md:text-left mb-12 md:mb-0"
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold mb-6">
               Your AI-Powered <br />
               <span className="gradient-text">Mock Interview Universe</span> <br />
@@ -122,14 +128,19 @@ const HeroSection = () => {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </div>
-          </div>
+          </motion.div>
           
-          <div className="w-full md:w-1/2 relative">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="w-full md:w-1/2 relative"
+          >
             <div className="relative w-full h-[400px] flex items-center justify-center">
-              {/* Neural network visualization placeholder */}
-              <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-interview-light to-white border border-white/50 shadow-xl flex items-center justify-center animate-spin-slow">
+              {/* Neural network visualization */}
+              <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-interview-primary/10 to-white border border-white/50 shadow-xl flex items-center justify-center animate-spin-slow">
                 <div className="absolute w-3/4 h-3/4 rounded-full border-2 border-dashed border-interview-blue/30 flex items-center justify-center animate-spin-slow" style={{ animationDirection: 'reverse' }}>
-                  <div className="absolute w-1/2 h-1/2 rounded-full border-2 border-dashed border-interview-violet/50" />
+                  <div className="absolute w-1/2 h-1/2 rounded-full border-2 border-dashed border-interview-primary/50" />
                 </div>
                 
                 {/* Core orb */}
@@ -139,22 +150,24 @@ const HeroSection = () => {
                 
                 {/* Orbiting nodes */}
                 {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-                  <div 
+                  <motion.div 
                     key={i}
                     className="absolute w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.1 * i, duration: 0.3 }}
                     style={{ 
                       transform: `rotate(${angle}deg) translateX(150px) rotate(-${angle}deg)`,
-                      animation: `floating ${5 + i}s infinite ease-in-out ${i * 0.5}s`
                     }}
                   >
                     <span className="text-xs font-medium text-interview-primary">
                       {['Tech', 'HR', 'Soft', 'Logic', 'Comm', 'Skills'][i]}
                     </span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const testimonials = [
@@ -27,25 +28,60 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-interview-primary/5">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-3xl md:text-4xl font-sora font-bold mb-4">Success Stories</h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
             See how InterviewXpert has helped candidates land their dream jobs
           </p>
-        </div>
+        </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {testimonials.map((testimonial, index) => (
-            <div 
-              key={index} 
-              className="bg-white rounded-xl p-6 shadow-card card-hover relative"
+            <motion.div 
+              key={index}
+              variants={itemVariants}
+              className="bg-white rounded-xl p-6 shadow-md card-hover relative"
             >
-              <div className="mb-6">
-                <span className="text-5xl text-interview-primary/20 font-serif">"</span>
-                <p className="text-gray-700 italic">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-interview-primary/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+              
+              <div className="mb-6 relative z-10">
+                <span className="text-5xl text-interview-primary/20 font-serif absolute -top-2 -left-1">"</span>
+                <p className="text-gray-700 italic pl-6 pt-4">
                   {testimonial.quote}
                 </p>
               </div>
@@ -53,7 +89,7 @@ const Testimonials = () => {
               <div className="flex items-center">
                 <Avatar className="h-12 w-12 mr-4">
                   <AvatarImage src={testimonial.image} alt={testimonial.name} />
-                  <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="bg-interview-primary/10 text-interview-primary">{testimonial.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 
                 <div>
@@ -67,9 +103,9 @@ const Testimonials = () => {
                   {testimonial.company}
                 </span>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

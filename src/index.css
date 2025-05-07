@@ -31,6 +31,11 @@
   .glass-card {
     @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm;
   }
+
+  /* Section spacing utility */
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
 }
 
 .cm-editor {
@@ -44,7 +49,8 @@
   @apply ring-2 ring-ring ring-offset-2 outline-none border-primary;
 }
 
-@keyframes fadeIn {
+/* Standardized Animation Keyframes */
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -55,11 +61,11 @@
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
 }
 
-@keyframes slideInRight {
+@keyframes slide-in-right {
   from {
     opacity: 0;
     transform: translateX(20px);
@@ -70,11 +76,11 @@
   }
 }
 
-.animate-slideInRight {
-  animation: slideInRight 0.4s ease-in-out;
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-in-out;
 }
 
-@keyframes scaleUp {
+@keyframes scale-up {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -85,8 +91,8 @@
   }
 }
 
-.animate-scaleUp {
-  animation: scaleUp 0.3s ease-in-out;
+.animate-scale-up {
+  animation: scale-up 0.3s ease-in-out;
 }
 
 @keyframes pulse {
@@ -167,4 +173,36 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  @apply bg-interview-primary text-white px-6 py-3 rounded-md hover:bg-interview-primary/90 transition-all duration-300 font-medium shadow-md hover:shadow-lg;
+}
+
+.btn-secondary {
+  @apply border border-gray-300 bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-50 transition-all duration-300 font-medium;
+}
+
+/* Gradient text effect */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-interview-primary to-interview-blue;
+}
+
+/* Card styling */
+.content-card {
+  @apply bg-white rounded-xl shadow-md border border-gray-100 p-6 transition-all duration-300 hover:shadow-lg;
+}
+
+/* Decorative orb elements */
+.orb {
+  @apply absolute rounded-full opacity-30 blur-3xl;
+}
+
+.orb-violet {
+  background: radial-gradient(circle, rgba(155, 135, 245, 0.8) 0%, rgba(155, 135, 245, 0.2) 70%);
+}
+
+.orb-blue {
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.8) 0%, rgba(14, 165, 233, 0.2) 70%);
 }
