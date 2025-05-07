@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -70,6 +69,8 @@ export const InterviewResults: React.FC = () => {
 
       setLoading(true);
       try {
+        console.log("Fetching results for ID:", id);
+        
         // Fetch interview session data
         const { data: sessionData, error: sessionError } = await supabase
           .from('interview_sessions')
@@ -85,10 +86,42 @@ export const InterviewResults: React.FC = () => {
             domain
           `)
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (sessionError) {
-          throw sessionError;
+          console.error("Error fetching session data:", sessionError);
+          
+          // Check if this might be a local ID instead of a database ID
+          // Look for local storage with dbSessionId
+          const localStorageItems = Object.keys(localStorage).filter(key => 
+            key.startsWith('interview_session_'));
+          
+          let foundDbId = null;
+          
+          // Check if any local sessions have this as their ID and contain a dbSessionId
+          for (const key of localStorageItems) {
+            try {
+              const storedItem = localStorage.getItem(key);
+              if (storedItem) {
+                const parsedSession = JSON.parse(storedItem);
+                if (key === `interview_session_${id}` && parsedSession.dbSessionId) {
+                  // Found a matching local session with dbSessionId
+                  foundDbId = parsedSession.dbSessionId;
+                  console.log("Found database ID in local storage:", foundDbId);
+                  
+                  // Navigate to the correct URL
+                  navigate(`/interviews/results/${foundDbId}`, { replace: true });
+                  return;
+                }
+              }
+            } catch (err) {
+              console.error("Error parsing local storage item:", err);
+            }
+          }
+          
+          if (!foundDbId) {
+            throw sessionError;
+          }
         }
 
         // Fetch questions and answers
@@ -197,7 +230,7 @@ export const InterviewResults: React.FC = () => {
     };
 
     fetchResults();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleDownloadReport = () => {
     toast.info('Generating PDF report...');

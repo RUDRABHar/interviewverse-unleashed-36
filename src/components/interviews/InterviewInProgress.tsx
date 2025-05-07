@@ -55,7 +55,8 @@ export const InterviewInProgress: React.FC = () => {
     generatingQuestions,
     handleAnswerSubmit,
     handleTimeUp,
-    handleRetry: hookHandleRetry
+    handleRetry: hookHandleRetry,
+    dbSessionId
   } = useInterviewSession({ 
     id, 
     retryCount, 
@@ -74,10 +75,11 @@ export const InterviewInProgress: React.FC = () => {
     console.log("Current interview state:", { 
       loading, error, errorType, generatingQuestions, 
       sessionExists: !!session,
+      dbSessionId,
       authChecked,
       userId
     });
-  }, [loading, error, errorType, generatingQuestions, session, authChecked, userId]);
+  }, [loading, error, errorType, generatingQuestions, session, authChecked, userId, dbSessionId]);
 
   // Show loading screen until auth is checked
   if (!authChecked) {

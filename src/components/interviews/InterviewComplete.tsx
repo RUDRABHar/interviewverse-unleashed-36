@@ -35,52 +35,124 @@ export const InterviewComplete: React.FC = () => {
 
     // Fetch the interview results from Supabase and local storage
     const fetchResult = async () => {
+      if (!id) return;
+      
       try {
         setLoading(true);
-        const storedSession = localStorage.getItem(`interview_session_${id}`);
         
-        if (storedSession) {
-          const session = JSON.parse(storedSession);
-          const answersCount = Object.keys(session.answers).length;
+        console.log("Fetching results for ID:", id);
+        
+        // First try to get the database record directly
+        const { data: sessionData, error: sessionError } = await supabase
+          .from('interview_sessions')
+          .select('*, interview_questions(count)')
+          .eq('id', id)
+          .maybeSingle();
+        
+        if (sessionError) {
+          console.error("Error fetching database session:", sessionError);
+          // Don't throw here, we'll try local storage next
+        }
+        
+        // Now we need to handle both cases: database ID or local ID
+        if (sessionData) {
+          // Found database record, let's check if we have local state with answers
+          console.log("Found database record:", sessionData);
           
-          // Get data from Supabase
-          const { data: sessionData, error } = await supabase
-            .from('interview_sessions')
-            .select('*, interview_questions(count)')
-            .eq('id', id)
-            .maybeSingle();
+          // Look for local storage data by iterating through all potential local IDs
+          // This is necessary because the local ID might not match the database ID
+          const localStorageItems = Object.keys(localStorage).filter(key => 
+            key.startsWith('interview_session_'));
           
-          if (error) {
-            console.error("Error fetching interview data:", error);
-            toast.error("Failed to load interview results");
-            return;
+          let session = null;
+          
+          // Check all local sessions to find one with matching dbSessionId
+          for (const key of localStorageItems) {
+            try {
+              const storedItem = localStorage.getItem(key);
+              if (storedItem) {
+                const parsedSession = JSON.parse(storedItem);
+                if (parsedSession.dbSessionId === id) {
+                  session = parsedSession;
+                  console.log("Found matching local session with answers:", key);
+                  break;
+                }
+              }
+            } catch (err) {
+              console.error("Error parsing local storage item:", err);
+            }
           }
           
-          if (sessionData) {
-            // Convert duration_taken from interval to minutes if it exists
-            const durationInMinutes = sessionData.duration_taken 
-              ? Math.ceil(parseInt(sessionData.duration_taken.toString()) / 60) 
-              : (session.durationInMinutes || 30);
-              
-            setResult({
-              id: session.id,
-              title: session.title || `Interview ${new Date(sessionData.created_at).toLocaleString()}`,
-              duration: durationInMinutes,
-              questionsAnswered: answersCount,
-              totalQuestions: session.questions.length,
-              completedAt: sessionData.completed_at || new Date().toISOString(),
-              score: sessionData.score,
-            });
+          // Convert duration_taken from interval to minutes if it exists
+          const durationInMinutes = sessionData.duration_taken 
+            ? Math.ceil(parseInt(sessionData.duration_taken.toString()) / 60) 
+            : (session?.durationInMinutes || 30);
+            
+          setResult({
+            id: sessionData.id,
+            title: session?.title || `Interview ${new Date(sessionData.created_at).toLocaleString()}`,
+            duration: durationInMinutes,
+            questionsAnswered: session?.answers ? Object.keys(session.answers).length : 0,
+            totalQuestions: sessionData.number_of_questions || (session?.questions?.length || 0),
+            completedAt: sessionData.completed_at || new Date().toISOString(),
+            score: sessionData.score,
+          });
 
-            // Begin analysis after fetching results
-            if (session.questions && session.answers) {
-              setAnalyzing(true);
-              await analyzeAnswers(session, id);
-            }
+          // Begin analysis after fetching results - only if we have questions and answers
+          if (session?.questions && session?.answers) {
+            setAnalyzing(true);
+            await analyzeAnswers(session, id);
           } else {
-            // Fallback to local data if no database record
+            // If we don't have local data, try to see if answers are already in the database
+            const { data: answersData } = await supabase
+              .from('user_answers')
+              .select('*')
+              .eq('session_id', id);
+              
+            if (answersData && answersData.length > 0) {
+              console.log("Found existing answers in database, skipping analysis");
+              // Answers already exist, no need to analyze
+              setAnalyzing(false);
+            } else if (sessionData.status === 'completed' && sessionData.score !== null) {
+              console.log("Session already complete with score, skipping analysis");
+              setAnalyzing(false);
+            } else {
+              console.log("No local session with answers found, but will still proceed to results");
+              setAnalyzing(false);
+            }
+          }
+        } else {
+          // If we couldn't find a database record, check if there's a local session with this ID
+          const storedSession = localStorage.getItem(`interview_session_${id}`);
+          
+          if (storedSession) {
+            // We have a local session
+            const session = JSON.parse(storedSession);
+            const answersCount = Object.keys(session.answers || {}).length;
+            const dbId = session.dbSessionId || id;
+            
+            console.log("Using local session with dbSessionId:", dbId);
+            
+            // If we have a database ID in the session, try to get that record
+            if (session.dbSessionId && session.dbSessionId !== id) {
+              const { data: dbSession } = await supabase
+                .from('interview_sessions')
+                .select('*')
+                .eq('id', session.dbSessionId)
+                .maybeSingle();
+                
+              if (dbSession) {
+                console.log("Found database session using local dbSessionId");
+                
+                // Navigate to the correct URL with the database ID
+                navigate(`/interviews/complete/${session.dbSessionId}`, { replace: true });
+                return;
+              }
+            }
+            
+            // Fallback to local data
             setResult({
-              id: session.id,
+              id: dbId,
               title: session.title,
               duration: session.durationInMinutes,
               questionsAnswered: answersCount,
@@ -88,20 +160,26 @@ export const InterviewComplete: React.FC = () => {
               completedAt: new Date().toISOString(),
               score: null,
             });
+            
+            setAnalyzing(true);
+            await analyzeAnswers(session, dbId);
+          } else {
+            console.log("No local session found and no database record");
+            toast.error("Interview session data not found");
+            setAnalyzing(false);
           }
-        } else {
-          toast.error("Interview session data not found");
         }
       } catch (err) {
         console.error("Error loading interview results:", err);
         toast.error("Error loading interview results");
+        setAnalyzing(false);
       } finally {
         setLoading(false);
       }
     };
 
     fetchResult();
-  }, [id]);
+  }, [id, navigate]);
 
   // Function to analyze answers using Gemini AI
   const analyzeAnswers = async (session: any, sessionId: string) => {

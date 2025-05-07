@@ -21,6 +21,7 @@ export interface Question {
 
 export interface InterviewSession {
   id: string;
+  dbSessionId: string; // Add dbSessionId to store the Supabase UUID
   title: string;
   durationInMinutes: number;
   questions: Question[];
@@ -175,9 +176,10 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
             }
           }
           
-          // Create session object
+          // Create session object with both local ID and database ID
           const session: InterviewSession = {
             id,
+            dbSessionId: sessionData.id, // Store the database ID
             title: `Interview Session ${new Date().toLocaleString()}`,
             durationInMinutes: config.duration || 30,
             questions,
@@ -311,8 +313,8 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
         }
       }
 
-      // Navigate to results page
-      navigate(`/interviews/complete/${id}`);
+      // Navigate to results page using the database ID for consistency
+      navigate(`/interviews/complete/${dbSessionId}`);
     }
   };
 
@@ -329,13 +331,19 @@ export const useInterviewSession = ({ id, retryCount, userId }: UseInterviewSess
             completed_at: new Date().toISOString()
           })
           .eq('id', dbSessionId);
+          
+        // Navigate to results page using the database ID
+        navigate(`/interviews/complete/${dbSessionId}`);
       } catch (err) {
         console.error("Error updating session completion status:", err);
+        
+        // If error, still try to navigate to complete page with local ID as fallback
+        navigate(`/interviews/complete/${id}`);
       }
+    } else {
+      // If no dbSessionId (rare case), use local ID as fallback
+      navigate(`/interviews/complete/${id}`);
     }
-    
-    // Navigate to results page
-    navigate(`/interviews/complete/${id}`);
   };
   
   const handleRetry = () => {
