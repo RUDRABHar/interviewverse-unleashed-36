@@ -32,7 +32,7 @@ const HeroSection = () => {
             </motion.span>
             
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold font-sora leading-tight"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold font-sora leading-tight text-shadow-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
@@ -41,7 +41,7 @@ const HeroSection = () => {
             </motion.h1>
             
             <motion.p 
-              className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-xl"
+              className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-xl"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
@@ -68,7 +68,7 @@ const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="rounded-full px-8 py-6 text-lg font-medium border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="rounded-full px-8 py-6 text-lg font-medium border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
                 asChild
               >
                 <Link to="#how-it-works" className="flex items-center">
@@ -86,7 +86,7 @@ const HeroSection = () => {
             >
               <div className="flex -space-x-2">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white dark:border-gray-800 flex items-center justify-center overflow-hidden">
+                  <div key={i} className="w-8 h-8 rounded-full bg-white border-2 border-white dark:border-gray-800 flex items-center justify-center overflow-hidden shadow-md">
                     <span className="text-xs font-medium">{String.fromCharCode(65 + i)}</span>
                   </div>
                 ))}
