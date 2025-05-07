@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,6 +16,7 @@ import { UpcomingInterview } from '@/components/dashboard/UpcomingInterview';
 import { UpcomingInterviews } from '@/components/schedules/UpcomingInterviews';
 import { ProUpgradeCard } from '@/components/dashboard/ProUpgradeCard';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const navigate = useNavigate();

@@ -9,7 +9,6 @@ import {
   Settings, 
   HelpCircle,
   FileText,
-  User,
   Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -53,12 +52,6 @@ export const DashboardSidebar = () => {
       label: 'Test History',
       href: '/test-history',
       active: currentPath === '/test-history'
-    },
-    {
-      icon: User,
-      label: 'AI Coach',
-      href: '/coach',
-      active: currentPath.includes('/coach')
     },
     {
       icon: BarChart,
