@@ -13,7 +13,7 @@ interface TestHistoryCardProps {
 }
 
 export const TestHistoryCard: React.FC<TestHistoryCardProps> = ({ interview }) => {
-  const statusMap = {
+  const statusMap: Record<string, { variant: "default" | "success" | "warning" | "destructive" | "secondary" | "outline", label: string }> = {
     completed: { variant: 'success', label: 'Completed' },
     pending: { variant: 'warning', label: 'In Progress' },
     draft: { variant: 'default', label: 'Draft' }
