@@ -134,8 +134,7 @@ const Interviews = () => {
     setIsWizardOpen(false);
   };
 
-  // Note: Since InterviewWizard may not have onInterviewCreated prop,
-  // we'll handle refresh with a key instead
+  // Handle interview created
   const handleInterviewCreated = () => {
     setIsWizardOpen(false);
     setRefreshKey(prev => prev + 1);
@@ -227,8 +226,7 @@ const Interviews = () => {
             <DialogTitle className="text-2xl font-bold font-sora">Create New Interview</DialogTitle>
           </DialogHeader>
           <div className="px-6 pb-6">
-            {/* Check if InterviewWizard component accepts an onClose prop, if not we'll need to adapt */}
-            <InterviewWizard />
+            <InterviewWizard onComplete={handleInterviewCreated} />
           </div>
         </DialogContent>
       </Dialog>

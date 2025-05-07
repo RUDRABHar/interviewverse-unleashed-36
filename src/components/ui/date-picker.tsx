@@ -29,12 +29,12 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
             variant="outline"
             className={cn(
               "w-[260px] justify-start text-left font-normal bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm",
-              !value && "text-muted-foreground"
+              !value?.from && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {value?.from ? (
-              value.to ? (
+              value?.to ? (
                 <>
                   {format(value.from, "LLL dd, y")} -{" "}
                   {format(value.to, "LLL dd, y")}

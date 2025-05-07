@@ -41,6 +41,21 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
     Intermediate: 'text-purple-600 dark:text-purple-400',
     Advanced: 'text-orange-600 dark:text-orange-400',
   };
+
+  // Format date safely with validation
+  const formatDateSafely = (dateString: string, formatStr: string) => {
+    try {
+      const date = new Date(dateString);
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        return 'Invalid date';
+      }
+      return format(date, formatStr);
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return 'Invalid date';
+    }
+  };
   
   return (
     <motion.div
@@ -69,10 +84,10 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <div className="text-sm text-gray-600 dark:text-gray-300">
-                {format(new Date(interview.date), 'MMM d, yyyy')}
+                {formatDateSafely(interview.date, 'MMM d, yyyy')}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {format(new Date(interview.date), 'h:mm a')} • {interview.duration} min
+                {formatDateSafely(interview.date, 'h:mm a')} • {interview.duration} min
               </div>
             </div>
             
@@ -83,7 +98,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
             {interview.types.map(type => (
               <span 
                 key={type} 
-                className={`text-xs px-2 py-0.5 rounded-full ${typeColor[type as keyof typeof typeColor]}`}
+                className={`text-xs px-2 py-0.5 rounded-full ${typeColor[type as keyof typeof typeColor] || 'bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-gray-200'}`}
               >
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </span>
@@ -96,7 +111,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
           
           <div className="flex items-center">
             <span className="text-sm font-medium dark:text-white">AI Rating:</span>
-            <span className={`ml-2 text-sm font-medium ${ratingColor[interview.rating as keyof typeof ratingColor]}`}>
+            <span className={`ml-2 text-sm font-medium ${ratingColor[interview.rating as keyof typeof ratingColor] || ''}`}>
               {interview.rating}
             </span>
           </div>
