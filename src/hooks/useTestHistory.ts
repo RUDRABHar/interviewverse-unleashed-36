@@ -10,9 +10,10 @@ export interface TestHistoryFilters {
   search: string;
   type: InterviewType;
   status: InterviewStatus;
+  sortBy: string;
   dateRange: {
-    from: Date | null;
-    to: Date | null;
+    from: Date | undefined;
+    to: Date | undefined;
   };
 }
 
@@ -29,9 +30,10 @@ export const useTestHistory = () => {
     search: '',
     type: 'all',
     status: 'all',
+    sortBy: 'newest',
     dateRange: {
-      from: null,
-      to: null
+      from: undefined,
+      to: undefined
     }
   });
   const [pagination, setPagination] = useState<TestHistoryPagination>({
@@ -79,9 +81,32 @@ export const useTestHistory = () => {
       const from = (pagination.page - 1) * pagination.pageSize;
       const to = from + pagination.pageSize - 1;
       
-      // Apply sorting
+      // Apply sorting based on sortBy value
+      let sortField = 'completed_at';
+      let sortAscending = false;
+      
+      switch(filters.sortBy) {
+        case 'oldest':
+          sortAscending = true;
+          break;
+        case 'score_high':
+          sortField = 'score';
+          sortAscending = false;
+          break;
+        case 'score_low':
+          sortField = 'score';
+          sortAscending = true;
+          break;
+        case 'duration':
+          sortField = 'duration';
+          sortAscending = false;
+          break;
+        default: // 'newest' is the default
+          sortAscending = false;
+      }
+      
       query = query
-        .order('completed_at', { ascending: false })
+        .order(sortField, { ascending: sortAscending })
         .range(from, to);
       
       const { data, error, count } = await query;
