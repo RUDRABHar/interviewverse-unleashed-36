@@ -21,11 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSidebarToggle, isSidebarOpen }) => {
             aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
             className="lg:hidden"
           >
-            {isSidebarOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
           
           <Link to="/" className="flex items-center">

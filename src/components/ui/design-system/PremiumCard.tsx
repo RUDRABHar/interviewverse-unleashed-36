@@ -58,6 +58,11 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
   // Apply glass opacity only to glassmorphic variant
   const opacityStyles = variant === 'glassmorphic' ? glassOpacityClasses[glassOpacity] : '';
 
+  // Create hover animation props object for framer-motion
+  const hoverAnimationProps = hoverEffect ? {
+    whileHover: { y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }
+  } : {};
+
   return (
     <motion.div
       ref={ref}
@@ -65,6 +70,7 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
+      {...hoverAnimationProps}
       className={cn(
         'rounded-xl overflow-hidden',
         variantStyles[variant],
