@@ -15,13 +15,14 @@ import { cn } from '@/lib/utils';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter
 } from '@/components/ui/sidebar';
 
 export const DashboardSidebar = () => {
@@ -80,10 +81,9 @@ export const DashboardSidebar = () => {
   ];
 
   return (
-    <Sidebar className="border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 backdrop-blur-lg backdrop-filter">
-      <SidebarContent>
-        {/* Logo and app name */}
-        <div className="flex items-center justify-center p-4 mb-2">
+    <Sidebar>
+      <SidebarHeader className="p-4">
+        <div className="flex items-center justify-center">
           <div className="flex items-center">
             <div className="text-2xl font-sora font-bold">
               <span className="text-interview-primary">Interview</span>
@@ -91,7 +91,9 @@ export const DashboardSidebar = () => {
             </div>
           </div>
         </div>
+      </SidebarHeader>
 
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="px-2">Main Menu</SidebarGroupLabel>
           <SidebarGroupContent>

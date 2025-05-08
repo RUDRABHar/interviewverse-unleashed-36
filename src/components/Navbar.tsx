@@ -1,28 +1,16 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Bell, Search } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
-interface NavbarProps {
-  onSidebarToggle: () => void;
-  isSidebarOpen: boolean;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ onSidebarToggle, isSidebarOpen }) => {
+const Navbar: React.FC = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 border-b border-gray-200/50 dark:border-gray-800/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-40">
+    <header className="sticky top-0 left-0 right-0 h-16 border-b border-gray-200/50 dark:border-gray-800/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-40">
       <div className="flex items-center justify-between h-full px-4 max-w-screen-2xl mx-auto">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onSidebarToggle}
-            aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
-            className="lg:hidden"
-          >
-            {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          <SidebarTrigger />
           
           <Link to="/" className="flex items-center">
             <span className="text-lg font-bold text-gray-900 dark:text-white">

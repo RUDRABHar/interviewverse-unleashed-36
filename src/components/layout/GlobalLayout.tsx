@@ -1,14 +1,15 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import Navbar from '../Navbar';
-import Sidebar from './Sidebar';
+import { DashboardSidebar } from '../dashboard/DashboardSidebar';
 import Footer from '../Footer';
 import { Sun, Moon, Laptop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SidebarInset } from '@/components/ui/sidebar';
 
 interface GlobalLayoutProps {
   children: React.ReactNode;
@@ -27,17 +28,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
   maxWidth = '2xl',
   className,
 }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   
-  // Close sidebar on route change on mobile
-  useEffect(() => {
-    if (window.innerWidth < 1024) {
-      setSidebarOpen(false);
-    }
-  }, [location.pathname]);
-
   // Handle theme icon and label
   const getThemeIcon = () => {
     if (theme === 'light') return <Sun className="h-5 w-5" />;
@@ -64,22 +57,12 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-100 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950"></div>
       <div className="fixed inset-0 -z-10 bg-grid-pattern opacity-[0.02] dark:opacity-[0.05]"></div>
       
-      {!hideNavbar && !isAuthPage && (
-        <Navbar 
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} 
-          isSidebarOpen={sidebarOpen}
-        />
-      )}
-      
       <div className="flex flex-1 overflow-hidden">
-        {!hideSidebar && !isAuthPage && (
-          <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-        )}
+        {!hideSidebar && !isAuthPage && <DashboardSidebar />}
         
-        <main className={cn(
-          "flex-1 flex flex-col relative overflow-x-hidden overflow-y-auto",
-          !isAuthPage && "pt-16", // Account for fixed navbar height
-        )}>
+        <SidebarInset className={cn("flex-1 flex flex-col relative")}>
+          {!hideNavbar && !isAuthPage && <Navbar />}
+          
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -98,7 +81,7 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
           </AnimatePresence>
           
           {!hideFooter && !isAuthPage && <Footer />}
-        </main>
+        </SidebarInset>
       </div>
       
       {/* Theme Switcher */}

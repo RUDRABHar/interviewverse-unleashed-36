@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,7 +23,7 @@ import PremiumCard from '@/components/ui/design-system/PremiumCard';
 import GradientButton from '@/components/ui/design-system/GradientButton';
 import EnhancedParticles from '@/components/ui/design-system/EnhancedParticles';
 
-// Import the new CSS styles
+// Import the CSS styles
 import '@/styles/gradients.css';
 
 const Dashboard = () => {
@@ -101,55 +100,61 @@ const Dashboard = () => {
   }, [navigate]);
 
   // Sample data for charts and cards
-  const mockRecentActivity = [{
-    id: '1',
-    title: 'React JS Technical Round',
-    score: 78,
-    result: 'Pass',
-    mode: 'AI',
-    status: 'Completed',
-    time: '32 mins',
-    date: '2025-05-01'
-  }, {
-    id: '2',
-    title: 'System Design Interview',
-    score: 65,
-    result: 'Needs Improvement',
-    mode: 'AI',
-    status: 'Completed',
-    time: '45 mins',
-    date: '2025-04-28'
-  }];
-  const mockRecommendations = [{
-    id: '1',
-    type: 'challenge',
-    title: 'Try this next',
-    content: 'Practice handling behavioral questions about conflict resolution',
-    icon: <ArrowUpRight className="h-5 w-5 text-orange-500" />
-  }, {
-    id: '2',
-    type: 'tip',
-    title: 'Daily Tip',
-    content: 'Speak 15% slower for clarity and to avoid rushing through important points',
-    icon: <Lightbulb className="h-5 w-5 text-purple-500" />
-  }, {
-    id: '3',
-    type: 'improvement',
-    title: 'Profile Suggestion',
-    content: 'Add more details about your recent project to strengthen your portfolio',
-    icon: <ChevronRight className="h-5 w-5 text-blue-500" />
-  }];
-  const mockUpcomingInterviews = [{
-    id: '1',
-    title: 'Frontend Developer Mock Interview',
-    datetime: '2025-05-10T13:00:00',
-    type: 'Technical'
-  }, {
-    id: '2',
-    title: 'Leadership Skills Assessment',
-    datetime: '2025-05-15T15:30:00',
-    type: 'Behavioral'
-  }];
+  const mockRecentActivity = [
+    {
+      id: '1',
+      title: 'React JS Technical Round',
+      score: 78,
+      result: 'Pass',
+      mode: 'AI',
+      status: 'Completed',
+      time: '32 mins',
+      date: '2025-05-01'
+    }, {
+      id: '2',
+      title: 'System Design Interview',
+      score: 65,
+      result: 'Needs Improvement',
+      mode: 'AI',
+      status: 'Completed',
+      time: '45 mins',
+      date: '2025-04-28'
+    }
+  ];
+  const mockRecommendations = [
+    {
+      id: '1',
+      type: 'challenge',
+      title: 'Try this next',
+      content: 'Practice handling behavioral questions about conflict resolution',
+      icon: <ArrowUpRight className="h-5 w-5 text-orange-500" />
+    }, {
+      id: '2',
+      type: 'tip',
+      title: 'Daily Tip',
+      content: 'Speak 15% slower for clarity and to avoid rushing through important points',
+      icon: <Lightbulb className="h-5 w-5 text-purple-500" />
+    }, {
+      id: '3',
+      type: 'improvement',
+      title: 'Profile Suggestion',
+      content: 'Add more details about your recent project to strengthen your portfolio',
+      icon: <ChevronRight className="h-5 w-5 text-blue-500" />
+    }
+  ];
+  const mockUpcomingInterviews = [
+    {
+      id: '1',
+      title: 'Frontend Developer Mock Interview',
+      datetime: '2025-05-10T13:00:00',
+      type: 'Technical'
+    }, {
+      id: '2',
+      title: 'Leadership Skills Assessment',
+      datetime: '2025-05-15T15:30:00',
+      type: 'Behavioral'
+    }
+  ];
   
   if (loading) {
     return (
