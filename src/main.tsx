@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster'
 import './styles/fonts.css'
 import './styles/design-tokens.css'
 import './styles/animations.css'
+import './styles/gradients.css'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

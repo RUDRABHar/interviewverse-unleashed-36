@@ -75,12 +75,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <PremiumCard 
-        className="overflow-hidden border-gray-200/50 dark:border-gray-700/50"
-        glassOpacity="heavy"
-        hoverEffect
-        variant="elevated"
-      >
+      <Card className="overflow-hidden border-gray-200/50 dark:border-gray-700/50">
         <CardHeader className="px-4 py-3 bg-gradient-to-r from-gray-50/80 to-gray-100/80 dark:from-gray-800/60 dark:to-gray-900/60 border-b dark:border-gray-800/50">
           <div className="flex items-start justify-between">
             <h3 className="font-semibold dark:text-white line-clamp-1 text-gray-800" title={interview.title || 'Untitled Interview'}>
@@ -144,7 +139,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
             </Button>
           </div>
         </CardFooter>
-      </PremiumCard>
+      </Card>
     </motion.div>
   );
 };

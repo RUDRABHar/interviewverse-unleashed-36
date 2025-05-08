@@ -64,10 +64,12 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-100 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950"></div>
       <div className="fixed inset-0 -z-10 bg-grid-pattern opacity-[0.02] dark:opacity-[0.05]"></div>
       
-      {!hideNavbar && !isAuthPage && <Navbar 
-        sidebarOpen={sidebarOpen} 
-        setSidebarOpen={setSidebarOpen} 
-      />}
+      {!hideNavbar && !isAuthPage && (
+        <Navbar 
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} 
+          isSidebarOpen={sidebarOpen}
+        />
+      )}
       
       <div className="flex flex-1 overflow-hidden">
         {!hideSidebar && !isAuthPage && (

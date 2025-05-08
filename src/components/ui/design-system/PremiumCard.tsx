@@ -9,6 +9,9 @@ interface PremiumCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'elevated' | 'glassmorphic' | 'bordered' | 'minimal';
   hoverEffect?: boolean;
   glowEffect?: boolean;
+  borderEffect?: boolean;
+  gradientBorder?: boolean;
+  glassOpacity?: 'light' | 'medium' | 'heavy';
 }
 
 const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
@@ -17,6 +20,9 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
   variant = 'default',
   hoverEffect = false,
   glowEffect = false,
+  borderEffect = false,
+  gradientBorder = false,
+  glassOpacity = 'medium',
   ...props
 }, ref) => {
   const variantStyles = {
@@ -27,6 +33,12 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
     minimal: 'bg-transparent border border-gray-100 dark:border-gray-800',
   };
 
+  const glassOpacityClasses = {
+    light: 'bg-opacity-30 dark:bg-opacity-30 backdrop-blur-sm',
+    medium: 'bg-opacity-50 dark:bg-opacity-50 backdrop-blur-md',
+    heavy: 'bg-opacity-70 dark:bg-opacity-70 backdrop-blur-lg',
+  };
+
   const hoverEffectStyles = hoverEffect 
     ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg' 
     : '';
@@ -34,6 +46,17 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
   const glowEffectStyles = glowEffect
     ? 'hover:shadow-[0_0_15px_rgba(255,107,0,0.3)]'
     : '';
+
+  const borderEffectStyles = borderEffect
+    ? 'hover:border-orange-500/30 dark:hover:border-orange-400/30'
+    : '';
+
+  const gradientBorderStyles = gradientBorder
+    ? 'border-gradient'
+    : '';
+    
+  // Apply glass opacity only to glassmorphic variant
+  const opacityStyles = variant === 'glassmorphic' ? glassOpacityClasses[glassOpacity] : '';
 
   return (
     <motion.div
@@ -45,8 +68,11 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
       className={cn(
         'rounded-xl overflow-hidden',
         variantStyles[variant],
+        opacityStyles,
         hoverEffectStyles,
         glowEffectStyles,
+        borderEffectStyles,
+        gradientBorderStyles,
         className
       )}
       {...props}
