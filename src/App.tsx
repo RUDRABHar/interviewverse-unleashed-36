@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import GlobalLayout from './components/layout/GlobalLayout';
 import Index from './pages/Index';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
@@ -20,22 +21,106 @@ import Support from './pages/Support';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/interviews" element={<Interviews />} />
-      <Route path="/analytics" element={<Analytics />} />
-      <Route path="/test-history" element={<TestHistory />} />
-      <Route path="/schedule" element={<ScheduleInterview />} />
-      <Route path="/interviews/:id" element={<InterviewInProgress />} />
-      <Route path="/interviews/active/:id" element={<InterviewInProgress />} />
-      <Route path="/interviews/complete/:id" element={<InterviewComplete />} />
-      <Route path="/interviews/results/:id" element={<InterviewResults />} />
-      <Route path="/progress-3d" element={<SkillGalaxy />} />
-      <Route path="/settings" element={<Settings />} />
-      <Route path="/support" element={<Support />} />
-      <Route path="*" element={<NotFound />} />
+      {/* Landing page - no sidebar */}
+      <Route path="/" element={
+        <GlobalLayout hideSidebar hideFooter maxWidth="full">
+          <Index />
+        </GlobalLayout>
+      } />
+      
+      {/* Auth page - minimal layout */}
+      <Route path="/auth" element={
+        <GlobalLayout hideSidebar hideNavbar hideFooter>
+          <Auth />
+        </GlobalLayout>
+      } />
+      
+      {/* Standard layout pages with sidebar */}
+      <Route path="/dashboard" element={
+        <GlobalLayout>
+          <Dashboard />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/onboarding" element={
+        <GlobalLayout hideSidebar>
+          <Onboarding />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/interviews" element={
+        <GlobalLayout>
+          <Interviews />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/analytics" element={
+        <GlobalLayout>
+          <Analytics />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/test-history" element={
+        <GlobalLayout>
+          <TestHistory />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/schedule" element={
+        <GlobalLayout>
+          <ScheduleInterview />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/progress-3d" element={
+        <GlobalLayout>
+          <SkillGalaxy />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/settings" element={
+        <GlobalLayout>
+          <Settings />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/support" element={
+        <GlobalLayout>
+          <Support />
+        </GlobalLayout>
+      } />
+      
+      {/* Interview views - fullscreen experience */}
+      <Route path="/interviews/:id" element={
+        <GlobalLayout hideSidebar hideNavbar hideFooter maxWidth="full">
+          <InterviewInProgress />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/interviews/active/:id" element={
+        <GlobalLayout hideSidebar hideNavbar hideFooter maxWidth="full">
+          <InterviewInProgress />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/interviews/complete/:id" element={
+        <GlobalLayout>
+          <InterviewComplete />
+        </GlobalLayout>
+      } />
+      
+      <Route path="/interviews/results/:id" element={
+        <GlobalLayout>
+          <InterviewResults />
+        </GlobalLayout>
+      } />
+      
+      {/* 404 page */}
+      <Route path="*" element={
+        <GlobalLayout hideSidebar>
+          <NotFound />
+        </GlobalLayout>
+      } />
     </Routes>
   );
 }

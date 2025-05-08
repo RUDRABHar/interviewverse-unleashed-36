@@ -10,7 +10,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
@@ -27,7 +27,7 @@
   }
   
   .primary-gradient {
-    @apply bg-gradient-to-r from-interview-primary to-interview-primary/80;
+    @apply bg-gradient-to-r from-orange-500 to-orange-600;
   }
   
   .glass-card {
@@ -83,9 +83,58 @@
 
 /* Interview app specific colors */
 :root {
-  --interview-primary: #9b87f5;
+  /* Light mode colors */
+  --interview-primary: #ff6b00;
   --interview-primary-foreground: #ffffff;
   --interview-blue: #0EA5E9;
+  
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 24 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 100% 48%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 24 100% 50%;
+  --radius: 0.75rem;
+}
+
+.dark {
+  /* Dark mode colors */
+  --interview-primary: #ff6b00;
+  --interview-primary-foreground: #ffffff;
+  --interview-blue: #0EA5E9;
+  
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 24 100% 50%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 210 100% 48%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 24 100% 50%;
 }
 
 .bg-interview-primary {
@@ -105,27 +154,27 @@
 }
 
 .hover\:bg-interview-primary\/90:hover {
-  background-color: rgba(155, 135, 245, 0.9);
+  background-color: rgba(255, 107, 0, 0.9);
 }
 
 .hover\:bg-interview-primary\/10:hover {
-  background-color: rgba(155, 135, 245, 0.1);
+  background-color: rgba(255, 107, 0, 0.1);
 }
 
 .bg-interview-primary\/5 {
-  background-color: rgba(155, 135, 245, 0.05);
+  background-color: rgba(255, 107, 0, 0.05);
 }
 
 .bg-interview-primary\/10 {
-  background-color: rgba(155, 135, 245, 0.1);
+  background-color: rgba(255, 107, 0, 0.1);
 }
 
 .bg-interview-primary\/20 {
-  background-color: rgba(155, 135, 245, 0.2);
+  background-color: rgba(255, 107, 0, 0.2);
 }
 
 .border-interview-primary\/20 {
-  border-color: rgba(155, 135, 245, 0.2);
+  border-color: rgba(255, 107, 0, 0.2);
 }
 
 .bg-interview-blue\/5 {
@@ -198,8 +247,8 @@
   @apply absolute rounded-full opacity-30 blur-3xl;
 }
 
-.orb-violet {
-  background: radial-gradient(circle, rgba(155, 135, 245, 0.8) 0%, rgba(155, 135, 245, 0.2) 70%);
+.orb-orange {
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.8) 0%, rgba(255, 107, 0, 0.2) 70%);
 }
 
 .orb-blue {
@@ -222,7 +271,7 @@
 
 .feature-card::before {
   content: '';
-  @apply absolute inset-0 opacity-0 transition-opacity duration-500 bg-gradient-to-br from-interview-primary/5 to-interview-blue/5;
+  @apply absolute inset-0 opacity-0 transition-opacity duration-500 bg-gradient-to-br from-orange-500/5 to-blue-500/5;
 }
 
 .feature-card:hover::before {
@@ -232,10 +281,10 @@
 /* Logo animation */
 @keyframes logo-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 5px rgba(155, 135, 245, 0.7));
+    filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.7));
   }
   50% {
-    filter: drop-shadow(0 0 15px rgba(155, 135, 245, 0.9));
+    filter: drop-shadow(0 0 15px rgba(255, 107, 0, 0.9));
   }
 }
 

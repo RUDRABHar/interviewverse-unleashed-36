@@ -1,0 +1,109 @@
+
+/* Premium Design Tokens */
+:root {
+  /* Base colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  
+  /* Primary palette */
+  --color-primary-50: #fff8f0;
+  --color-primary-100: #ffecd9;
+  --color-primary-200: #ffd7b3;
+  --color-primary-300: #ffc28c;
+  --color-primary-400: #ffa64d;
+  --color-primary-500: #ff8a1f;
+  --color-primary-600: #ff6b00; /* Main orange */
+  --color-primary-700: #cc5500;
+  --color-primary-800: #994000;
+  --color-primary-900: #662b00;
+  --color-primary-950: #331500;
+
+  /* Secondary palette - Blue */
+  --color-secondary-50: #f0f9ff;
+  --color-secondary-100: #e0f2fe;
+  --color-secondary-200: #b9e6fe;
+  --color-secondary-300: #7cd4fd;
+  --color-secondary-400: #36bffa;
+  --color-secondary-500: #0ea5e9; /* Secondary blue */
+  --color-secondary-600: #0284c7;
+  --color-secondary-700: #0369a1;
+  --color-secondary-800: #075985;
+  --color-secondary-900: #0c4a6e;
+  --color-secondary-950: #082f49;
+
+  /* Gray scale */
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+  --color-gray-950: #020617;
+
+  /* Status colors */
+  --color-success-500: #10b981;
+  --color-warning-500: #f59e0b;
+  --color-error-500: #ef4444;
+  --color-info-500: #06b6d4;
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+  /* Premium glow effects */
+  --glow-primary: 0 0 15px rgba(255, 107, 0, 0.5);
+  --glow-secondary: 0 0 15px rgba(14, 165, 233, 0.5);
+  --glow-white: 0 0 15px rgba(255, 255, 255, 0.5);
+
+  /* Animations */
+  --transition-fast: 150ms;
+  --transition-normal: 250ms;
+  --transition-slow: 350ms;
+  --transition-very-slow: 500ms;
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Z-indices */
+  --z-negative: -1;
+  --z-elevate: 1;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-drawer: 1200;
+  --z-modal: 1300;
+  --z-tooltip: 1400;
+  --z-toast: 1500;
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-primary-50: #331500;
+  --color-primary-100: #662b00;
+  --color-primary-200: #994000;
+  --color-primary-300: #cc5500;
+  --color-primary-400: #ff6b00;
+  --color-primary-500: #ff8a1f;
+  --color-primary-600: #ffa64d;
+  --color-primary-700: #ffc28c;
+  --color-primary-800: #ffd7b3;
+  --color-primary-900: #ffecd9;
+  --color-primary-950: #fff8f0;
+}

@@ -1,72 +1,61 @@
 
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React, { forwardRef } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface PremiumCardProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
   className?: string;
-  glassOpacity?: 'light' | 'medium' | 'heavy';
-  glowEffect?: boolean;
+  variant?: 'default' | 'elevated' | 'glassmorphic' | 'bordered' | 'minimal';
   hoverEffect?: boolean;
-  borderEffect?: boolean;
-  gradientBorder?: boolean;
-  variant?: 'default' | 'elevated' | 'subtle' | 'flat';
+  glowEffect?: boolean;
 }
 
-export const PremiumCard = ({
+const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
   children,
-  className = '',
-  glassOpacity = 'medium',
-  glowEffect = false,
-  hoverEffect = false,
-  borderEffect = false,
-  gradientBorder = false,
+  className,
   variant = 'default',
+  hoverEffect = false,
+  glowEffect = false,
   ...props
-}: PremiumCardProps) => {
-  const opacityClasses = {
-    light: 'bg-white/30 dark:bg-gray-900/30 backdrop-blur-sm',
-    medium: 'bg-white/50 dark:bg-gray-900/50 backdrop-blur-md',
-    heavy: 'bg-white/70 dark:bg-gray-900/70 backdrop-blur-lg',
+}, ref) => {
+  const variantStyles = {
+    default: 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm',
+    elevated: 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-lg',
+    glassmorphic: 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border border-white/20 dark:border-gray-700/20 shadow-lg',
+    bordered: 'bg-white dark:bg-gray-800 border-2 border-orange-500/40 dark:border-orange-400/40 shadow-sm',
+    minimal: 'bg-transparent border border-gray-100 dark:border-gray-800',
   };
 
-  const variantClasses = {
-    default: 'border border-gray-200/30 dark:border-white/10 shadow-md',
-    elevated: 'border border-gray-200/30 dark:border-white/10 shadow-lg',
-    subtle: 'border border-gray-100/20 dark:border-white/5 shadow-sm',
-    flat: 'border-0'
-  };
+  const hoverEffectStyles = hoverEffect 
+    ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg' 
+    : '';
+  
+  const glowEffectStyles = glowEffect
+    ? 'hover:shadow-[0_0_15px_rgba(255,107,0,0.3)]'
+    : '';
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      whileHover={hoverEffect ? { 
-        y: -5, 
-        boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05)"
-      } : {}}
       className={cn(
-        'rounded-2xl transition-all duration-300',
-        opacityClasses[glassOpacity],
-        variantClasses[variant],
-        glowEffect && 'shadow-[0_0_20px_rgba(155,135,245,0.3)]',
-        borderEffect && 'hover:border-interview-primary/30',
-        gradientBorder && 'border-gradient',
+        'rounded-xl overflow-hidden',
+        variantStyles[variant],
+        hoverEffectStyles,
+        glowEffectStyles,
         className
       )}
       {...props}
     >
-      {gradientBorder && (
-        <div className="absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-br from-interview-primary/30 via-interview-blue/20 to-transparent -z-10 blur-[0.5px]"></div>
-      )}
-      <div className="relative z-10">
-        {children}
-      </div>
+      {children}
     </motion.div>
   );
-};
+});
+
+PremiumCard.displayName = 'PremiumCard';
 
 export default PremiumCard;
