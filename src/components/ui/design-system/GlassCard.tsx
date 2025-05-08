@@ -27,13 +27,17 @@ export const GlassCard = ({
     heavy: 'bg-white/70 dark:bg-gray-900/70 backdrop-blur-lg',
   };
 
+  const hoverAnimationProps = hoverEffect ? {
+    whileHover: { y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }
+  } : {};
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      whileHover={hoverEffect ? { y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" } : undefined}
+      {...hoverAnimationProps}
       className={cn(
         'rounded-2xl border border-gray-200/30 dark:border-white/10 shadow-md transition-all duration-300',
         opacityClasses[glassOpacity],
