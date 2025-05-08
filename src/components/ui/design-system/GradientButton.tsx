@@ -29,6 +29,26 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   // Only apply gradient styling when variant is default or gradient
   const shouldApplyGradient = variant === 'default' || variant === 'gradient';
   
+  // Using a different approach to handle the asChild prop
+  if (asChild) {
+    return (
+      <Button
+        className={cn(
+          shouldApplyGradient && `relative overflow-hidden bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white`,
+          'rounded-xl transition-all duration-300',
+          glowEffect && 'hover:shadow-glow-primary',
+          className
+        )}
+        size={size as any}
+        variant={shouldApplyGradient ? 'default' : variant as any}
+        asChild={true}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
+  
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -43,24 +63,20 @@ const GradientButton: React.FC<GradientButtonProps> = ({
         )}
         size={size as any}
         variant={shouldApplyGradient ? 'default' : variant as any}
-        asChild={asChild}
+        asChild={false}
         {...props}
       >
-        {asChild ? (
-          children
-        ) : (
-          <div className="relative z-10 flex items-center">
-            {children}
-          </div>
-        )}
-        {shouldApplyGradient && !asChild && (
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
-            initial={{ x: '-100%', opacity: 0 }}
-            whileHover={{ x: '100%', opacity: 0.3 }}
-            transition={{ duration: 0.7 }}
-          />
-        )}
+        <div className="relative z-10 flex items-center">
+          {children}
+          {shouldApplyGradient && (
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
+              initial={{ x: '-100%', opacity: 0 }}
+              whileHover={{ x: '100%', opacity: 0.3 }}
+              transition={{ duration: 0.7 }}
+            />
+          )}
+        </div>
       </Button>
     </motion.div>
   );

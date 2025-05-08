@@ -26,11 +26,41 @@ const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
   gradientBg = false,
   iconLeft,
   iconRight,
+  asChild = false,
   ...props
 }, ref) => {
   
   // Handle hover animation for the glow
   const [isHovering, setIsHovering] = React.useState(false);
+
+  // Different rendering for asChild to avoid the "React.Children.only" error
+  if (asChild) {
+    return (
+      <Button
+        ref={ref}
+        className={cn(
+          // Base styles
+          "relative overflow-hidden transition-all duration-300",
+          // Gradient background
+          gradientBg && "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-none",
+          // Glow effect
+          glowEffect && isHovering && "shadow-[0_0_15px_rgba(255,107,0,0.5)]",
+          // Gradient text
+          gradientText && "bg-gradient-to-br from-orange-500 to-orange-600 bg-clip-text text-transparent",
+          // Additional classes
+          className
+        )}
+        variant={variant}
+        size={size}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        asChild={true}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
   
   return (
     <motion.div

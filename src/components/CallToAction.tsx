@@ -89,9 +89,10 @@ const CallToAction = () => {
               <GradientButton 
                 gradientFrom="from-white"
                 gradientTo="to-gray-100"
-                className="text-interview-primary hover:text-interview-blue text-lg px-8 py-6 rounded-full font-medium group shadow-xl"
+                className="text-interview-primary hover:text-interview-blue text-lg px-8 py-6 rounded-full font-medium shadow-xl"
+                asChild
               >
-                <Link to="/auth" className="flex items-center">
+                <Link to="/auth">
                   Start Your Journey Now
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>

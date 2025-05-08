@@ -49,8 +49,9 @@ const HeroSection = () => {
                 <GradientButton 
                   size="lg" 
                   className="rounded-full px-8 py-6 text-lg font-medium group"
+                  asChild
                 >
-                  <Link to="/auth" className="flex items-center">
+                  <Link to="/auth">
                     Start Now
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -62,7 +63,7 @@ const HeroSection = () => {
                   className="rounded-full px-8 py-6 text-lg font-medium border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
                   asChild
                 >
-                  <Link to="#how-it-works" className="flex items-center">
+                  <Link to="#how-it-works">
                     <BookOpen className="mr-2 h-5 w-5" />
                     See How It Works
                   </Link>

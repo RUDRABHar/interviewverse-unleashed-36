@@ -44,15 +44,16 @@ export const EmptyState = () => {
         </StaggerItem>
         
         <StaggerItem>
-          <Link to="/interviews">
-            <GradientButton 
-              className="px-6 py-6 text-white rounded-xl shadow-luxury text-base group"
-              glowEffect
-            >
+          <GradientButton 
+            className="px-6 py-6 text-white rounded-xl shadow-luxury text-base group"
+            glowEffect
+            asChild
+          >
+            <Link to="/interviews">
               Start Your First Interview
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </GradientButton>
-          </Link>
+            </Link>
+          </GradientButton>
         </StaggerItem>
       </StaggerContainer>
     </motion.div>

@@ -97,13 +97,13 @@ export const ProUpgradeCard = () => {
         </div>
         
         <GradientButton 
-          className="w-full font-medium"
+          className="w-full font-medium flex items-center justify-center"
           gradientFrom="from-orange-500" 
           gradientTo="to-amber-500"
           glowEffect
         >
           <Sparkles className="w-4 h-4 mr-1" />
-          Upgrade to Pro
+          <span>Upgrade to Pro</span>
         </GradientButton>
         
         <div className="text-center mt-3 text-xs text-gray-400">
