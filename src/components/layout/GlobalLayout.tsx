@@ -10,6 +10,7 @@ import { Sun, Moon, Laptop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SidebarInset } from '@/components/ui/sidebar';
+import SmartMentorAssistant from '../ai-assistant/SmartMentorAssistant';
 
 interface GlobalLayoutProps {
   children: React.ReactNode;
@@ -28,16 +29,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
   maxWidth = '2xl',
   className,
 }) => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const location = useLocation();
   
-  // Handle theme icon and label
-  const getThemeIcon = () => {
-    if (theme === 'light') return <Sun className="h-5 w-5" />;
-    if (theme === 'dark') return <Moon className="h-5 w-5" />;
-    return <Laptop className="h-5 w-5" />;
-  };
-
   // Max width class mapping
   const maxWidthClasses = {
     sm: 'max-w-screen-sm',
@@ -84,16 +78,8 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
         </SidebarInset>
       </div>
       
-      {/* Theme Switcher */}
-      <Button 
-        variant="outline"
-        size="icon"
-        className="fixed bottom-4 right-4 rounded-full shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm z-50"
-        onClick={toggleTheme}
-        aria-label="Toggle theme"
-      >
-        {getThemeIcon()}
-      </Button>
+      {/* Replace Theme Switcher with AI Assistant */}
+      <SmartMentorAssistant />
     </div>
   );
 };
