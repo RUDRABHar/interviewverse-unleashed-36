@@ -44,11 +44,11 @@ const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(({
     : '';
   
   const glowEffectStyles = glowEffect
-    ? 'hover:shadow-[0_0_15px_rgba(255,107,0,0.3)]'
+    ? 'hover:shadow-[0_0_15px_rgba(155,135,245,0.3)]'
     : '';
 
   const borderEffectStyles = borderEffect
-    ? 'hover:border-orange-500/30 dark:hover:border-orange-400/30'
+    ? 'hover:border-interview-primary/30 dark:hover:border-interview-primary/30'
     : '';
 
   const gradientBorderStyles = gradientBorder

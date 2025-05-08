@@ -1,149 +1,55 @@
 
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X, Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { supabase } from '@/integrations/supabase/client';
-import { Link, useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const navigate = useNavigate();
+interface NavbarProps {
+  onSidebarToggle: () => void;
+  isSidebarOpen: boolean;
+}
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    // Check if user is signed in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Setup auth listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
-  };
-
-  const handleStartInterview = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
-    }
-  };
-
+const Navbar: React.FC<NavbarProps> = ({ onSidebarToggle, isSidebarOpen }) => {
   return (
-    <nav 
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300',
-        scrolled ? 'bg-white/90 backdrop-blur-md shadow-md' : 'bg-transparent'
-      )}
-    >
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <Link to="/" className="text-2xl font-sora font-bold">
-            <span className="text-interview-primary">Interview</span>
-            <span className="text-interview-blue">Xpert</span>
+    <header className="fixed top-0 left-0 right-0 h-16 border-b border-gray-200/50 dark:border-gray-800/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-40">
+      <div className="flex items-center justify-between h-full px-4">
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onSidebarToggle}
+            aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+            className="lg:hidden"
+          >
+            {isSidebarOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+          
+          <Link to="/" className="flex items-center">
+            <span className="text-xl font-bold text-gray-900 dark:text-white">
+              Interview<span className="text-interview-primary">Xpert</span>
+            </span>
           </Link>
         </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          <a href="#how-it-works" className="text-gray-700 hover:text-interview-primary transition-colors">How it Works</a>
-          <a href="#features" className="text-gray-700 hover:text-interview-primary transition-colors">Features</a>
-          <a href="#pricing" className="text-gray-700 hover:text-interview-primary transition-colors">Pricing</a>
-          <a href="#faqs" className="text-gray-700 hover:text-interview-primary transition-colors">FAQs</a>
+        
+        <div className="flex items-center space-x-3">
+          <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <Search className="h-5 w-5" />
+          </Button>
           
-          {user ? (
-            <>
-              <Link to="/dashboard" className="text-interview-primary font-medium hover:text-interview-violet transition-colors">
-                Dashboard
-              </Link>
-              <Button 
-                variant="outline" 
-                onClick={handleSignOut}
-                className="border-interview-primary text-interview-primary hover:bg-interview-light"
-              >
-                Sign Out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link to="/auth" className="text-interview-primary font-medium hover:text-interview-violet transition-colors">
-                Login
-              </Link>
-              <Button 
-                onClick={handleStartInterview} 
-                className="bg-gradient-primary hover:shadow-glow transition-all shadow-sm"
-              >
-                Start Your Mock Interview
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Navigation Toggle */}
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white absolute top-16 left-0 right-0 p-4 shadow-lg">
-          <div className="flex flex-col space-y-4">
-            <a href="#how-it-works" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">How it Works</a>
-            <a href="#features" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">Features</a>
-            <a href="#pricing" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">Pricing</a>
-            <a href="#faqs" onClick={() => setIsOpen(false)} className="text-gray-700 hover:text-interview-primary py-2">FAQs</a>
-            
-            {user ? (
-              <>
-                <Link to="/dashboard" onClick={() => setIsOpen(false)} className="text-interview-primary font-medium py-2">
-                  Dashboard
-                </Link>
-                <Button onClick={() => {handleSignOut(); setIsOpen(false);}} variant="outline" className="w-full border-interview-primary text-interview-primary">
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              <>
-                <Link to="/auth" onClick={() => setIsOpen(false)} className="text-interview-primary font-medium py-2">
-                  Login
-                </Link>
-                <Button onClick={() => {handleStartInterview(); setIsOpen(false);}} className="bg-gradient-primary w-full">
-                  Start Your Mock Interview
-                </Button>
-              </>
-            )}
+          <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <Bell className="h-5 w-5" />
+          </Button>
+          
+          <div className="h-8 w-8 rounded-full bg-interview-primary/10 flex items-center justify-center text-interview-primary font-medium">
+            A
           </div>
         </div>
-      )}
-    </nav>
+      </div>
+    </header>
   );
 };
 
