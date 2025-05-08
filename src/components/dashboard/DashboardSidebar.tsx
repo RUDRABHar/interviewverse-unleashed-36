@@ -104,7 +104,7 @@ export const DashboardSidebar = () => {
                   >
                     <Link to={item.href} className="flex items-center">
                       <item.icon className="mr-2 h-5 w-5" />
-                      <span>{item.label}</span>
+                      {item.label}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
