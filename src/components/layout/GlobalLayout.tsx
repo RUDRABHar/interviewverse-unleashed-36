@@ -88,7 +88,7 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               className={cn(
-                "flex-1 mx-auto w-full px-4 sm:px-6 md:px-8",
+                "flex-1 mx-auto w-full px-4 sm:px-6 md:px-8 py-6",
                 maxWidthClasses[maxWidth],
                 className
               )}

@@ -83,8 +83,8 @@ export const DashboardSidebar = () => {
     <Sidebar className="border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 backdrop-blur-lg backdrop-filter">
       <SidebarContent>
         {/* Logo and app name */}
-        <div className="flex items-center justify-center p-5">
-          <div className="flex items-center space-x-1">
+        <div className="flex items-center justify-center p-4 mb-2">
+          <div className="flex items-center">
             <div className="text-2xl font-sora font-bold">
               <span className="text-interview-primary">Interview</span>
               <span className="text-interview-blue">Xpert</span>
@@ -93,7 +93,7 @@ export const DashboardSidebar = () => {
         </div>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-2">Main Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -101,9 +101,10 @@ export const DashboardSidebar = () => {
                   <SidebarMenuButton
                     isActive={item.active}
                     tooltip={item.label}
+                    className="flex w-full items-center px-3 py-2"
                   >
-                    <Link to={item.href} className="flex items-center">
-                      <item.icon className="mr-2 h-5 w-5" />
+                    <Link to={item.href} className="flex w-full items-center gap-3">
+                      <item.icon className="h-4 w-4 shrink-0" />
                       {item.label}
                     </Link>
                   </SidebarMenuButton>
@@ -114,8 +115,8 @@ export const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-4">
-        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+      <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3">
+        <div className="text-center text-xs text-gray-500 dark:text-gray-400">
           <span className="block">© 2025 InterviewXpert</span>
           <span className="block mt-1">Version 2.0</span>
         </div>

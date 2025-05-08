@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { FileText, ArrowRight } from 'lucide-react';
 import GradientButton from '@/components/ui/design-system/GradientButton';
@@ -22,22 +21,22 @@ export const EmptyState = () => {
       <StaggerContainer className="relative z-10">
         <StaggerItem>
           <motion.div 
-            className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-interview-primary/10 to-interview-blue/10 rounded-full flex items-center justify-center"
+            className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-interview-primary/10 to-interview-blue/10 rounded-full flex items-center justify-center"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
-            <FileText className="h-16 w-16 text-interview-primary" />
+            <FileText className="h-12 w-12 text-interview-primary" />
           </motion.div>
         </StaggerItem>
         
         <StaggerItem>
-          <h3 className="text-2xl font-bold mb-4 dark:text-white font-sora">
+          <h3 className="text-2xl font-bold mb-3 dark:text-white font-sora">
             No interviews yet
           </h3>
         </StaggerItem>
         
         <StaggerItem>
-          <p className="text-gray-600 dark:text-gray-400 max-w-md mb-8">
+          <p className="text-gray-600 dark:text-gray-400 max-w-md mb-6">
             Create your first interview to get started. Take a practice interview to improve your skills 
             and track your progress over time.
           </p>
@@ -45,11 +44,11 @@ export const EmptyState = () => {
         
         <StaggerItem>
           <GradientButton 
-            className="px-6 py-6 text-white rounded-xl shadow-luxury text-base group"
+            className="px-6 py-3 text-white rounded-xl shadow-luxury text-base group"
             glowEffect
             asChild
           >
-            <Link to="/interviews">
+            <Link to="/interviews" className="inline-flex items-center">
               Start Your First Interview
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
